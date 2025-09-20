@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String   @id @default(cuid())
+  email                String   @unique
+  password             String
+  firstName            String   @default("")
+  lastName             String   @default("")
+  age                  Int?
+  weight               Float?
+  height               Float?
+  activityLevel        String   @default("moderate")
+  dietaryRestrictions  String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  goals                Goal[]
+  meals                Meal[]
+}
+
+model Goal {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String
+  targetValue Float
+  currentValue Float   @default(0)
+  unit        String
+  deadline    DateTime?
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Meal {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String
+  foods         String?
+  totalCalories Float    @default(0)
+  totalProtein  Float    @default(0)
+  totalCarbs    Float    @default(0)
+  totalFat      Float    @default(0)
+  mealType      String
+  consumedAt    DateTime @default(now())
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

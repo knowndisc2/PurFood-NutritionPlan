@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import LoginPage from './components/LoginPage';
 import MealPlanDisplay from './components/MealPlanDisplay';
+import { auth, db } from './firebase'; // Import auth and db
+import { useAuthState } from 'react-firebase-hooks/auth'; // Import the hook
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; // Import Firestore functions
 import './App.css';
 
 // This is our mock data. In the future, this will come from the AI.
@@ -26,19 +29,39 @@ Here is a sample plan based on today's menu at Wiley Dining Court:
 `;
 
 function App() {
+  const [user] = useAuthState(auth); // Get the current user
   const [mealPlan, setMealPlan] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // This function simulates fetching the meal plan from the backend
-  const handleGeneratePlan = (goal) => {
+  // This function now saves the goal to Firestore and then fetches the plan
+  const handleGeneratePlan = async (goal) => {
+    if (!user) {
+      alert('You must be logged in to generate a plan!');
+      return;
+    }
+
     console.log('Generating plan in App.js for goal:', goal);
     setIsLoading(true);
 
-    // Simulate a 2-second network delay
-    setTimeout(() => {
-      setMealPlan(MOCK_MEAL_PLAN);
+    try {
+      // Save the goal to Firestore
+      const userGoalsRef = collection(db, 'users', user.uid, 'goals');
+      await addDoc(userGoalsRef, {
+        goal: goal,
+        createdAt: serverTimestamp(),
+      });
+      console.log('Goal saved to Firestore');
+
+      // Simulate a 2-second network delay for fetching the AI plan
+      setTimeout(() => {
+        setMealPlan(MOCK_MEAL_PLAN);
+        setIsLoading(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Error saving goal or generating plan:', error);
+      alert('Sorry, something went wrong while saving your goal.');
       setIsLoading(false);
-    }, 2000);
+    }
   };
 
   const handleStartOver = () => {
