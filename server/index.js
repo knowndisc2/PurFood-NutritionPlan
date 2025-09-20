@@ -2,25 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
-
-const { app: sessionApp, authMiddleware } = require('./session');
-const {
-  getUserById,
-  updateUserById,
-  deleteUserById,
-  createGoal,
-  getGoalsByUser,
-  getGoalById,
-  updateGoal,
-  deleteGoal,
-  createMeal,
-  getMealsByUser,
-  getMealById,
-  updateMeal,
-  deleteMeal
-} = require('./repo');
+const admin = require('./firebaseAdmin');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -33,16 +16,29 @@ const generalLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-app.use(helmet());
+// In development, disable COOP/COEP to avoid popup/window.close issues with Firebase auth
+if ((process.env.NODE_ENV || 'development') !== 'production') {
+  app.use(helmet({
+    crossOriginOpenerPolicy: false,
+    crossOriginEmbedderPolicy: false,
+  }));
+} else {
+  app.use(helmet());
+}
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-domain.com'] 
-    : ['http://localhost:3000', 'http://localhost:3001'],
+  origin: (origin, cb) => {
+    if ((process.env.NODE_ENV || 'development') !== 'production') {
+      // Allow all origins in development (covers localhost, 127.0.0.1, LAN IPs)
+      return cb(null, true);
+    }
+    const allowed = ['https://your-domain.com'];
+    if (!origin || allowed.includes(origin)) return cb(null, true);
+    return cb(new Error('Not allowed by CORS'));
+  },
   credentials: true
 }));
 app.use(generalLimiter);
 app.use(express.json({ limit: '10mb' }));
-app.use(cookieParser());
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -53,206 +49,82 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-app.get('/api/users/profile', authMiddleware, async (req, res) => {
+// Firebase ID token verification middleware
+async function fbAuthMiddleware(req, res, next) {
   try {
-    const user = await getUserById(req.user.id);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    const { password, ...userWithoutPassword } = user;
-    if (typeof userWithoutPassword.dietaryRestrictions === 'string') {
-      try { userWithoutPassword.dietaryRestrictions = JSON.parse(userWithoutPassword.dietaryRestrictions); } catch {}
-    }
-    res.json(userWithoutPassword);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch user profile' });
+    const authHeader = req.headers.authorization || '';
+    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+    if (!token) return res.status(401).json({ error: 'Missing Authorization Bearer token' });
+    const decoded = await admin.auth().verifyIdToken(token);
+    req.fbUid = decoded.uid;
+    next();
+  } catch (e) {
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+}
+
+// User profile endpoints (GET/PUT on user doc)
+app.get('/api/fb/profile', fbAuthMiddleware, async (req, res) => {
+  try {
+    const db = admin.firestore();
+    const doc = await db.collection('users').doc(req.fbUid).get();
+    if (!doc.exists) return res.status(404).json({ error: 'User profile not found' });
+    return res.json(doc.data());
+  } catch (e) {
+    console.error('Profile fetch failed', e);
+    return res.status(500).json({ error: 'Failed to fetch profile' });
   }
 });
 
-app.put('/api/users/profile', authMiddleware, async (req, res) => {
+app.put('/api/fb/profile', fbAuthMiddleware, async (req, res) => {
   try {
-    const { email, password, ...updateData } = req.body;
-    if (updateData.dietaryRestrictions && typeof updateData.dietaryRestrictions !== 'string') {
-      updateData.dietaryRestrictions = JSON.stringify(updateData.dietaryRestrictions);
-    }
-    const updatedUser = await updateUserById(req.user.id, updateData);
-    if (!updatedUser) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    const { password: _, ...userWithoutPassword } = updatedUser;
-    if (typeof userWithoutPassword.dietaryRestrictions === 'string') {
-      try { userWithoutPassword.dietaryRestrictions = JSON.parse(userWithoutPassword.dietaryRestrictions); } catch {}
-    }
-    res.json({ user: userWithoutPassword, message: 'Profile updated successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to update profile' });
+    const db = admin.firestore();
+    const { email, ...profileData } = req.body; // email is not mutable
+    await db.collection('users').doc(req.fbUid).set(profileData, { merge: true });
+    return res.json({ message: 'Profile updated' });
+  } catch (e) {
+    console.error('Profile update failed', e);
+    return res.status(500).json({ error: 'Failed to update profile' });
   }
 });
 
-app.delete('/api/users/profile', authMiddleware, async (req, res) => {
+// Meal history endpoints (GET/POST on meals subcollection)
+app.post('/api/fb/meals', fbAuthMiddleware, async (req, res) => {
   try {
-    await deleteUserById(req.user.id);
-    res.clearCookie('token');
-    res.json({ message: 'Account deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to delete account' });
-  }
-});
-
-app.post('/api/goals', authMiddleware, async (req, res) => {
-  try {
-    const { type, targetValue, unit, deadline, description, currentValue } = req.body;
-    
-    if (!type || !targetValue || !unit) {
-      return res.status(400).json({ 
-        error: 'Type, target value, and unit are required' 
-      });
-    }
-    
-    const goal = await createGoal({
-      userId: req.user.id,
-      type,
-      targetValue,
-      currentValue,
-      unit,
-      deadline: deadline ? new Date(deadline) : null,
-      description
+    const db = admin.firestore();
+    const mealData = req.body;
+    if (!mealData || !mealData.name) return res.status(400).json({ error: 'Meal data is invalid' });
+    const docRef = await db.collection('users').doc(req.fbUid).collection('meals').add({
+      ...mealData,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
-    
-    res.status(201).json({
-      goal,
-      message: 'Goal created successfully'
-    });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to create goal' });
+    return res.status(201).json({ id: docRef.id });
+  } catch (e) {
+    console.error('Meal create failed', e);
+    return res.status(500).json({ error: 'Failed to save meal' });
   }
 });
 
-app.get('/api/goals', authMiddleware, async (req, res) => {
-  try {
-    const goals = await getGoalsByUser(req.user.id);
-    res.json(goals);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch goals' });
-  }
-});
-
-app.put('/api/goals/:id', authMiddleware, async (req, res) => {
-  try {
-    const goalId = req.params.id;
-    const updateData = req.body;
-    const goal = await getGoalById(goalId);
-    if (!goal || goal.userId !== req.user.id) {
-      return res.status(404).json({ error: 'Goal not found' });
-    }
-    const updatedGoal = await updateGoal(goalId, {
-      ...updateData,
-      deadline: updateData.deadline ? new Date(updateData.deadline) : undefined,
-    });
-    res.json({ goal: updatedGoal, message: 'Goal updated successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to update goal' });
-  }
-});
-
-app.delete('/api/goals/:id', authMiddleware, async (req, res) => {
-  try {
-    const goalId = req.params.id;
-    const goal = await getGoalById(goalId);
-    if (!goal || goal.userId !== req.user.id) {
-      return res.status(404).json({ error: 'Goal not found' });
-    }
-    await deleteGoal(goalId);
-    res.json({ message: 'Goal deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to delete goal' });
-  }
-});
-
-app.post('/api/meals', authMiddleware, async (req, res) => {
-  try {
-    const { name, foods, totalCalories, totalProtein, totalCarbs, totalFat, mealType, consumedAt, notes } = req.body;
-    
-    if (!name || !mealType) {
-      return res.status(400).json({ 
-        error: 'Meal name and type are required' 
-      });
-    }
-    
-    const meal = await createMeal({
-      userId: req.user.id,
-      name,
-      foods: foods ? JSON.stringify(foods) : null,
-      totalCalories,
-      totalProtein,
-      totalCarbs,
-      totalFat,
-      mealType,
-      consumedAt: consumedAt ? new Date(consumedAt) : undefined,
-      notes
-    });
-    
-    res.status(201).json({
-      meal,
-      message: 'Meal logged successfully'
-    });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to log meal' });
-  }
-});
-
-app.get('/api/meals', authMiddleware, async (req, res) => {
+app.get('/api/fb/meals', fbAuthMiddleware, async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 50;
-    const meals = await getMealsByUser(req.user.id, limit);
-    const parsed = meals.map(m => ({
-      ...m,
-      foods: typeof m.foods === 'string' ? (()=>{ try { return JSON.parse(m.foods) } catch { return m.foods } })() : m.foods
-    }));
-    res.json(parsed);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch meals' });
+    const db = admin.firestore();
+    const snap = await db.collection('users').doc(req.fbUid).collection('meals')
+      .orderBy('createdAt', 'desc')
+      .limit(limit)
+      .get();
+    const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    return res.json(items);
+  } catch (e) {
+    console.error('Meals fetch failed', e);
+    return res.status(500).json({ error: 'Failed to fetch meals' });
   }
 });
 
-app.put('/api/meals/:id', authMiddleware, async (req, res) => {
-  try {
-    const mealId = req.params.id;
-    const updateData = req.body;
-    const meal = await getMealById(mealId);
-    if (!meal || meal.userId !== req.user.id) {
-      return res.status(404).json({ error: 'Meal not found' });
-    }
-    const updatedMeal = await updateMeal(mealId, {
-      ...updateData,
-      consumedAt: updateData.consumedAt ? new Date(updateData.consumedAt) : undefined,
-      foods: updateData.foods ? JSON.stringify(updateData.foods) : undefined,
-    });
-    const toReturn = { ...updatedMeal };
-    if (typeof toReturn.foods === 'string') {
-      try { toReturn.foods = JSON.parse(toReturn.foods); } catch {}
-    }
-    res.json({ meal: toReturn, message: 'Meal updated successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to update meal' });
-  }
-});
 
-app.delete('/api/meals/:id', authMiddleware, async (req, res) => {
-  try {
-    const mealId = req.params.id;
-    const meal = await getMealById(mealId);
-    if (!meal || meal.userId !== req.user.id) {
-      return res.status(404).json({ error: 'Meal not found' });
-    }
-    await deleteMeal(mealId);
-    res.json({ message: 'Meal deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to delete meal' });
-  }
-});
 
-app.use(sessionApp);
+
+// app.use(sessionApp); // Disabled: migrating to Firebase Auth only
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
