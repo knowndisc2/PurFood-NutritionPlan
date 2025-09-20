@@ -1,0 +1,28 @@
+mutation SeedData @auth(level: USER) {
+  foodItem_insertMany(data: [
+    {
+      name: "Apple",
+      caloriesPerServing: 95.0,
+      carbsPerServing: 25.0,
+      fatPerServing: 0.3,
+      proteinPerServing: 0.5,
+      servingUnit: "medium apple"
+    },
+    {
+      name: "Banana",
+      caloriesPerServing: 105.0,
+      carbsPerServing: 27.0,
+      fatPerServing: 0.4,
+      proteinPerServing: 1.3,
+      servingUnit: "medium banana"
+    },
+    {
+      name: "Chicken Breast",
+      caloriesPerServing: 165.0,
+      carbsPerServing: 0.0,
+      fatPerServing: 3.6,
+      proteinPerServing: 31.0,
+      servingUnit: "3 oz cooked"
+    }
+  ])
+}

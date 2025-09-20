@@ -1,0 +1,34 @@
+mutation CreateMeal @auth(level: USER) {
+  meal_insert(data: {
+    mealName: "New Meal",
+    mealDate_expr: "request.time",
+    userId_expr: "auth.uid"
+  })
+}
+
+query GetMyMeals @auth(level: USER) {
+  meals(where: {userId: {eq_expr: "auth.uid"}}) {
+    id
+    mealName
+    mealDate
+  }
+}
+
+mutation AddFoodItemToMeal($mealId: UUID!, $foodItemId: UUID!, $quantity: Float!) @auth(level: USER) {
+  mealEntry_insert(data: {
+    mealId: $mealId,
+    foodItemId: $foodItemId,
+    quantity: $quantity
+  })
+}
+
+query ListFoodItems @auth(level: PUBLIC) {
+  foodItems {
+    id
+    name
+    caloriesPerServing
+    proteinPerServing
+    carbsPerServing
+    fatPerServing
+  }
+}
