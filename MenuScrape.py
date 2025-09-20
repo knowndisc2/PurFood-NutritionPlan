@@ -3,24 +3,25 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import time
 import json
-from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
-def setup_driver():
-    """Set up Chrome driver with proper options"""
+def setup_headless_driver():
+    """Set up headless Chrome driver"""
     chrome_options = Options()
-    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    chrome_options.add_experimental_option('useAutomationExtension', False)
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--log-level=3")  # Suppress warnings
+    chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
     
     driver = webdriver.Chrome(options=chrome_options)
-    driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
     return driver
 
 def scrape_nutrition_data(driver, nutrition_url):
     """Scrape nutrition information from individual food item page"""
     try:
         driver.get(nutrition_url)
-        time.sleep(3)  # Wait for page to load
+        time.sleep(2)
         
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         
@@ -47,9 +48,12 @@ def scrape_nutrition_data(driver, nutrition_url):
                 label = label_elem.get_text().strip().lower()
                 value_text = value_elem.get_text().strip()
                 
-                # Extract numeric value (remove 'g', 'mg', etc.)
+                # Extract numeric value (handle < 1g cases)
                 try:
-                    value = float(''.join(filter(str.isdigit, value_text.replace('.', 'X'))).replace('X', '.'))
+                    if '<' in value_text:
+                        value = 0.5  # Treat "< 1g" as 0.5g
+                    else:
+                        value = float(''.join(filter(lambda x: x.isdigit() or x == '.', value_text)))
                     
                     if 'total fat' in label:
                         nutrition_data['fat'] = value
@@ -66,110 +70,177 @@ def scrape_nutrition_data(driver, nutrition_url):
                 except:
                     continue
         
-        # Get station info from upcoming meals section
-        station_elem = soup.find('span', class_='appearances__appearance--station')
-        if station_elem:
-            nutrition_data['station'] = station_elem.get_text().strip()
-        
         return nutrition_data
         
     except Exception as e:
-        print(f"Error getting nutrition data: {e}")
         return {}
 
-def scrape_all_dining_courts():
-    """Main scraping function"""
-    driver = setup_driver()
+def scrape_single_court_all_stations(court_name="Earhart", today="2025/9/20"):
+    """Scrape one dining court and organize by stations"""
+    print(f"[{court_name}] Starting scrape...")
     
+    driver = setup_headless_driver()
+    
+    try:
+        # Try the main page for this court and today
+        url = f"https://dining.purdue.edu/menus/{court_name}/{today}/"
+        driver.get(url)
+        time.sleep(5)
+        
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        
+        # Find all stations
+        stations = soup.find_all('div', class_='station')
+        print(f"[{court_name}] Found {len(stations)} stations")
+        
+        court_data = {
+            'dining_court': court_name,
+            'stations': {},
+            'total_items': 0
+        }
+        
+        for station in stations:
+            # Get station name
+            station_name_elem = station.find('div', class_='station-name')
+            if station_name_elem:
+                station_name = station_name_elem.get_text().strip()
+                print(f"[{court_name}] Processing station: {station_name}")
+                
+                # Find all food items in this station
+                station_items = []
+                food_containers = station.find_all('div', class_='station-item--container_plain')
+                
+                print(f"[{court_name}] {station_name}: {len(food_containers)} items")
+                
+                # Process items (limit to first 3 per station for speed)
+                for i, container in enumerate(food_containers[:3]):
+                    name_span = container.find('span', class_='station-item-text')
+                    if name_span:
+                        food_name = name_span.get_text().strip()
+                        
+                        # Get nutrition link
+                        link = container.find('a', class_='station-item')
+                        if link and link.get('href'):
+                            nutrition_url = "https://dining.purdue.edu" + link.get('href')
+                            
+                            # Get detailed nutrition data
+                            nutrition_data = scrape_nutrition_data(driver, nutrition_url)
+                            
+                            food_item = {
+                                'name': food_name,
+                                'station': station_name,
+                                'nutrition_url': nutrition_url,
+                                **nutrition_data
+                            }
+                            
+                            station_items.append(food_item)
+                            
+                            # Show progress
+                            calories = nutrition_data.get('calories', 'N/A')
+                            protein = nutrition_data.get('protein', 'N/A')
+                            print(f"[{court_name}]   {food_name}: {calories} cal, {protein}g protein")
+                            
+                            time.sleep(1)  # Be respectful to server
+                
+                court_data['stations'][station_name] = station_items
+                court_data['total_items'] += len(station_items)
+        
+        print(f"[{court_name}] Complete! {court_data['total_items']} items across {len(court_data['stations'])} stations")
+        return court_name, court_data
+        
+    except Exception as e:
+        print(f"[{court_name}] Error: {e}")
+        return court_name, {'dining_court': court_name, 'stations': {}, 'total_items': 0}
+    
+    finally:
+        driver.quit()
+
+def scrape_all_courts_concurrent():
+    """Scrape all dining courts concurrently, organized by stations"""
     dining_courts = ['Earhart', 'Ford', 'Hillenbrand', 'Wiley', 'Windsor']
-    today = "2025/9/20"  # You can make this dynamic
+    all_data = {}
     
-    all_menus = {}
+    print("Starting concurrent scraping of all dining courts...")
+    print("Each court will show all stations with food items organized by station")
     
-    for court in dining_courts:
-        try:
-            url = f"https://dining.purdue.edu/menus/{court}/{today}/"
-            print(f"\n=== Scraping {court} ===")
+    # Use ThreadPoolExecutor for concurrent scraping
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        # Submit all tasks
+        future_to_court = {
+            executor.submit(scrape_single_court_all_stations, court): court 
+            for court in dining_courts
+        }
+        
+        # Collect results as they complete
+        for future in as_completed(future_to_court):
+            court_name, court_data = future.result()
+            all_data[court_name] = court_data
             
-            driver.get(url)
-            time.sleep(8)  # Wait for page to load
+            # Print completion status
+            completed = len(all_data)
+            total = len(dining_courts)
+            print(f"\n*** {court_name} FINISHED! ({completed}/{total} courts complete) ***")
             
-            soup = BeautifulSoup(driver.page_source, 'html.parser')
-            
-            # Find all food items
-            food_items = []
-            station_containers = soup.find_all('div', class_='station-item--container_plain')
-            
-            print(f"Found {len(station_containers)} food items")
-            
-            # Limit to first 5 items for testing (remove this limit later)
-            for i, container in enumerate(station_containers[:5]):
-                name_span = container.find('span', class_='station-item-text')
-                if name_span:
-                    food_name = name_span.get_text().strip()
-                    print(f"  Processing: {food_name}")
-                    
-                    # Get nutrition link
-                    link = container.find('a', class_='station-item')
-                    if link and link.get('href'):
-                        nutrition_url = "https://dining.purdue.edu" + link.get('href')
-                        
-                        # Get detailed nutrition data
-                        nutrition_data = scrape_nutrition_data(driver, nutrition_url)
-                        
-                        food_item = {
-                            'name': food_name,
-                            'dining_court': court,
-                            'nutrition_url': nutrition_url,
-                            **nutrition_data  # Merge nutrition data
-                        }
-                        
-                        food_items.append(food_item)
-                        print(f"    ✓ Calories: {nutrition_data.get('calories', 'N/A')}, Protein: {nutrition_data.get('protein', 'N/A')}g")
-                        
-                        # Small delay between requests
-                        time.sleep(2)
-            
-            all_menus[court] = food_items
-            
-        except Exception as e:
-            print(f"Error scraping {court}: {e}")
-            all_menus[court] = []
+            # Show station summary
+            stations = court_data.get('stations', {})
+            total_items = court_data.get('total_items', 0)
+            print(f"    {len(stations)} stations, {total_items} total items")
+            for station_name, items in stations.items():
+                print(f"      • {station_name}: {len(items)} items")
     
-    driver.quit()
-    return all_menus
+    return all_data
 
-def save_menu_data(menu_data, filename='purdue_menus.json'):
-    """Save scraped data to JSON file"""
-    with open(filename, 'w') as f:
-        json.dump(menu_data, f, indent=2)
-    print(f"\n✓ Data saved to {filename}")
-
-def print_summary(menu_data):
-    """Print a nice summary of scraped data"""
-    print("\n" + "="*50)
-    print("SCRAPING SUMMARY")
-    print("="*50)
+def print_detailed_summary(all_data):
+    """Print a comprehensive summary organized by station"""
+    print("\n" + "="*70)
+    print("FINAL STATION-ORGANIZED SUMMARY")
+    print("="*70)
     
-    for court, items in menu_data.items():
-        print(f"\n{court}: {len(items)} items")
-        for item in items[:3]:  # Show first 3 items
-            calories = item.get('calories', 'N/A')
-            protein = item.get('protein', 'N/A')
-            station = item.get('station', 'Unknown station')
-            print(f"  • {item['name']}")
-            print(f"    {calories} cal, {protein}g protein, {station}")
+    for court_name, court_data in all_data.items():
+        stations = court_data.get('stations', {})
+        total_items = court_data.get('total_items', 0)
+        
+        print(f"\n{court_name}: {len(stations)} stations, {total_items} items total")
+        
+        for station_name, items in stations.items():
+            print(f"\n  📍 {station_name} ({len(items)} items):")
+            
+            # Show high-protein items first
+            protein_items = sorted(items, key=lambda x: x.get('protein', 0), reverse=True)
+            
+            for item in protein_items:
+                name = item['name']
+                calories = item.get('calories', 'N/A')
+                protein = item.get('protein', 'N/A')
+                serving = item.get('serving_size', 'N/A')
+                
+                print(f"    • {name}")
+                print(f"      {calories} cal, {protein}g protein ({serving})")
+    
+    # Overall stats
+    total_stations = sum(len(court_data.get('stations', {})) for court_data in all_data.values())
+    total_items = sum(court_data.get('total_items', 0) for court_data in all_data.values())
+    
+    print(f"\n🎯 OVERALL STATS:")
+    print(f"   {len(all_data)} dining courts")
+    print(f"   {total_stations} total stations")
+    print(f"   {total_items} total food items")
+    print(f"\nData is now organized by: Court → Station → Food Items")
+    print("Perfect for your recommendation engine!")
 
 if __name__ == "__main__":
-    print("🍽️  Starting Purdue dining scraper...")
+    print("🍽️ Station-organized Purdue dining scraper")
+    print("This will scrape all dining courts and organize food by station")
     
-    # Scrape all data
-    menus = scrape_all_dining_courts()
+    # Scrape all data concurrently
+    data = scrape_all_courts_concurrent()
     
     # Save to file
-    save_menu_data(menus)
+    with open('purdue_menus_by_station.json', 'w') as f:
+        json.dump(data, f, indent=2)
+    print(f"\nData saved to purdue_menus_by_station.json")
     
-    # Print summary
-    print_summary(menus)
+    # Print detailed summary
+    print_detailed_summary(data)
     
-    print("\n🎉 Scraping complete! Your team can now use this data.")
+    print("\n✅ Complete! Your team now has comprehensive dining data organized by station.")
