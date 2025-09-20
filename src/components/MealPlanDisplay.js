@@ -1,11 +1,12 @@
 import React from 'react';
-import { auth } from '../firebase';
+import { auth } from '../firebase/config';
 import './MealPlanDisplay.css';
 
 function MealPlanDisplay({ plan, onBack }) {
   const [mealHistory, setMealHistory] = React.useState([]);
   const [loadingMeals, setLoadingMeals] = React.useState(true);
   const [mealsError, setMealsError] = React.useState('');
+  const [savingMeal, setSavingMeal] = React.useState(false);
 
   const fetchMeals = React.useCallback(async () => {
     setLoadingMeals(true);
@@ -14,8 +15,8 @@ function MealPlanDisplay({ plan, onBack }) {
       const user = auth.currentUser;
       if (!user) throw new Error('Not signed in');
       const token = await user.getIdToken();
-      const apiBase = process.env.NODE_ENV !== 'production' ? 'http://localhost:4000' : window.location.origin;
-      const url = `${apiBase}/api/fb/meals?limit=10`;
+      // Use relative URL to leverage proxy configuration in development
+      const url = '/api/fb/meals?limit=10';
       const res = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -37,6 +38,52 @@ function MealPlanDisplay({ plan, onBack }) {
     }
   }, []);
 
+  const saveMealPlan = React.useCallback(async () => {
+    setSavingMeal(true);
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error('Not signed in');
+      const token = await user.getIdToken();
+      
+      // Extract meal information from the plan text
+      const mealData = {
+        name: `Meal Plan - ${new Date().toLocaleDateString()}`,
+        mealType: 'Custom Plan',
+        description: plan,
+        totalCalories: extractCaloriesFromPlan(plan),
+        planContent: plan
+      };
+
+      const res = await fetch('/api/fb/meals', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(mealData)
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Save failed: ${res.status} ${res.statusText} — ${text.slice(0, 200)}`);
+      }
+
+      // Refresh the meal history after saving
+      await fetchMeals();
+      alert('Meal plan saved successfully!');
+    } catch (e) {
+      alert(`Failed to save meal plan: ${e.message}`);
+    } finally {
+      setSavingMeal(false);
+    }
+  }, [plan, fetchMeals]);
+
+  // Helper function to extract calories from plan text
+  const extractCaloriesFromPlan = (planText) => {
+    const calorieMatch = planText.match(/(\d+)\s*calories?/i);
+    return calorieMatch ? parseInt(calorieMatch[1]) : 0;
+  };
+
   React.useEffect(() => {
     fetchMeals();
   }, [fetchMeals]);
@@ -46,6 +93,16 @@ function MealPlanDisplay({ plan, onBack }) {
       <h2>Your Custom Meal Plan</h2>
       <div className="plan-content">
         <pre>{plan}</pre>
+      </div>
+      
+      <div className="plan-actions">
+        <button 
+          className="btn-primary" 
+          onClick={saveMealPlan} 
+          disabled={savingMeal}
+        >
+          {savingMeal ? 'Saving...' : 'Save to Meal History'}
+        </button>
       </div>
 
       <div className="meal-history-section">
@@ -61,11 +118,34 @@ function MealPlanDisplay({ plan, onBack }) {
           {!loadingMeals && !mealsError && (
             <ul className="meal-list">
               {mealHistory.map((m) => (
-                <li key={m.id}>
-                  {m.name} ({m.mealType}) - {m.totalCalories || 0} kcal
+                <li key={m.id} className="meal-history-item">
+                  <div className="meal-info">
+                    <strong>{m.name}</strong> 
+                    <span className="meal-type">({m.mealType})</span>
+                    {m.totalCalories > 0 && (
+                      <span className="meal-calories"> - {m.totalCalories} kcal</span>
+                    )}
+                  </div>
+                  {m.createdAt && (
+                    <div className="meal-date">
+                      {new Date(m.createdAt.seconds * 1000).toLocaleDateString()}
+                    </div>
+                  )}
+                  {m.description && (
+                    <div className="meal-description">
+                      {m.description.length > 100 
+                        ? `${m.description.substring(0, 100)}...` 
+                        : m.description
+                      }
+                    </div>
+                  )}
                 </li>
               ))}
-              {mealHistory.length === 0 && <li>No meals recorded yet.</li>}
+              {mealHistory.length === 0 && (
+                <li className="no-meals-message">
+                  📝 No meal history found. Start tracking your meals to see them here!
+                </li>
+              )}
             </ul>
           )}
         </div>
