@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import App from "./App";
-import { auth, provider, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "./firebase";
+import { auth, provider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "./firebase";
 import { signInWithRedirect, getRedirectResult, setPersistence, browserLocalPersistence, onAuthStateChanged } from "firebase/auth";
 
 export default function Auth() {
@@ -73,7 +73,8 @@ export default function Auth() {
 
   const handleGoogle = async () => {
     try {
-      await signInWithRedirect(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      setUser(result.user);
     } catch (e) {
       const info = formatFirebaseError(e);
       setError(JSON.stringify(info));
@@ -108,8 +109,24 @@ export default function Auth() {
     <div>
       <button onClick={handleGoogle}>Sign in with Google</button>
       <form onSubmit={handleSignIn}>
-        <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
-        <input value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" type="password" />
+        <input 
+          id="email" 
+          name="email" 
+          value={email} 
+          onChange={e => setEmail(e.target.value)} 
+          placeholder="Email" 
+          type="email"
+          autoComplete="email"
+        />
+        <input 
+          id="password" 
+          name="password" 
+          value={password} 
+          onChange={e => setPassword(e.target.value)} 
+          placeholder="Password" 
+          type="password"
+          autoComplete="current-password"
+        />
         <button type="submit">Sign In</button>
         <button type="button" onClick={handleSignUp}>Sign Up</button>
       </form>

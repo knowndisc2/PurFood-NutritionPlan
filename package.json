@@ -7,10 +7,11 @@
   "scripts": {
     "start": "node server/index.js",
     "dev": "nodemon server/index.js",
-    "client": "react-scripts start",
-    "build": "react-scripts build",
+    "client": "set PORT=3000 && react-scripts start",
+    "build": "craco build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:full": "concurrently \"npm run dev\" \"npm run client\"",
+    "dev:separate": "echo \"Run 'npm run dev' in one terminal and 'npm run client' in another\"",
     "start:prod": "npm run build && npm run start"
   },
   "repository": {
@@ -40,8 +41,10 @@
     "validator": "^13.12.0"
   },
   "devDependencies": {
+    "@craco/craco": "^7.1.0",
     "axios": "^1.7.7",
     "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
     "nodemon": "^3.0.2",
     "prisma": "^5.19.1",
     "react-scripts": "^5.0.1"

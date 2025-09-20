@@ -2,7 +2,7 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const { registerUser, loginUser, generateToken, authMiddleware } = require('./auth');
 
-const app = express();
+const router = express.Router();
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -12,10 +12,10 @@ const authLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-app.use('/api/register', authLimiter);
-app.use('/api/login', authLimiter);
+router.use('/api/register', authLimiter);
+router.use('/api/login', authLimiter);
 
-app.post('/api/register', async (req, res) => {
+router.post('/api/register', async (req, res) => {
   try {
     const { email, password, firstName, lastName, age, weight, height, activityLevel, dietaryRestrictions } = req.body;
     
@@ -52,7 +52,7 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-app.post('/api/login', async (req, res) => {
+router.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     
@@ -84,7 +84,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-app.post('/api/logout', (req, res) => {
+router.post('/api/logout', (req, res) => {
   res.clearCookie('token');
   res.json({
     success: true,
@@ -92,10 +92,10 @@ app.post('/api/logout', (req, res) => {
   });
 });
 
-app.get('/api/me', authMiddleware, (req, res) => {
+router.get('/api/me', authMiddleware, (req, res) => {
   res.json({
     user: req.user
   });
 });
 
-module.exports = { app, authMiddleware };
+module.exports = { router, authMiddleware };

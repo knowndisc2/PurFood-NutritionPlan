@@ -44,15 +44,20 @@ function MealPlanDisplay({ plan, onBack }) {
       const user = auth.currentUser;
       if (!user) throw new Error('Not signed in');
       const token = await user.getIdToken();
-      
+
+      console.log('[MealPlan] Saving meal plan with content:', plan.substring(0, 200) + '...');
+
       // Extract meal information from the plan text
       const mealData = {
         name: `Meal Plan - ${new Date().toLocaleDateString()}`,
         mealType: 'Custom Plan',
         description: plan,
         totalCalories: extractCaloriesFromPlan(plan),
-        planContent: plan
+        planContent: plan,
+        createdAt: new Date() // Add client-side timestamp for immediate display
       };
+
+      console.log('[MealPlan] Sending meal data:', mealData);
 
       const res = await fetch('/api/fb/meals', {
         method: 'POST',
@@ -65,13 +70,17 @@ function MealPlanDisplay({ plan, onBack }) {
 
       if (!res.ok) {
         const text = await res.text();
+        console.error('[MealPlan] Save failed with response:', text);
         throw new Error(`Save failed: ${res.status} ${res.statusText} — ${text.slice(0, 200)}`);
       }
+
+      console.log('[MealPlan] Meal plan saved successfully');
 
       // Refresh the meal history after saving
       await fetchMeals();
       alert('Meal plan saved successfully!');
     } catch (e) {
+      console.error('[MealPlan] Save error:', e);
       alert(`Failed to save meal plan: ${e.message}`);
     } finally {
       setSavingMeal(false);

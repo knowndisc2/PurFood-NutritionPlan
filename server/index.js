@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
 const admin = require('./firebaseAdmin');
+// const { router: sessionRouter } = require('./session');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -41,9 +42,28 @@ app.use(cors({
 app.use(generalLimiter);
 app.use(express.json({ limit: '10mb' }));
 
+// Mount session routes
+// app.use(sessionRouter);
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Something went wrong!' });
+});
+
+app.get('/api/test-auth', async (req, res) => {
+  try {
+    // Test if Firebase Admin is working
+    const testToken = req.headers.authorization?.replace('Bearer ', '');
+    if (testToken) {
+      const decoded = await admin.auth().verifyIdToken(testToken);
+      return res.json({ success: true, uid: decoded.uid, message: 'Token verified successfully' });
+    } else {
+      return res.status(400).json({ error: 'No token provided' });
+    }
+  } catch (e) {
+    console.error('Test auth failed:', e);
+    return res.status(401).json({ error: 'Token verification failed', details: e.message });
+  }
 });
 
 app.get('/api/health', (req, res) => {
@@ -54,12 +74,22 @@ app.get('/api/health', (req, res) => {
 async function fbAuthMiddleware(req, res, next) {
   try {
     const authHeader = req.headers.authorization || '';
+    console.log('[Auth] Authorization header:', authHeader.substring(0, 20) + '...');
+
     const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
-    if (!token) return res.status(401).json({ error: 'Missing Authorization Bearer token' });
+    if (!token) {
+      console.log('[Auth] No token found in authorization header');
+      return res.status(401).json({ error: 'Missing Authorization Bearer token' });
+    }
+
+    console.log('[Auth] Verifying token...');
     const decoded = await admin.auth().verifyIdToken(token);
+    console.log('[Auth] Token verified successfully for user:', decoded.uid);
     req.fbUid = decoded.uid;
     next();
   } catch (e) {
+    console.error('[Auth] Token verification failed:', e.message);
+    console.error('[Auth] Error stack:', e.stack);
     return res.status(401).json({ error: 'Invalid or expired token' });
   }
 }
@@ -108,17 +138,34 @@ app.post('/api/fb/meals', fbAuthMiddleware, async (req, res) => {
 
 app.get('/api/fb/meals', fbAuthMiddleware, async (req, res) => {
   try {
+    console.log('[Meals] Fetch request received for user:', req.fbUid);
     const limit = parseInt(req.query.limit) || 50;
+    console.log('[Meals] Query limit:', limit);
+
     const db = admin.firestore();
-    const snap = await db.collection('users').doc(req.fbUid).collection('meals')
-      .orderBy('createdAt', 'desc')
-      .limit(limit)
-      .get();
-    const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    console.log('[Meals] Firestore instance created');
+
+    const collectionRef = db.collection('users').doc(req.fbUid).collection('meals');
+    console.log('[Meals] Collection reference created');
+
+    const query = collectionRef.orderBy('createdAt', 'desc').limit(limit);
+    console.log('[Meals] Query created');
+
+    const snap = await query.get();
+    console.log('[Meals] Query executed, documents found:', snap.size);
+
+    const items = snap.docs.map(d => {
+      const data = d.data();
+      console.log('[Meals] Document:', d.id, 'createdAt:', data.createdAt);
+      return { id: d.id, ...data };
+    });
+
+    console.log('[Meals] Returning', items.length, 'meal items');
     return res.json(items);
   } catch (e) {
-    console.error('Meals fetch failed', e);
-    return res.status(500).json({ error: 'Failed to fetch meals' });
+    console.error('[Meals] Fetch failed:', e);
+    console.error('[Meals] Error stack:', e.stack);
+    return res.status(500).json({ error: 'Failed to fetch meals', details: e.message });
   }
 });
 
@@ -134,19 +181,6 @@ if (process.env.NODE_ENV === 'production') {
     } else {
       res.status(404).json({ error: 'API route not found' });
     }
-  });
-} else {
-  // In development, just handle unknown API routes
-  app.use('/api/*', (req, res) => {
-    res.status(404).json({ error: 'API route not found' });
-  });
-  
-  // For non-API routes in development, let React dev server handle them
-  app.use((req, res) => {
-    res.status(404).json({ 
-      error: 'Route not found',
-      note: 'In development, make sure React dev server is running on port 3000'
-    });
   });
 }
 
