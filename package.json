@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "purfood-nutritionplan",
   "version": "1.0.0",
   "description": "a purdue food nutrition",
@@ -7,7 +8,10 @@
     "start": "node server/index.js",
     "dev": "nodemon server/index.js",
     "client": "react-scripts start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "react-scripts build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:full": "concurrently \"npm run dev\" \"npm run client\"",
+    "start:prod": "npm run build && npm run start"
   },
   "repository": {
     "type": "git",
@@ -37,6 +41,7 @@
   },
   "devDependencies": {
     "axios": "^1.7.7",
+    "concurrently": "^8.2.2",
     "nodemon": "^3.0.2",
     "prisma": "^5.19.1",
     "react-scripts": "^5.0.1"
@@ -55,5 +60,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:4000"
 }

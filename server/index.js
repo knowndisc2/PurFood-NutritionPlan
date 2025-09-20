@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
 const admin = require('./firebaseAdmin');
 
 const app = express();
@@ -121,14 +122,33 @@ app.get('/api/fb/meals', fbAuthMiddleware, async (req, res) => {
   }
 });
 
-
-
-
-// app.use(sessionApp); // Disabled: migrating to Firebase Auth only
-
-app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
-});
+// Serve static files from React build in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../build')));
+  
+  // Handle React routing - send all non-API requests to React app
+  app.get('*', (req, res) => {
+    // Only serve React app for non-API routes
+    if (!req.path.startsWith('/api/')) {
+      res.sendFile(path.join(__dirname, '../build', 'index.html'));
+    } else {
+      res.status(404).json({ error: 'API route not found' });
+    }
+  });
+} else {
+  // In development, just handle unknown API routes
+  app.use('/api/*', (req, res) => {
+    res.status(404).json({ error: 'API route not found' });
+  });
+  
+  // For non-API routes in development, let React dev server handle them
+  app.use((req, res) => {
+    res.status(404).json({ 
+      error: 'Route not found',
+      note: 'In development, make sure React dev server is running on port 3000'
+    });
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT} ✓`);
