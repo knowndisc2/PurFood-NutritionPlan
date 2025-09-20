@@ -240,7 +240,7 @@ if __name__ == "__main__":
         json.dump(data, f, indent=2)
     print(f"\nData saved to purdue_menus_by_station.json")
     
-    # Print detailed summary
+    # Print detailed summary.
     print_detailed_summary(data)
     
     print("\n✅ Complete! Your team now has comprehensive dining data organized by station.")
