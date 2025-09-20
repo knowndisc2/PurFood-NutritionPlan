@@ -1,15 +1,21 @@
 import json
-import requests
+import os
+import google.generativeai as genai
+from dotenv import load_dotenv
 from typing import Dict, List, Any
 
-class PerplexityMealPlanner:
-    def __init__(self, api_key: str):
-        self.api_key = api_key
-        self.base_url = "https://api.perplexity.ai/chat/completions"
-        self.headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-        }
+class GeminiMealPlanner:
+    def __init__(self):
+        # Load environment variables
+        load_dotenv()
+        api_key = os.getenv('GEMINI_API_KEY')
+        
+        if not api_key:
+            print("Error: Please set GEMINI_API_KEY in .env file")
+            exit()
+            
+        genai.configure(api_key=api_key)
+        self.model = genai.GenerativeModel('gemini-1.5-flash')  # Free tier model
     
     def load_dining_data(self, json_file_path: str) -> Dict:
         """Load the scraped dining data from JSON file"""
@@ -37,18 +43,18 @@ class PerplexityMealPlanner:
         return formatted_text
     
     def create_meal_plan_prompt(self, user_preferences: Dict, court_food_data: str) -> str:
-        """Create the prompt for Perplexity AI"""
+        """Create the prompt for Gemini AI"""
         target_calories = user_preferences.get('target_calories', 2000)
-        protein_percentage = user_preferences.get('protein_percentage', 25)  # % of total calories
+        protein_percentage = user_preferences.get('protein_percentage', 25)
         carb_percentage = user_preferences.get('carb_percentage', 45)
         fat_percentage = user_preferences.get('fat_percentage', 30)
         dietary_restrictions = user_preferences.get('dietary_restrictions', [])
         meal_count = user_preferences.get('meals_per_day', 3)
         
         # Calculate target macros
-        target_protein = int((target_calories * protein_percentage / 100) / 4)  # 4 cal per g protein
-        target_carbs = int((target_calories * carb_percentage / 100) / 4)       # 4 cal per g carbs
-        target_fat = int((target_calories * fat_percentage / 100) / 9)          # 9 cal per g fat
+        target_protein = int((target_calories * protein_percentage / 100) / 4)
+        target_carbs = int((target_calories * carb_percentage / 100) / 4)
+        target_fat = int((target_calories * fat_percentage / 100) / 9)
         
         restrictions_text = ", ".join(dietary_restrictions) if dietary_restrictions else "None"
         
@@ -94,7 +100,7 @@ class PerplexityMealPlanner:
         return prompt
     
     def get_meal_recommendations(self, user_preferences: Dict, court_data: Dict) -> str:
-        """Get meal plan recommendations from Perplexity AI"""
+        """Get meal plan recommendations from Gemini AI"""
         
         # Format the food data for AI
         food_data_text = self.format_food_data_for_ai(court_data)
@@ -102,30 +108,13 @@ class PerplexityMealPlanner:
         # Create the prompt
         prompt = self.create_meal_plan_prompt(user_preferences, food_data_text)
         
-        # Prepare API request
-        data = {
-            "model": "llama-3.1-sonar-small-128k-online",  # or "llama-3.1-sonar-large-128k-online"
-            "messages": [
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            "max_tokens": 2000,
-            "temperature": 0.7
-        }
-        
         try:
-            response = requests.post(self.base_url, headers=self.headers, json=data)
-            response.raise_for_status()
+            # Generate response using Gemini
+            response = self.model.generate_content(prompt)
+            return response.text
             
-            result = response.json()
-            return result['choices'][0]['message']['content']
-            
-        except requests.exceptions.RequestException as e:
-            return f"Error calling Perplexity API: {e}"
-        except KeyError as e:
-            return f"Error parsing API response: {e}"
+        except Exception as e:
+            return f"Error calling Gemini API: {e}"
     
     def generate_all_court_recommendations(self, json_file_path: str, user_preferences: Dict) -> Dict[str, str]:
         """Generate meal plan recommendations for all dining courts"""
@@ -168,11 +157,8 @@ def main():
     """Main function to run the meal planner"""
     
     # Get user inputs
-    print("🍽️ AI-Powered Meal Plan Generator")
+    print("🍽️ AI-Powered Meal Plan Generator (Gemini)")
     print("=" * 40)
-    
-    # Get Perplexity API key
-    api_key = input("Enter your Perplexity API key: ").strip()
     
     # Get JSON file path
     json_file = input("Enter path to your dining data JSON file: ").strip()
@@ -204,8 +190,8 @@ def main():
             'meals_per_day': 3
         }
         
-        # Initialize meal planner
-        planner = PerplexityMealPlanner(api_key)
+        # Initialize meal planner (no API key needed - reads from .env)
+        planner = GeminiMealPlanner()
         
         # Generate recommendations
         recommendations = planner.generate_all_court_recommendations(json_file, user_preferences)
