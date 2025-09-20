@@ -7,18 +7,20 @@ const rateLimit = require('express-rate-limit');
 
 const { app: sessionApp, authMiddleware } = require('./session');
 const {
-  findUserById,
-  updateUser,
-  deleteUser,
+  getUserById,
+  updateUserById,
+  deleteUserById,
   createGoal,
-  getUserGoals,
+  getGoalsByUser,
+  getGoalById,
   updateGoal,
   deleteGoal,
   createMeal,
-  getUserMeals,
+  getMealsByUser,
+  getMealById,
   updateMeal,
   deleteMeal
-} = require('./db');
+} = require('./repo');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -51,13 +53,12 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-app.get('/api/users/profile', authMiddleware, (req, res) => {
+app.get('/api/users/profile', authMiddleware, async (req, res) => {
   try {
-    const user = findUserById(req.user.id);
+    const user = await getUserById(req.user.id);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-    
     const { password, ...userWithoutPassword } = user;
     res.json(userWithoutPassword);
   } catch (error) {
@@ -65,32 +66,23 @@ app.get('/api/users/profile', authMiddleware, (req, res) => {
   }
 });
 
-app.put('/api/users/profile', authMiddleware, (req, res) => {
+app.put('/api/users/profile', authMiddleware, async (req, res) => {
   try {
     const { email, password, ...updateData } = req.body;
-    
-    const updatedUser = updateUser(req.user.id, updateData);
+    const updatedUser = await updateUserById(req.user.id, updateData);
     if (!updatedUser) {
       return res.status(404).json({ error: 'User not found' });
     }
-    
     const { password: _, ...userWithoutPassword } = updatedUser;
-    res.json({
-      user: userWithoutPassword,
-      message: 'Profile updated successfully'
-    });
+    res.json({ user: userWithoutPassword, message: 'Profile updated successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to update profile' });
   }
 });
 
-app.delete('/api/users/profile', authMiddleware, (req, res) => {
+app.delete('/api/users/profile', authMiddleware, async (req, res) => {
   try {
-    const deleted = deleteUser(req.user.id);
-    if (!deleted) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    
+    await deleteUserById(req.user.id);
     res.clearCookie('token');
     res.json({ message: 'Account deleted successfully' });
   } catch (error) {
@@ -98,7 +90,7 @@ app.delete('/api/users/profile', authMiddleware, (req, res) => {
   }
 });
 
-app.post('/api/goals', authMiddleware, (req, res) => {
+app.post('/api/goals', authMiddleware, async (req, res) => {
   try {
     const { type, targetValue, unit, deadline, description, currentValue } = req.body;
     
@@ -108,13 +100,13 @@ app.post('/api/goals', authMiddleware, (req, res) => {
       });
     }
     
-    const goal = createGoal({
+    const goal = await createGoal({
       userId: req.user.id,
       type,
       targetValue,
       currentValue,
       unit,
-      deadline,
+      deadline: deadline ? new Date(deadline) : null,
       description
     });
     
@@ -127,60 +119,48 @@ app.post('/api/goals', authMiddleware, (req, res) => {
   }
 });
 
-app.get('/api/goals', authMiddleware, (req, res) => {
+app.get('/api/goals', authMiddleware, async (req, res) => {
   try {
-    const goals = getUserGoals(req.user.id);
+    const goals = await getGoalsByUser(req.user.id);
     res.json(goals);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch goals' });
   }
 });
 
-app.put('/api/goals/:id', authMiddleware, (req, res) => {
+app.put('/api/goals/:id', authMiddleware, async (req, res) => {
   try {
     const goalId = req.params.id;
     const updateData = req.body;
-    
-    const goals = getUserGoals(req.user.id);
-    const goalExists = goals.find(g => g.id === goalId);
-    
-    if (!goalExists) {
+    const goal = await getGoalById(goalId);
+    if (!goal || goal.userId !== req.user.id) {
       return res.status(404).json({ error: 'Goal not found' });
     }
-    
-    const updatedGoal = updateGoal(goalId, updateData);
-    res.json({
-      goal: updatedGoal,
-      message: 'Goal updated successfully'
+    const updatedGoal = await updateGoal(goalId, {
+      ...updateData,
+      deadline: updateData.deadline ? new Date(updateData.deadline) : undefined,
     });
+    res.json({ goal: updatedGoal, message: 'Goal updated successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to update goal' });
   }
 });
 
-app.delete('/api/goals/:id', authMiddleware, (req, res) => {
+app.delete('/api/goals/:id', authMiddleware, async (req, res) => {
   try {
     const goalId = req.params.id;
-    
-    const goals = getUserGoals(req.user.id);
-    const goalExists = goals.find(g => g.id === goalId);
-    
-    if (!goalExists) {
+    const goal = await getGoalById(goalId);
+    if (!goal || goal.userId !== req.user.id) {
       return res.status(404).json({ error: 'Goal not found' });
     }
-    
-    const deleted = deleteGoal(goalId);
-    if (deleted) {
-      res.json({ message: 'Goal deleted successfully' });
-    } else {
-      res.status(500).json({ error: 'Failed to delete goal' });
-    }
+    await deleteGoal(goalId);
+    res.json({ message: 'Goal deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete goal' });
   }
 });
 
-app.post('/api/meals', authMiddleware, (req, res) => {
+app.post('/api/meals', authMiddleware, async (req, res) => {
   try {
     const { name, foods, totalCalories, totalProtein, totalCarbs, totalFat, mealType, consumedAt, notes } = req.body;
     
@@ -190,16 +170,16 @@ app.post('/api/meals', authMiddleware, (req, res) => {
       });
     }
     
-    const meal = createMeal({
+    const meal = await createMeal({
       userId: req.user.id,
       name,
-      foods,
+      foods: foods || null,
       totalCalories,
       totalProtein,
       totalCarbs,
       totalFat,
       mealType,
-      consumedAt,
+      consumedAt: consumedAt ? new Date(consumedAt) : undefined,
       notes
     });
     
@@ -212,55 +192,43 @@ app.post('/api/meals', authMiddleware, (req, res) => {
   }
 });
 
-app.get('/api/meals', authMiddleware, (req, res) => {
+app.get('/api/meals', authMiddleware, async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 50;
-    const meals = getUserMeals(req.user.id, limit);
+    const meals = await getMealsByUser(req.user.id, limit);
     res.json(meals);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch meals' });
   }
 });
 
-app.put('/api/meals/:id', authMiddleware, (req, res) => {
+app.put('/api/meals/:id', authMiddleware, async (req, res) => {
   try {
     const mealId = req.params.id;
     const updateData = req.body;
-    
-    const meals = getUserMeals(req.user.id);
-    const mealExists = meals.find(m => m.id === mealId);
-    
-    if (!mealExists) {
+    const meal = await getMealById(mealId);
+    if (!meal || meal.userId !== req.user.id) {
       return res.status(404).json({ error: 'Meal not found' });
     }
-    
-    const updatedMeal = updateMeal(mealId, updateData);
-    res.json({
-      meal: updatedMeal,
-      message: 'Meal updated successfully'
+    const updatedMeal = await updateMeal(mealId, {
+      ...updateData,
+      consumedAt: updateData.consumedAt ? new Date(updateData.consumedAt) : undefined,
     });
+    res.json({ meal: updatedMeal, message: 'Meal updated successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to update meal' });
   }
 });
 
-app.delete('/api/meals/:id', authMiddleware, (req, res) => {
+app.delete('/api/meals/:id', authMiddleware, async (req, res) => {
   try {
     const mealId = req.params.id;
-    
-    const meals = getUserMeals(req.user.id);
-    const mealExists = meals.find(m => m.id === mealId);
-    
-    if (!mealExists) {
+    const meal = await getMealById(mealId);
+    if (!meal || meal.userId !== req.user.id) {
       return res.status(404).json({ error: 'Meal not found' });
     }
-    
-    const deleted = deleteMeal(mealId);
-    if (deleted) {
-      res.json({ message: 'Meal deleted successfully' });
-    } else {
-      res.status(500).json({ error: 'Failed to delete meal' });
-    }
+    await deleteMeal(mealId);
+    res.json({ message: 'Meal deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete meal' });
   }
