@@ -48,18 +48,18 @@ function MealPlanDisplay({ plan, onBack }) {
         <pre>{plan}</pre>
       </div>
 
-      <div style={{ marginTop: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <h3 style={{ marginBottom: 8 }}>Meal History</h3>
+      <div className="meal-history-section">
+        <div className="meal-history-header">
+          <h3>Meal History</h3>
           <button className="btn-secondary" onClick={fetchMeals} disabled={loadingMeals}>
             {loadingMeals ? 'Refreshing…' : 'Refresh'}
           </button>
         </div>
-        <div style={{ border: '1px solid #e0e0e0', borderRadius: 8, padding: 12, background: '#fafafa' }}>
+        <div className="meal-history-content">
           {loadingMeals && <div>Loading meals…</div>}
-          {mealsError && <div style={{ color: '#b00020' }}>Error: {mealsError}</div>}
+          {mealsError && <div className="error-message">Error: {mealsError}</div>}
           {!loadingMeals && !mealsError && (
-            <ul style={{ paddingLeft: 18, margin: 0 }}>
+            <ul className="meal-list">
               {mealHistory.map((m) => (
                 <li key={m.id}>
                   {m.name} ({m.mealType}) - {m.totalCalories || 0} kcal
@@ -71,7 +71,7 @@ function MealPlanDisplay({ plan, onBack }) {
         </div>
       </div>
 
-      <button className="btn-secondary" onClick={onBack} style={{ marginTop: 24 }}>
+      <button className="btn-secondary" onClick={onBack}>
         Start Over
       </button>
     </div>
