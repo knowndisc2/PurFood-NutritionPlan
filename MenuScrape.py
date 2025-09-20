@@ -133,13 +133,16 @@ def scrape_single_court_meal_time(court_name="Earhart", meal_time="lunch", date=
     if date is None:
         date = get_todays_date()
     
+    # Capitalize meal time for URL
+    meal_time_capitalized = meal_time.capitalize()
+    
     print(f"[{court_name} - {meal_time.upper()}] Starting scrape for {date}...")
     
     driver = setup_headless_driver()
     
     try:
-        # Build URL with meal time
-        url = f"https://dining.purdue.edu/menus/{court_name}/{date}/{meal_time}/"
+        # Build URL with capitalized meal time
+        url = f"https://dining.purdue.edu/menus/{court_name}/{date}/{meal_time_capitalized}/"
         driver.get(url)
         time.sleep(5)
         
