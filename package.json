@@ -18,7 +18,10 @@
   },
   "homepage": "https://github.com/knowndisc2/PurFood-NutritionPlan#readme",
   "dependencies": {
+    "cookie-parser": "^1.4.7",
     "express": "^5.1.0",
+    "firebase": "^12.3.0",
+    "jsonwebtoken": "^9.0.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
