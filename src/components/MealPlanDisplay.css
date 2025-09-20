@@ -1,0 +1,36 @@
+.meal-plan-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.plan-content {
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 1rem;
+  white-space: pre-wrap; /* This makes the text wrap nicely */
+  font-family: monospace;
+  line-height: 1.5;
+}
+
+.btn-secondary {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #CEB888;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #CEB888;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: #CEB888;
+  color: #000;
+}

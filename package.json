@@ -16,11 +16,10 @@
   "bugs": {
     "url": "https://github.com/knowndisc2/PurFood-NutritionPlan/issues"
   },
-  "homepage": "https://github.com/knowndisc2/PurFood-NutritionPlan#readme",
   "dependencies": {
     "express": "^5.1.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "react-scripts": "^5.0.1"
