@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const validator = require('validator');
-const { findUserByEmail, createUser } = require('./db');
+const { getUserByEmail, createUser } = require('./repo');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_key';
 const SALT_ROUNDS = 12;
@@ -55,14 +55,14 @@ const registerUser = async (userData) => {
     throw new Error('Password must be at least 8 characters with uppercase, lowercase, and number');
   }
   
-  const existingUser = findUserByEmail(email);
+  const existingUser = await getUserByEmail(email);
   if (existingUser) {
     throw new Error('User already exists with this email');
   }
   
   const hashedPassword = await hashPassword(password);
   
-  const newUser = createUser({
+  const newUser = await createUser({
     email,
     password: hashedPassword,
     firstName: firstName || '',
@@ -78,7 +78,7 @@ const loginUser = async (email, password) => {
     throw new Error('Invalid email format');
   }
   
-  const user = findUserByEmail(email);
+  const user = await getUserByEmail(email);
   if (!user) {
     throw new Error('Invalid credentials');
   }

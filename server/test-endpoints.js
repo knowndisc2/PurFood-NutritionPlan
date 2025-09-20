@@ -22,22 +22,21 @@ const testAPI = async () => {
       activityLevel: 'moderate'
     };
     
-    const registerResponse = await axios.post(`${BASE_URL}/register`, registerData, {
-      withCredentials: true
-    });
-    console.log('✓ User registered:', registerResponse.data.user.email);
+    let cookieHeader = '';
+    try {
+      const registerResponse = await axios.post(`${BASE_URL}/register`, registerData, { withCredentials: true });
+      console.log('✓ User registered:', registerResponse.data.user.email);
+      const cookiesReg = registerResponse.headers['set-cookie'];
+      cookieHeader = cookiesReg ? cookiesReg[0] : '';
+    } catch (e) {
+      console.log('• Registration skipped (maybe already exists). Proceeding to login.');
+    }
     
     console.log('\n3. User Login');
-    const loginResponse = await axios.post(`${BASE_URL}/login`, {
-      email: 'test@example.com',
-      password: 'TestPass123'
-    }, {
-      withCredentials: true
-    });
+    const loginResponse = await axios.post(`${BASE_URL}/login`, { email: 'test@example.com', password: 'TestPass123' }, { withCredentials: true });
     console.log('✓ User logged in:', loginResponse.data.user.email);
-    
     const cookies = loginResponse.headers['set-cookie'];
-    const cookieHeader = cookies ? cookies[0] : '';
+    cookieHeader = cookieHeader || (cookies ? cookies[0] : '');
     
     console.log('\n4. Create Goal');
     const goalData = {
