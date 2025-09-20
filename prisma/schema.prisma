@@ -17,7 +17,7 @@ model User {
   weight               Float?
   height               Float?
   activityLevel        String   @default("moderate")
-  dietaryRestrictions  Json?
+  dietaryRestrictions  String?
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
   goals                Goal[]
@@ -44,7 +44,7 @@ model Meal {
   userId        String
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   name          String
-  foods         Json?
+  foods         String?
   totalCalories Float    @default(0)
   totalProtein  Float    @default(0)
   totalCarbs    Float    @default(0)

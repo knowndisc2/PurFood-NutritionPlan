@@ -60,6 +60,9 @@ app.get('/api/users/profile', authMiddleware, async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
     const { password, ...userWithoutPassword } = user;
+    if (typeof userWithoutPassword.dietaryRestrictions === 'string') {
+      try { userWithoutPassword.dietaryRestrictions = JSON.parse(userWithoutPassword.dietaryRestrictions); } catch {}
+    }
     res.json(userWithoutPassword);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch user profile' });
@@ -69,11 +72,17 @@ app.get('/api/users/profile', authMiddleware, async (req, res) => {
 app.put('/api/users/profile', authMiddleware, async (req, res) => {
   try {
     const { email, password, ...updateData } = req.body;
+    if (updateData.dietaryRestrictions && typeof updateData.dietaryRestrictions !== 'string') {
+      updateData.dietaryRestrictions = JSON.stringify(updateData.dietaryRestrictions);
+    }
     const updatedUser = await updateUserById(req.user.id, updateData);
     if (!updatedUser) {
       return res.status(404).json({ error: 'User not found' });
     }
     const { password: _, ...userWithoutPassword } = updatedUser;
+    if (typeof userWithoutPassword.dietaryRestrictions === 'string') {
+      try { userWithoutPassword.dietaryRestrictions = JSON.parse(userWithoutPassword.dietaryRestrictions); } catch {}
+    }
     res.json({ user: userWithoutPassword, message: 'Profile updated successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to update profile' });
@@ -173,7 +182,7 @@ app.post('/api/meals', authMiddleware, async (req, res) => {
     const meal = await createMeal({
       userId: req.user.id,
       name,
-      foods: foods || null,
+      foods: foods ? JSON.stringify(foods) : null,
       totalCalories,
       totalProtein,
       totalCarbs,
@@ -196,7 +205,11 @@ app.get('/api/meals', authMiddleware, async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 50;
     const meals = await getMealsByUser(req.user.id, limit);
-    res.json(meals);
+    const parsed = meals.map(m => ({
+      ...m,
+      foods: typeof m.foods === 'string' ? (()=>{ try { return JSON.parse(m.foods) } catch { return m.foods } })() : m.foods
+    }));
+    res.json(parsed);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch meals' });
   }
@@ -213,8 +226,13 @@ app.put('/api/meals/:id', authMiddleware, async (req, res) => {
     const updatedMeal = await updateMeal(mealId, {
       ...updateData,
       consumedAt: updateData.consumedAt ? new Date(updateData.consumedAt) : undefined,
+      foods: updateData.foods ? JSON.stringify(updateData.foods) : undefined,
     });
-    res.json({ meal: updatedMeal, message: 'Meal updated successfully' });
+    const toReturn = { ...updatedMeal };
+    if (typeof toReturn.foods === 'string') {
+      try { toReturn.foods = JSON.parse(toReturn.foods); } catch {}
+    }
+    res.json({ meal: toReturn, message: 'Meal updated successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to update meal' });
   }
@@ -241,6 +259,6 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT} ✓`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });

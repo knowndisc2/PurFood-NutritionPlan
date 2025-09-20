@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import App from "./App";
 import { auth, provider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "./firebase";
 
 export default function Auth() {
@@ -36,7 +37,7 @@ export default function Auth() {
     }
   };
 
-  if (user) return <div>Signed in as {user.email}</div>;
+  if (user) return <App />;
 
   return (
     <div>
