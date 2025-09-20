@@ -34,3 +34,53 @@
   background-color: #CEB888;
   color: #000;
 }
+
+.btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.meal-history-section {
+  margin-top: 2rem;
+}
+
+.meal-history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.meal-history-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.meal-history-header .btn-secondary {
+  margin-top: 0;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.meal-history-content {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  background: #fafafa;
+}
+
+.meal-list {
+  padding-left: 1.2rem;
+  margin: 0;
+  list-style-type: disc;
+}
+
+.meal-list li {
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+.error-message {
+  color: #b00020;
+  font-weight: 500;
+}
