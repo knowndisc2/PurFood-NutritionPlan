@@ -6,47 +6,31 @@ import { useAuthState } from 'react-firebase-hooks/auth'; // Import the hook
 import './App.css';
 
 // This is our mock data. In the future, this will come from the AI.
-const MOCK_MEAL_PLAN = `**MEAL PLAN 1: The Hearty Harvest**
+const MOCK_MEAL_PLAN = `**MEAL PLAN 1**
+* Breaded Pork Tenderloin (1 Each Serving)
+* Sliced Smoked Polish Sausage (10 Ounce)
+* Sweet Potato Wedge Fries (6 oz Serving)
+* Peanut Butter Cookie (1 Cookie)
+* Green Beans (1/2 Cup Serving)
+Totals: 1202 cal, 141.6g protein, 75.6g carbs, 37.3g fat
 
-* Breaded Pork Tenderloin (1): 176 cal, 22.66g protein, 11.34g carbs, 0g fat
-* Sweet Potato Wedge Fries (6 oz): 320 cal, 2.00g protein, 50.03g carbs, 0g fat
-* Chicken And Noodles (1 cup): 443 cal, 18.41g protein, 51.18g carbs, 0g fat (assuming minimal fat in this serving)
-* Whipped Potatoes (1/2 cup): 107 cal, 2.38g protein, 20.21g carbs, 0g fat (assuming minimal fat in this serving)
-* Green Beans (1/2 cup): 15 cal, 1g protein, 2.93g carbs, 0g fat
-* Dinner Rolls (1): 99 cal, 2.98g protein, 18.9g carbs, 0g fat (assuming minimal fat in this serving)
-* Dark Chocolate Sea Salt Seed'nola (1 oz): 132 cal, 4g protein, 13.16g carbs, 0g fat (assuming minimal fat in this serving)
+**MEAL PLAN 2**
+* Breaded Pork Tenderloin (2 Each Serving)
+* Chicken And Noodles (1 Cup Serving)
+* Whipped Potatoes (1/2 Cup Serving)
+* Green Beans (1/2 Cup Serving)
+* Pork Potstickers (4 Each Serving)
+* Peanut Butter Cookie (1 Cookie)
+Totals: 1197 cal, 141.2g protein, 74.9g carbs, 36.8g fat
 
-
-Totals: 1292 cal, 53.43g protein, 167.65g carbs, 0g fat  *(Need to add fat sources)*
-
-
-**MEAL PLAN 2:  The Italian Adventure**
-
-* Linguini (1 cup): 172 cal, 5.67g protein, 34.02g carbs, 0g fat
-* Pesto Alfredo Cream Sauce (1/2 cup): 281 cal, 5.91g protein, 7.82g carbs, ~20g fat (estimated fat content, needs adjustment if actual data is available)
-* Pork Potstickers (3): 159 cal, 7g protein, 24g carbs, 0g fat (estimated fat content, needs adjustment if actual data is available)
-* Potsticker Sauce (1 tbsp): 17 cal, 0.58g protein, 3.32g carbs, 0g fat
-* Fried Rice (1/2 cup): 182 cal, 3.89g protein, 27.47g carbs, ~10g fat (estimated fat content, needs adjustment if actual data is available)
-* Sliced Smoked Polish Sausage (2 oz): 174 cal, 7.32g protein, 2.74g carbs, ~15g fat (estimated fat content, needs adjustment if actual data is available)
-* Long Grain Rice (1/2 cup): 122 cal, 2.28g protein, 27.35g carbs, 0g fat
-
-Totals: 1107 cal, 32.65g protein, 136.72g carbs, ~45g fat *(Needs more protein and carbs; less fat)*
-
-
-**MEAL PLAN 3:  The Balanced Plate**
-
-* Malibu Burger (1): 160 cal, 3.99g protein, 20.94g carbs, 0g fat
-* GF Hamburger Bun (1): 240 cal, 5g protein, 44g carbs, 0g fat
-* Creamy Coleslaw (1/2 cup): 89 cal, 0.67g protein, 11.75g carbs, 0g fat
-* Chicken And Noodles (1 cup): 443 cal, 18.41g protein, 51.18g carbs, 0g fat (assuming minimal fat in this serving)
-* Whipped Potatoes (1/2 cup): 107 cal, 2.38g protein, 20.21g carbs, 0g fat (assuming minimal fat in this serving)
-* Summer Symphony Fruit Salad (1/2 cup): 65 cal, 0.71g protein, 16.68g carbs, 0g fat
-* Peanut Butter Cookie (1): 120 cal, 2g protein, 17g carbs, 0g fat (assuming minimal fat in this serving)
-
-Totals: 1224 cal, 33.2g protein, 177.76g carbs, 0g fat *(Needs significant fat and protein increase)*
-
-
-**Note:**  The fat content in many of these items isn't specified.  Accurate fat estimations are crucial for balancing the macronutrients.  These meal plans are preliminary and require adjustment once the precise fat content of each dish is known.  Furthermore, additional food items may be needed to meet the required macronutrient targets precisely.`;
+**MEAL PLAN 3**
+* Breaded Pork Tenderloin (1 Each Serving)
+* Sliced Smoked Polish Sausage (8 Ounce)
+* Chicken And Noodles (1 Cup Serving)
+* Fried Rice (1/2 Cup Serving)
+* Green Beans (1/2 Cup Serving)
+* Dirt Pudding (1/2 Cup)
+Totals: 1201 cal, 140.9g protein, 75.1g carbs, 37g fat`;
 
 function App() {
   const [user, loading] = useAuthState(auth); // include loading to avoid flicker
@@ -80,13 +64,16 @@ function App() {
   // Parse meal plans from the generated text
   const parseMealPlans = (planText) => {
     const plans = [];
-    const planRegex = /\*\*MEAL PLAN (\d+): ([^*]+)\*\*([\s\S]*?)(?=\*\*MEAL PLAN|$)/g;
+    const planRegex = /\*\*MEAL PLAN (\d+)\*\*([\s\S]*?)(?=\*\*MEAL PLAN|$)/g;
     let match;
     
     while ((match = planRegex.exec(planText)) !== null) {
-      const [, number, name, content] = match;
+      const [, number, content] = match;
       const lines = content.trim().split('\n').filter(line => line.trim());
       
+      // The first line is now the dining hall
+      const diningHall = lines.length > 0 && !lines[0].startsWith('*') ? lines.shift() : 'Unknown Dining Hall';
+
       // Extract totals line
       const totalsLine = lines.find(line => line.toLowerCase().includes('totals:'));
       let calories = 0, protein = 0, carbs = 0, fat = 0;
@@ -103,12 +90,12 @@ function App() {
         fat = fatMatch ? parseFloat(fatMatch[1]) : 0;
       }
       
-      // Extract food items (everything except totals line)
+      // Extract food items (everything except totals line and dining hall)
       const foodItems = lines.filter(line => !line.toLowerCase().includes('totals:')).join('\n');
       
       plans.push({
         id: number,
-        name: name.trim(),
+        name: diningHall.trim(), // Use the dining hall as the name
         foodItems,
         calories,
         protein,
