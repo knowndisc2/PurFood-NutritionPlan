@@ -2,10 +2,81 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Purdue brand colors */
+  --purdue-gold: #CFB991;
+  --purdue-black: #000000;
+  /* Rounded corner scale */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+}
+
 /* Optional: global styles */
 html, body, #root {
   height: 100%;
 }
 body {
-  @apply bg-purdue-gold text-purdue-black;
+  background-color: var(--purdue-gold);
+  color: var(--purdue-black);
+}
+
+/* Range slider theming: Purdue Gold knob */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+/* WebKit */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: var(--purdue-gold);
+  border: 2px solid #000;
+  cursor: pointer;
+  margin-top: -6px; /* aligns thumb with 2px track height adjustments if needed */
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 9999px;
+  background: #262626; /* ~ neutral-800 */
+}
+/* Firefox */
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: var(--purdue-gold);
+  border: 2px solid #000;
+  cursor: pointer;
+}
+input[type="range"]::-moz-range-track {
+  height: 8px;
+  border-radius: 9999px;
+  background: #262626;
+}
+/* Microsoft Edge (Trident/EdgeHTML legacy) */
+input[type="range"]::-ms-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: var(--purdue-gold);
+  border: 2px solid #000;
+  cursor: pointer;
+}
+input[type="range"]::-ms-track {
+  height: 8px;
+  border-radius: 9999px;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type="range"]::-ms-fill-lower,
+input[type="range"]::-ms-fill-upper {
+  background: #262626;
+  border-radius: 9999px;
 }
