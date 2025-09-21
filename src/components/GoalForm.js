@@ -6,7 +6,6 @@ function GoalForm({ onGeneratePlan, isLoading }) {
     const [calories, setCalories] = useState('2000');
     const [macros, setMacros] = useState({ protein: 25, carbs: 45, fats: 30 });
     const [dietaryPrefs, setDietaryPrefs] = useState([]);
-    const [mealPrefs, setMealPrefs] = useState(['Lunch', 'Dinner']);
     const [aiPrompt, setAiPrompt] = useState('');
     const [mealTime, setMealTime] = useState('lunch'); // breakfast | lunch | dinner | brunch | late lunch
     const [date, setDate] = useState(''); // optional YYYY-MM-DD (converted internally)
@@ -38,7 +37,6 @@ function GoalForm({ onGeneratePlan, isLoading }) {
             calories,
             macros,
             dietaryPrefs,
-            mealPrefs,
             aiPrompt,
         };
 
@@ -193,15 +191,20 @@ function GoalForm({ onGeneratePlan, isLoading }) {
                     </div>
 
                     <div>
-                        <h3 className="text-md font-semibold mb-2">Meal Preferences</h3>
+                        <h3 className="text-md font-semibold mb-2">Meal Time (for scraping)</h3>
                         <div className="grid grid-cols-2 gap-3">
-                            {['Breakfast/Brunch','Lunch','Dinner','Late Lunch'].map((label) => {
-                              const active = mealPrefs.includes(label);
+                            {[
+                                { label: 'Breakfast', value: 'breakfast' },
+                                { label: 'Lunch', value: 'lunch' },
+                                { label: 'Dinner', value: 'dinner' },
+                                { label: 'Late Lunch', value: 'late lunch' }
+                            ].map(({ label, value }) => {
+                              const active = mealTime === value;
                               return (
                                 <button
-                                  key={label}
+                                  key={value}
                                   type="button"
-                                  onClick={() => handlePrefToggle(label, mealPrefs, setMealPrefs)}
+                                  onClick={() => setMealTime(value)}
                                   className={`py-2 px-4 rounded-md text-sm ${active ? 'border-purple-400 bg-purple-50 text-purple-700 ring-2 ring-purple-200' : 'border border-gray-600 text-gray-200 hover:bg-neutral-800'}`}
                                 >
                                   {label}
