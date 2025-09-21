@@ -1,0 +1,3 @@
+It's impossible to create these meal plans without the nutritional information (calories, protein, carbs, fat) for each food item.  The provided data is incomplete.  To create accurate meal plans, please provide the nutritional content for each food item listed in the Earhart Dining Court menu.
+
+Once the nutritional information is provided, I can generate three diverse and accurate meal plans that meet the specified calorie and macro targets.

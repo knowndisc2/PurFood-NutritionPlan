@@ -6,51 +6,9 @@ import { useAuthState } from 'react-firebase-hooks/auth'; // Import the hook
 import './App.css';
 
 // This is our mock data. In the future, this will come from the AI.
-const MOCK_MEAL_PLAN = `**MEAL PLAN 1:  Hearty Italian Veggie Feast**
+const MOCK_MEAL_PLAN = `It's impossible to create these meal plans without the nutritional information (calories, protein, carbs, fat) for each food item.  The provided data is incomplete.  To create accurate meal plans, please provide the nutritional content for each food item listed in the Earhart Dining Court menu.
 
-* 2 Lasagna (4x4 Cut): 404 cal, 26g protein, 50g carbs, 4g fat
-* Thin Pizza Crust (Each): 190 cal, 5g protein, 36g carbs, 2g fat
-* Pizza Sauce (1/2 cup): 70 cal, 1g protein, 10g carbs, 4g fat
-* 2 oz Grated Parmesan Cheese: 226 cal, 22g protein, 0g carbs, 20g fat
-* Kale Pesto (1/4 cup): 160 cal, 2g protein, 2g carbs, 3g fat
-* Roasted Brussels Sprouts (4 oz): 110 cal, 4g protein, 11g carbs, 4g fat
-* Long Grain Rice (1/2 Cup): 122 cal, 2g protein, 27g carbs, 1g fat
-* Sliced Fresh Mushrooms (1/2 Cup): 6 cal, 0g protein, 0g carbs, 0g fat
-* Sliced Red Onions (2 slices): 4 cal, 0g protein, 1g carbs, 0g fat
-
-
-Totals: 1296 cal, 60g protein, 187g carbs, 38g fat
-
-
-**MEAL PLAN 2:  Mediterranean Veggie Bowl**
-
-* Lasagna Rollups with Alfredo Sauce (1 Roll Up): 470 cal, 14g protein, 35g carbs, 20g fat
-* Roasted Brussels Sprouts (8 oz): 220 cal, 8g protein, 22g carbs, 8g fat
-* Grilled Zucchini (6 oz): 177 cal, 1.5g protein, 6g carbs, 1.5g fat
-* Long Grain Rice (1 Cup): 244 cal, 4g protein, 54g carbs, 2g fat
-* White Grapes (8 oz): 148 cal, 1g protein, 38g carbs, 1g fat
-* Mini Spring Rolls (4 Each): 160 cal, 0g protein, 28g carbs, 8g fat
-* Vegan Shredded Mozzarella Cheese (2 oz): 180 cal, 1g protein, 12g carbs, 8g fat
-
-
-Totals: 1600 cal, 30g protein, 201g carbs, 58g fat
-
-
-**MEAL PLAN 3:  Asian-Inspired Vegetarian Delight**
-
-* Fried Rice (1 Cup): 364 cal, 8g protein, 54g carbs, 8g fat
-* Mini Spring Rolls (6 Each): 120 cal, 0g protein, 21g carbs, 6g fat
-* Tempura Sweet and Sour Sauce (1 Cup): 376 cal, 1g protein, 94g carbs, 16g fat
-* Long Grain Rice (1 Cup): 244 cal, 4g protein, 54g carbs, 2g fat
-* Garlic Bread (2 pieces): 144 cal, 4g protein, 20g carbs, 6g fat
-* Roasted Brussels Sprouts (4 oz): 110 cal, 4g protein, 11g carbs, 4g fat
-* Dark Chocolate Sea Salt Seed'nola (1 oz): 132 cal, 4g protein, 13g carbs, 4g fat
-
-
-Totals: 1470 cal, 21g protein, 267g carbs, 46g fat
-
-
-**Note:**  These meal plans aim to meet the macro targets as closely as possible given the limited and somewhat inaccurate nutritional information provided for the dining hall options.  Actual macronutrient content may vary slightly.  It is also advisable to check the ingredients for allergens or other specific dietary requirements before consuming any item.  The  "MYO Stir Fry" and "Salad Bar" options are excluded due to their lack of nutritional data.  Some adjustments might be needed based on actual available food items and their exact nutritional information.`;
+Once the nutritional information is provided, I can generate three diverse and accurate meal plans that meet the specified calorie and macro targets.`;
 
 function App() {
   const [user] = useAuthState(auth); // Get the current user
