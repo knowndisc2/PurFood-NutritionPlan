@@ -4,6 +4,8 @@
 
 const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
+const fs = require('fs');
+const path = require('path');
 
 const COURTS_DEFAULT = ['Earhart', 'Ford', 'Hillenbrand', 'Wiley', 'Windsor'];
 
@@ -196,18 +198,46 @@ async function scrapeMenu({ mealTime = 'lunch', date } = {}) {
 // New function that scrapes and directly generates meal plans
 async function scrapeAndGeneratePlans({ mealTime = 'lunch', date, goals } = {}) {
   const { generatePlan } = require('./geminiIntegration');
-  
-  // Scrape the menu data
-  const menuData = await scrapeMenu({ mealTime, date });
-  
-  // Generate plans using the scraped data
+
+  // --- Caching Logic ---
+  const useDate = date || getTodaysDate();
+  const outDir = path.join(process.cwd(), 'src', 'components', 'tmp');
+  const dateForFilename = useDate.replaceAll('/', '-');
+  const filename = `purdue_${mealTime.replace(' ', '_')}_${dateForFilename}.json`;
+  const filePath = path.join(outDir, filename);
+
+  let menuData;
+
+  // Check if a cached file exists and use it
+  if (fs.existsSync(filePath)) {
+    console.log(`[Scrape] Cache hit for ${filename}. Using cached menu.`);
+    const cachedData = fs.readFileSync(filePath, 'utf8');
+    menuData = JSON.parse(cachedData);
+  } else {
+    // If no cache, perform live scrape
+    console.log(`[Scrape] Cache miss for ${filename}. Performing live scrape.`);
+    menuData = await scrapeMenu({ mealTime, date: useDate });
+
+    // Save the new data to cache
+    try {
+      if (!fs.existsSync(outDir)) {
+        fs.mkdirSync(outDir, { recursive: true });
+      }
+      fs.writeFileSync(filePath, JSON.stringify(menuData, null, 2), 'utf8');
+      console.log(`[Scrape] Live scrape successful. Saved to cache: ${filename}`);
+    } catch (e) {
+      console.error(`[Scrape] Failed to write cache file: ${e.message}`);
+    }
+  }
+
+  // Generate plans using the (cached or live) menu data
   const planText = await generatePlan({ goals, menu: menuData });
-  
+
   return {
     menuData,
     planText,
     mealTime,
-    date: date || getTodaysDate()
+    date: useDate
   };
 }
 

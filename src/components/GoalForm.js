@@ -41,23 +41,34 @@ function GoalForm({ onGeneratePlan, isLoading }) {
         };
 
         try {
-            // Single call: scrape menu and generate plans in one request
-            const resp = await fetch('/api/scrape-and-generate', {
+            // Step 1: Scrape menu data non-interactively
+            const scrapeResp = await fetch('/api/scrape/menu', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    goals: allGoals,
                     mealTime,
                     date: date ? date.replaceAll('-', '/') : '',
                 }),
             });
+            if (!scrapeResp.ok) {
+                const t = await scrapeResp.text();
+                throw new Error(`Menu scrape failed: ${scrapeResp.status} ${scrapeResp.statusText} — ${t.slice(0,200)}`);
+            }
+            const { data: menuData } = await scrapeResp.json();
+
+            // Step 2: Call backend to run Gemini AI integration with goals + scraped menu
+            const resp = await fetch('/api/ai/gemini', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ goals: allGoals, menu: menuData }),
+            });
 
             if (!resp.ok) {
                 const text = await resp.text();
-                throw new Error(`Scrape and generate failed: ${resp.status} ${resp.statusText} — ${text.slice(0,200)}`);
+                throw new Error(`Gemini endpoint failed: ${resp.status} ${resp.statusText} — ${text.slice(0,200)}`);
             }
 
-            const { planText, file, menuData } = await resp.json();
+            const { planText, file } = await resp.json();
 
             // Trigger client-side download of the generated plan
             if (planText) {
@@ -230,27 +241,14 @@ function GoalForm({ onGeneratePlan, isLoading }) {
                     ></textarea>
                 </div>
 
-                {/* Scrape Controls */}
-                <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Date Selection */}
+                <div className="mt-6">
                   <div>
-                    <label className="block text-sm font-medium mb-1">Meal Time (for scraping)</label>
-                    <select
-                      className="w-full p-2 border border-gray-700 bg-neutral-900 rounded-md focus:ring-2 focus:ring-purdue-gold"
-                      value={mealTime}
-                      onChange={(e) => setMealTime(e.target.value)}
-                    >
-                      <option value="breakfast">Breakfast</option>
-                      <option value="brunch">Brunch</option>
-                      <option value="lunch">Lunch</option>
-                      <option value="late lunch">Late Lunch</option>
-                      <option value="dinner">Dinner</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Date (optional)</label>
+                    <label htmlFor="date-picker" className="block text-sm font-medium mb-1">Date (optional)</label>
                     <input
+                      id="date-picker"
                       type="date"
-                      className="w-full p-2 border border-gray-700 bg-neutral-900 rounded-md focus:ring-2 focus:ring-purdue-gold"
+                      className="w-full p-2 border border-gray-700 bg-neutral-900 rounded-md focus:ring-2 focus:ring-purdue-gold md:max-w-xs"
                       value={date}
                       onChange={(e) => setDate(e.target.value)}
                     />
