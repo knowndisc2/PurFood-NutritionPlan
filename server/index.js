@@ -96,7 +96,7 @@ app.get('/api/scrape/menu', async (req, res) => {
   }
 });
 
-// Generate plan text using Gemini (Node) with posted goals and optional menu, then save to a text file
+// Generate plan text using Gemini (Node) with posted goals and optional menu
 app.post('/api/ai/gemini', async (req, res) => {
   try {
     const body = req.body || {};
@@ -106,16 +106,8 @@ app.post('/api/ai/gemini', async (req, res) => {
     const planText = (planTextRaw || '').trim();
     if (!planText) return res.status(500).json({ error: 'Failed to generate plan text' });
 
-    const outDir = path.join(__dirname, 'outputs');
-    try { if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true }); } catch {}
-    const filename = `gemini_plan_${Date.now()}.txt`;
-    const filePath = path.join(outDir, filename);
-    try {
-      fs.writeFileSync(filePath, planText, 'utf8');
-    } catch (e) {
-      console.error('[AI] Failed to save output file:', e);
-    }
-    return res.json({ planText, file: filename });
+    // No file saving - plan is already written to App.js by geminiIntegration.js
+    return res.json({ planText });
   } catch (e) {
     console.error('[AI] Endpoint error:', e);
     return res.status(500).json({ error: 'Failed to run AI integration', details: e.message });
@@ -136,20 +128,9 @@ app.post('/api/scrape-and-generate', async (req, res) => {
       return res.status(500).json({ error: 'Failed to generate plan text' });
     }
 
-    // Save the plan text to a file
-    const outDir = path.join(__dirname, 'outputs');
-    try { if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true }); } catch {}
-    const filename = `gemini_plan_${Date.now()}.txt`;
-    const filePath = path.join(outDir, filename);
-    try {
-      fs.writeFileSync(filePath, result.planText, 'utf8');
-    } catch (e) {
-      console.error('[Scrape-Generate] Failed to save output file:', e);
-    }
-
+    // No file saving - plan is already written to App.js by geminiIntegration.js
     return res.json({ 
       planText: result.planText, 
-      file: filename,
       menuData: result.menuData,
       mealTime: result.mealTime,
       date: result.date
