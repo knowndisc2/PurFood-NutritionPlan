@@ -2,14 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB_mL7IrpkpLUjywnGmOxLDwO85a-11vbM",
-  authDomain: "general-nutrition-manager.firebaseapp.com",
-  projectId: "general-nutrition-manager",
-  // Use the correct default bucket domain for Firebase Storage
-  storageBucket: "general-nutrition-manager.appspot.com",
-  messagingSenderId: "925229683098",
-  appId: "1:925229683098:web:139dfcef86e7020c1a2a23",
-  measurementId: "G-MFHW5E5J0C"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import App from "./App";
-import { auth, provider, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "./firebase";
+import { auth, provider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "./firebase";
 import { signInWithRedirect, getRedirectResult, setPersistence, browserLocalPersistence, onAuthStateChanged } from "firebase/auth";
 
 export default function Auth() {
@@ -73,7 +73,8 @@ export default function Auth() {
 
   const handleGoogle = async () => {
     try {
-      await signInWithRedirect(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      setUser(result.user);
     } catch (e) {
       const info = formatFirebaseError(e);
       setError(JSON.stringify(info));
@@ -105,36 +106,87 @@ export default function Auth() {
   if (user) return <App />;
 
   return (
-    <div>
-      <button onClick={handleGoogle}>Sign in with Google</button>
-      <form onSubmit={handleSignIn}>
-        <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
-        <input value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" type="password" />
-        <button type="submit">Sign In</button>
-        <button type="button" onClick={handleSignUp}>Sign Up</button>
-      </form>
-      {error && (() => {
-        let parsed
-        try { parsed = JSON.parse(error) } catch { parsed = { title: "Authentication error", detail: error, steps: [] } }
-        return (
-          <div style={{
-            marginTop: 16,
-            padding: 12,
-            border: "1px solid #f5c2c7",
-            background: "#f8d7da",
-            color: "#842029",
-            borderRadius: 6
-          }}>
-            <div style={{ fontWeight: 600, marginBottom: 6 }}>{parsed.title}</div>
-            {parsed.detail && <div style={{ marginBottom: parsed.steps?.length ? 8 : 0 }}>{parsed.detail}</div>}
-            {parsed.steps && parsed.steps.length > 0 && (
-              <ul style={{ margin: 0, paddingLeft: 18 }}>
-                {parsed.steps.map((s, i) => (<li key={i}>{s}</li>))}
-              </ul>
-            )}
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <div className="w-full max-w-md bg-white rounded-lg shadow p-8">
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome back</h1>
+        <p className="text-gray-600 mb-6">Sign in to continue to Purdue Fitness Pal</p>
+
+        <button
+          type="button"
+          onClick={handleGoogle}
+          className="w-full inline-flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded hover:bg-gray-50 transition-colors mb-6"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="h-5 w-5" aria-hidden="true">
+            <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.5-.4-3.5z"/>
+            <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.1 4 9.1 8.5 6.3 14.7z"/>
+            <path fill="#4CAF50" d="M24 44c5.2 0 10-2 13.6-5.3l-6.3-5.2C29.2 35.8 26.8 37 24 37c-5.2 0-9.6-3.3-11.2-8l-6.6 5.1C9.1 39.5 16.1 44 24 44z"/>
+            <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-1 3.1-3.2 5.6-6 7.3l6.3 5.2C38 37.6 40 31.2 40 24c0-1.3-.1-2.5-.4-3.5z"/>
+          </svg>
+          Continue with Google
+        </button>
+
+        <form onSubmit={handleSignIn} className="space-y-4">
+          <div className="text-left">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              id="email"
+              name="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              type="email"
+              autoComplete="email"
+              className="mt-1 w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purdueGold"
+            />
           </div>
-        )
-      })()}
+
+          <div className="text-left">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+            <input
+              id="password"
+              name="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              placeholder="••••••••"
+              type="password"
+              autoComplete="current-password"
+              className="mt-1 w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purdueGold"
+            />
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              type="submit"
+              className="inline-flex justify-center bg-purdueGold text-black font-semibold py-2 px-4 rounded hover:bg-[#b89f6a] transition-colors"
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              onClick={handleSignUp}
+              className="inline-flex justify-center bg-gray-800 text-white font-semibold py-2 px-4 rounded hover:bg-gray-700 transition-colors"
+            >
+              Sign Up
+            </button>
+          </div>
+        </form>
+
+        {error && (() => {
+          let parsed
+          try { parsed = JSON.parse(error) } catch { parsed = { title: "Authentication error", detail: error, steps: [] } }
+          return (
+            <div className="mt-6 rounded border border-red-200 bg-red-50 text-red-800 p-4">
+              <div className="font-semibold mb-1">{parsed.title}</div>
+              {parsed.detail && <div className="mb-2">{parsed.detail}</div>}
+              {parsed.steps && parsed.steps.length > 0 && (
+                <ul className="list-disc pl-5">
+                  {parsed.steps.map((s, i) => (<li key={i}>{s}</li>))}
+                </ul>
+              )}
+            </div>
+          )
+        })()}
+      </div>
     </div>
   );
 }

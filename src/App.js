@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import LoginPage from './components/LoginPage';
+import GoalForm from './components/GoalForm';
 import MealPlanDisplay from './components/MealPlanDisplay';
 import { auth } from './firebase'; // Auth only
 import { useAuthState } from 'react-firebase-hooks/auth'; // Import the hook
@@ -59,13 +59,19 @@ function App() {
   const handleStartOver = () => {
     setMealPlan(null);
   };
-
   return (
     <div className="App">
-      {mealPlan ? (
-        <MealPlanDisplay plan={mealPlan} onBack={handleStartOver} />
+      {/* If a user is logged in, show the main app content */}
+      {user ? (
+        mealPlan ? (
+          <MealPlanDisplay plan={mealPlan} onBack={handleStartOver} />
+        ) : (
+          <GoalForm onGeneratePlan={handleGeneratePlan} isLoading={isLoading} />
+        )
       ) : (
-        <LoginPage onGeneratePlan={handleGeneratePlan} isLoading={isLoading} />
+        /* If no user is logged in, Auth.js will handle showing the login UI */
+        // This part will likely not be visible as Auth.js gatekeeps the App component
+        <p>Please log in.</p>
       )}
     </div>
   );
