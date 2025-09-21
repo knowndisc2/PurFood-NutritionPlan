@@ -6,51 +6,59 @@ import { useAuthState } from 'react-firebase-hooks/auth'; // Import the hook
 import './App.css';
 
 // This is our mock data. In the future, this will come from the AI.
-const MOCK_MEAL_PLAN = `**MEAL PLAN 1:  Hearty Italian Veggie Feast**
+const MOCK_MEAL_PLAN = `**MEAL PLAN 1: The Pulled Pork Powerhouse**
 
-* 2 Lasagna (4x4 Cut): 404 cal, 26g protein, 50g carbs, 4g fat
-* Thin Pizza Crust (Each): 190 cal, 5g protein, 36g carbs, 2g fat
-* Pizza Sauce (1/2 cup): 70 cal, 1g protein, 10g carbs, 4g fat
-* 2 oz Grated Parmesan Cheese: 226 cal, 22g protein, 0g carbs, 20g fat
-* Kale Pesto (1/4 cup): 160 cal, 2g protein, 2g carbs, 3g fat
-* Roasted Brussels Sprouts (4 oz): 110 cal, 4g protein, 11g carbs, 4g fat
-* Long Grain Rice (1/2 Cup): 122 cal, 2g protein, 27g carbs, 1g fat
-* Sliced Fresh Mushrooms (1/2 Cup): 6 cal, 0g protein, 0g carbs, 0g fat
-* Sliced Red Onions (2 slices): 4 cal, 0g protein, 1g carbs, 0g fat
-
-
-Totals: 1296 cal, 60g protein, 187g carbs, 38g fat
+* Austin Blues Pulled Pork (4 oz): 408 cal, 26g protein, 25g carbs, 0g fat
+* Hamburger Bun (Bun): 140 cal, 4g protein, 28g carbs, 0g fat
+* Creamy Coleslaw (1/2 Cup): 89 cal, 0.5g protein, 12g carbs, 0g fat (estimating 0g fat for simplicity)
+* Crinkle Cut Fries (4 oz): 162 cal, 3g protein, 24g carbs, 0g fat (estimating 0g fat for simplicity)
+* Lasagna (4x4 Cut): 202 cal, 13g protein, 25g carbs, 0g fat (estimating 0g fat for simplicity)
+* Roasted Brussels Sprouts (4 oz): 110 cal, 4g protein, 11g carbs, 0g fat (estimating 0g fat for simplicity)
+* Long Grain Rice (1/2 Cup): 122 cal, 2g protein, 27g carbs, 0g fat (estimating 0g fat for simplicity)
+*  Grated Parmesan Cheese (1 ounce): 113 cal, 11g protein, 0g carbs, 0g fat (estimating 0g fat for simplicity)
 
 
-**MEAL PLAN 2:  Mediterranean Veggie Bowl**
-
-* Lasagna Rollups with Alfredo Sauce (1 Roll Up): 470 cal, 14g protein, 35g carbs, 20g fat
-* Roasted Brussels Sprouts (8 oz): 220 cal, 8g protein, 22g carbs, 8g fat
-* Grilled Zucchini (6 oz): 177 cal, 1.5g protein, 6g carbs, 1.5g fat
-* Long Grain Rice (1 Cup): 244 cal, 4g protein, 54g carbs, 2g fat
-* White Grapes (8 oz): 148 cal, 1g protein, 38g carbs, 1g fat
-* Mini Spring Rolls (4 Each): 160 cal, 0g protein, 28g carbs, 8g fat
-* Vegan Shredded Mozzarella Cheese (2 oz): 180 cal, 1g protein, 12g carbs, 8g fat
+Totals: 1346 cal, 63.5g protein, 152g carbs, 0g fat (Note: Fat significantly under target.  This plan needs adjustment to meet the fat requirement, see below.)
 
 
-Totals: 1600 cal, 30g protein, 201g carbs, 58g fat
+**ADJUSTMENT FOR MEAL PLAN 1:** To reach the fat target, we need to add high-fat items, which are limited in the provided menu. We will substitute some items to increase fat content, even though this impacts other macros slightly.
+
+* Austin Blues Pulled Pork (4 oz): 408 cal, 26g protein, 25g carbs, 10g fat (corrected to reflect that pulled pork has some fat)
+* Hamburger Bun (1 Bun): 140 cal, 4g protein, 28g carbs, 2g fat (added a conservative estimate for fat content)
+* Creamy Coleslaw (1 Cup): 178 cal, 1g protein, 24g carbs, 5g fat (Doubled portion to boost fat)
+* Crinkle Cut Fries (4 oz): 162 cal, 3g protein, 24g carbs, 5g fat (added a conservative estimate for fat content)
+*  Grated Parmesan Cheese (2 ounce): 226 cal, 22g protein, 0g carbs, 5g fat (Doubled portion to boost fat)
+
+Totals (Adjusted): 1124 cal, 58g protein, 101g carbs, 27g fat (Still significantly short on the fat, but we can improve it in the other meal plans).
 
 
-**MEAL PLAN 3:  Asian-Inspired Vegetarian Delight**
+**MEAL PLAN 2: The Italian Fiesta**
 
-* Fried Rice (1 Cup): 364 cal, 8g protein, 54g carbs, 8g fat
-* Mini Spring Rolls (6 Each): 120 cal, 0g protein, 21g carbs, 6g fat
-* Tempura Sweet and Sour Sauce (1 Cup): 376 cal, 1g protein, 94g carbs, 16g fat
-* Long Grain Rice (1 Cup): 244 cal, 4g protein, 54g carbs, 2g fat
-* Garlic Bread (2 pieces): 144 cal, 4g protein, 20g carbs, 6g fat
-* Roasted Brussels Sprouts (4 oz): 110 cal, 4g protein, 11g carbs, 4g fat
-* Dark Chocolate Sea Salt Seed'nola (1 oz): 132 cal, 4g protein, 13g carbs, 4g fat
+* Thin Pizza Crust (1 Each): 190 cal, 5g protein, 36g carbs, 1g fat (estimating fat)
+* Pizza Sauce (1/2 cup): 70 cal, 1g protein, 10g carbs, 2g fat (doubled portion)
+* Diced Pepperoni (2 Tablespoons): 178 cal, 6g protein, 0g carbs, 10g fat (doubled portion)
+* Shredded 3 Cheese Blend (2 ounces): 194 cal, 12g protein, 2g carbs, 10g fat (doubled portion)
+* Lasagna Rollups with Alfredo Sauce (1 Roll Up): 470 cal, 14g protein, 35g carbs, 20g fat (added to increase fat and calories)
+* Garlic Bread (1 piece): 72 cal, 2g protein, 10g carbs, 5g fat (adding a conservative estimate for fat content)
+* Salad Bar (Large serving of lettuce, tomatoes, and cucumbers): 50 cal, 1g protein, 2g carbs, 0.5g fat (variable – an attempt to add greens for nutritional value and only a minor macro contribution)
+
+Totals: 1224 cal, 41g protein, 105g carbs, 48.5g fat
 
 
-Totals: 1470 cal, 21g protein, 267g carbs, 46g fat
+**MEAL PLAN 3: The Asian Fusion**
+
+* Mini Spring Rolls (4 Each): 160 cal, 0g protein, 28g carbs, 5g fat (estimating some fat)
+* Tempura Sweet and Sour Sauce (1 Cup): 376 cal, 1g protein, 94g carbs, 10g fat (doubled portion)
+* Fried Rice (1 Cup): 364 cal, 8g protein, 54g carbs, 10g fat (doubled portion)
+* Long Grain Rice (1 Cup): 244 cal, 4g protein, 54g carbs, 1g fat (doubled portion)
+* Grilled Zucchini (3 oz): 59 cal, 0.5g protein, 2g carbs, 0g fat
+* Austin Blues Pulled Pork (2 oz): 204 cal, 13g protein, 12.5g carbs, 5g fat (half portion of pulled pork for added protein)
+* Dark Chocolate Sea Salt Seed'nola (1 ounce): 132 cal, 4g protein, 13g carbs, 5g fat
+
+Totals: 1539 cal, 30.5g protein, 263.5g carbs, 36g fat
 
 
-**Note:**  These meal plans aim to meet the macro targets as closely as possible given the limited and somewhat inaccurate nutritional information provided for the dining hall options.  Actual macronutrient content may vary slightly.  It is also advisable to check the ingredients for allergens or other specific dietary requirements before consuming any item.  The  "MYO Stir Fry" and "Salad Bar" options are excluded due to their lack of nutritional data.  Some adjustments might be needed based on actual available food items and their exact nutritional information.`;
+**Important Note:** The fat content in these plans remains challenging to accurately meet with the given options and their listed nutritional information.  Many items list only a small amount of fat or 0g fat, and accurate fat content can be variable depending on cooking methods and preparation.  These meal plans provide a reasonable approximation; however, to fully achieve the 2000 calorie, 125g protein, 225g carb, and 67g fat targets, additional high-fat options would be needed in the dining hall.`;
 
 function App() {
   const [user] = useAuthState(auth); // Get the current user
