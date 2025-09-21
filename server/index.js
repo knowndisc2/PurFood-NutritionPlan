@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
 const fs = require('fs');
-const { scrapeMenu } = require('./scripts/menuScrape');
+const { scrapeMenu, scrapeAndGeneratePlans } = require('./scripts/menuScrape');
 const { generatePlan } = require('./scripts/geminiIntegration');
 const admin = require('./firebaseAdmin');
 // const { router: sessionRouter } = require('./session');
@@ -119,6 +119,44 @@ app.post('/api/ai/gemini', async (req, res) => {
   } catch (e) {
     console.error('[AI] Endpoint error:', e);
     return res.status(500).json({ error: 'Failed to run AI integration', details: e.message });
+  }
+});
+
+// New streamlined endpoint: scrape menu and generate plans in one call
+app.post('/api/scrape-and-generate', async (req, res) => {
+  try {
+    const body = req.body || {};
+    const goals = body.goals || {};
+    const mealTime = body.mealTime || 'lunch';
+    const date = body.date || '';
+
+    const result = await scrapeAndGeneratePlans({ mealTime, date, goals });
+    
+    if (!result.planText) {
+      return res.status(500).json({ error: 'Failed to generate plan text' });
+    }
+
+    // Save the plan text to a file
+    const outDir = path.join(__dirname, 'outputs');
+    try { if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true }); } catch {}
+    const filename = `gemini_plan_${Date.now()}.txt`;
+    const filePath = path.join(outDir, filename);
+    try {
+      fs.writeFileSync(filePath, result.planText, 'utf8');
+    } catch (e) {
+      console.error('[Scrape-Generate] Failed to save output file:', e);
+    }
+
+    return res.json({ 
+      planText: result.planText, 
+      file: filename,
+      menuData: result.menuData,
+      mealTime: result.mealTime,
+      date: result.date
+    });
+  } catch (e) {
+    console.error('[Scrape-Generate] Endpoint error:', e);
+    return res.status(500).json({ error: 'Failed to scrape and generate plan', details: e.message });
   }
 });
 

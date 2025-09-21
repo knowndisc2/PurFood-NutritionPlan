@@ -21,6 +21,80 @@ function mapMealTimeForUrl(mealTime) {
   return mt.charAt(0).toUpperCase() + mt.slice(1);
 }
 
+async function scrapeNutritionData(page, nutritionUrl) {
+  try {
+    await page.goto(nutritionUrl, { waitUntil: 'networkidle2', timeout: 60000 });
+    await new Promise((r) => setTimeout(r, 1500));
+
+    const html = await page.content();
+    const $ = cheerio.load(html);
+    
+    const nutritionData = {};
+    
+    // Parse serving size and calories
+    const servingSizeElem = $('.nutrition-feature-servingSize-quantity').first();
+    if (servingSizeElem.length) {
+      nutritionData.serving_size = servingSizeElem.text().trim();
+    }
+    
+    const caloriesElem = $('.nutrition-feature-calories-quantity').first();
+    if (caloriesElem.length) {
+      try {
+        nutritionData.total_calories = parseInt(caloriesElem.text().trim()) || 0;
+      } catch {
+        nutritionData.total_calories = 0;
+      }
+    }
+
+    // Parse nutrition table rows
+    $('.nutrition-table-row').each((_, row) => {
+      const labelElem = $(row).find('.table-row-label').first();
+      const valueElem = $(row).find('.table-row-labelValue').first();
+      
+      if (labelElem.length && valueElem.length) {
+        const label = labelElem.text().trim().toLowerCase();
+        const valueText = valueElem.text().trim();
+        
+        try {
+          let value = 0;
+          if (valueText.includes('<')) {
+            value = 0.5;
+          } else if (valueText.includes('%')) {
+            return; // Skip percentage values
+          } else {
+            const numericPart = valueText.split(/\s+/)[0].replace(/[^\d.]/g, '');
+            if (numericPart) {
+              value = parseFloat(numericPart) || 0;
+            }
+          }
+
+          // Map labels to standardized keys
+          if (label.includes('total fat')) nutritionData.total_fat_g = value;
+          else if (label.includes('saturated fat')) nutritionData.saturated_fat_g = value;
+          else if (label.includes('trans fat')) nutritionData.trans_fat_g = value;
+          else if (label.includes('cholesterol')) nutritionData.cholesterol_mg = value;
+          else if (label.includes('sodium')) nutritionData.sodium_mg = value;
+          else if (label.includes('total carbohydrate')) nutritionData.total_carbs_g = value;
+          else if (label.includes('dietary fiber')) nutritionData.dietary_fiber_g = value;
+          else if (label.includes('total sugar')) nutritionData.total_sugar_g = value;
+          else if (label.includes('added sugar')) nutritionData.added_sugar_g = value;
+          else if (label.includes('protein')) nutritionData.protein_g = value;
+          else if (label.includes('vitamin d')) nutritionData.vitamin_d_mcg = value;
+          else if (label.includes('calcium')) nutritionData.calcium_mg = value;
+          else if (label.includes('iron')) nutritionData.iron_mg = value;
+          else if (label.includes('potassium')) nutritionData.potassium_mg = value;
+        } catch (e) {
+          // Skip problematic entries
+        }
+      }
+    });
+
+    return nutritionData;
+  } catch (e) {
+    return {};
+  }
+}
+
 async function scrapeCourt(page, courtName, mealTime, date) {
   const mtUrl = mapMealTimeForUrl(mealTime);
   const url = `https://dining.purdue.edu/menus/${courtName}/${date}/${mtUrl}/`;
@@ -62,6 +136,17 @@ async function scrapeCourt(page, courtName, mealTime, date) {
 
     stations[stationName] = items;
   });
+
+  // Now scrape nutrition data for each item
+  for (const stationName of Object.keys(stations)) {
+    for (let i = 0; i < stations[stationName].length; i++) {
+      const item = stations[stationName][i];
+      if (item.nutrition_url) {
+        const nutritionData = await scrapeNutritionData(page, item.nutrition_url);
+        stations[stationName][i] = { ...item, ...nutritionData };
+      }
+    }
+  }
 
   const total_items = Object.values(stations).reduce((acc, arr) => acc + arr.length, 0);
   return {
@@ -126,4 +211,22 @@ async function scrapeMenu({ mealTime = 'lunch', date } = {}) {
   return result;
 }
 
-module.exports = { scrapeMenu };
+// New function that scrapes and directly generates meal plans
+async function scrapeAndGeneratePlans({ mealTime = 'lunch', date, goals } = {}) {
+  const { generatePlan } = require('./geminiIntegration');
+  
+  // Scrape the menu data
+  const menuData = await scrapeMenu({ mealTime, date });
+  
+  // Generate plans using the scraped data
+  const planText = await generatePlan({ goals, menu: menuData });
+  
+  return {
+    menuData,
+    planText,
+    mealTime,
+    date: date || getTodaysDate()
+  };
+}
+
+module.exports = { scrapeMenu, scrapeAndGeneratePlans };

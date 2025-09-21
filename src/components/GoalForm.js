@@ -43,34 +43,23 @@ function GoalForm({ onGeneratePlan, isLoading }) {
         };
 
         try {
-            // Step 1: Scrape menu data non-interactively
-            const scrapeResp = await fetch('/api/scrape/menu', {
+            // Single call: scrape menu and generate plans in one request
+            const resp = await fetch('/api/scrape-and-generate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    goals: allGoals,
                     mealTime,
                     date: date ? date.replaceAll('-', '/') : '',
                 }),
             });
-            if (!scrapeResp.ok) {
-                const t = await scrapeResp.text();
-                throw new Error(`Menu scrape failed: ${scrapeResp.status} ${scrapeResp.statusText} — ${t.slice(0,200)}`);
-            }
-            const { data: menuData } = await scrapeResp.json();
-
-            // Step 2: Call backend to run Gemini AI integration with goals + scraped menu
-            const resp = await fetch('/api/ai/gemini', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ goals: allGoals, menu: menuData }),
-            });
 
             if (!resp.ok) {
                 const text = await resp.text();
-                throw new Error(`Gemini endpoint failed: ${resp.status} ${resp.statusText} — ${text.slice(0,200)}`);
+                throw new Error(`Scrape and generate failed: ${resp.status} ${resp.statusText} — ${text.slice(0,200)}`);
             }
 
-            const { planText, file } = await resp.json();
+            const { planText, file, menuData } = await resp.json();
 
             // Trigger client-side download of the generated plan
             if (planText) {

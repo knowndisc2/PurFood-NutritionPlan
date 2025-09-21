@@ -2,7 +2,75 @@
 // Generates a plan text using Google Gemini (if GEMINI_API_KEY is set) or a fallback string.
 
 const fs = require('fs');
+const path = require('path');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+function pickFirstCourtWithItems(menu = {}) {
+  try {
+    for (const [courtName, courtData] of Object.entries(menu)) {
+      if (courtData && typeof courtData === 'object' && (courtData.total_items || 0) > 0) {
+        return [courtName, courtData];
+      }
+    }
+  } catch {}
+  // Fallback: pick the first court if any
+  const first = Object.entries(menu || {})[0];
+  return first || [null, null];
+}
+
+function formatFoodDataForAI(courtData = {}) {
+  let formatted = `Dining Court: ${courtData?.dining_court || 'Unknown'}\n\n`;
+  const stations = courtData?.stations || {};
+  for (const [stationName, items] of Object.entries(stations)) {
+    formatted += `Station: ${stationName}\n`;
+    for (const item of items || []) {
+      const name = item?.name ?? 'Unknown';
+      const calories = item?.total_calories ?? 'N/A';
+      const protein = item?.protein_g ?? 'N/A';
+      const carbs = item?.total_carbs_g ?? 'N/A';
+      const fiber = item?.dietary_fiber_g ?? 'N/A';
+      const cholesterol = item?.cholesterol_mg ?? 'N/A';
+      const serving = item?.serving_size ?? 'N/A';
+      formatted += `  - ${name} (${serving}): ${calories} cal, ${protein}g protein, ${carbs}g carbs, ${fiber}g fiber, ${cholesterol}mg cholesterol\n`;
+    }
+    formatted += `\n`;
+  }
+  return formatted;
+}
+
+function updateAppJsWithMealPlan(planText) {
+  try {
+    const appJsPath = path.join(process.cwd(), 'src', 'App.js');
+    let appJsContent = fs.readFileSync(appJsPath, 'utf8');
+    
+    // Escape backticks and other special characters in the plan text
+    const escapedPlanText = planText.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+    
+    // Replace the MOCK_MEAL_PLAN constant
+    const newMockMealPlan = `const MOCK_MEAL_PLAN = \`${escapedPlanText}\`;`;
+    
+    // Find and replace the existing MOCK_MEAL_PLAN
+    const mockMealPlanRegex = /const MOCK_MEAL_PLAN = `[\s\S]*?`;/;
+    if (mockMealPlanRegex.test(appJsContent)) {
+      appJsContent = appJsContent.replace(mockMealPlanRegex, newMockMealPlan);
+    } else {
+      // If pattern not found, try to insert after imports
+      const insertPoint = appJsContent.indexOf('// This is our mock data');
+      if (insertPoint !== -1) {
+        const beforeInsert = appJsContent.substring(0, insertPoint);
+        const afterInsert = appJsContent.substring(insertPoint);
+        appJsContent = beforeInsert + newMockMealPlan + '\n\n' + afterInsert.replace(/const MOCK_MEAL_PLAN = `[\s\S]*?`;?\s*/, '');
+      }
+    }
+    
+    fs.writeFileSync(appJsPath, appJsContent, 'utf8');
+    console.log('[Gemini] Updated App.js with new meal plan');
+    return true;
+  } catch (e) {
+    console.error('[Gemini] Failed to update App.js:', e);
+    return false;
+  }
+}
 
 async function generateWithGemini(goals, menu) {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -11,17 +79,75 @@ async function generateWithGemini(goals, menu) {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-1.5-flash' });
 
-    const system = `You are a nutrition assistant. Create a concise daily plan using the user's goals and the provided dining menu options. Return a readable plain text plan with bullet points for breakfast, lunch, dinner, and snacks. Include estimated calories if available. Avoid markdown code fences.`;
+    // Get court data and format it
+    const [, courtData] = pickFirstCourtWithItems(menu);
+    const court_food_data = formatFoodDataForAI(courtData || {});
 
-    const prompt = {
-      system,
-      goals,
-      menuPreview: summarizeMenu(menu),
-    };
+    // Extract user requirements
+    const target_calories = Number(goals.calories ?? 2000) || 2000;
+    const protein_percentage = Number(goals?.macros?.protein ?? 25) || 25;
+    const carb_percentage = Number(goals?.macros?.carbs ?? 45) || 45;
+    const fat_percentage = Number(goals?.macros?.fats ?? 30) || 30;
+    const dietary_restrictions = Array.isArray(goals?.dietaryPrefs) ? goals.dietaryPrefs : [];
 
-    const result = await model.generateContent({ contents: [{ role: 'user', parts: [{ text: JSON.stringify(prompt) }] }] });
+    const target_protein = Math.round((target_calories * protein_percentage / 100) / 4);
+    const target_carbs = Math.round((target_calories * carb_percentage / 100) / 4);
+    const target_fat = Math.round((target_calories * fat_percentage / 100) / 9);
+    const restrictions_text = dietary_restrictions.length ? dietary_restrictions.join(', ') : 'None';
+
+    const prompt = `You are a nutrition expert creating single-meal plans using dining hall food options.
+
+
+USER REQUIREMENTS:
+- Meal calorie target: ${target_calories}
+- Protein target: ${target_protein}g (${protein_percentage}% of calories)
+- Carb target: ${target_carbs}g (${carb_percentage}% of calories)
+- Fat target: ${target_fat}g (${fat_percentage}% of calories)
+- Dietary restrictions: ${restrictions_text}
+
+
+AVAILABLE FOOD OPTIONS:
+${court_food_data}
+
+
+TASK: Create exactly 3 different meal plans for this dining court. Each meal plan should:
+1. Meet the calorie and macro targets as closely as possible
+2. Only use foods from the provided list above
+3. Respect dietary restrictions
+4. Provide variety across the 3 plans
+5. Show total calories and macros for each plan
+
+
+FORMAT your response as:
+
+
+**MEAL PLAN 1: [Creative Name]**
+Food items with quantities (e.g., "2 pancakes, 1 cup rice")
+Totals: [calories]cal, [protein]g protein, [carbs]g carbs, [fat]g fat
+
+
+**MEAL PLAN 2: [Creative Name]**
+Food items with quantities
+Totals: [calories]cal, [protein]g protein, [carbs]g carbs, [fat]g fat
+
+
+**MEAL PLAN 3: [Creative Name]**
+Food items with quantities
+Totals: [calories]cal, [protein]g protein, [carbs]g carbs, [fat]g fat
+
+
+Be specific about portions and prioritize nutritional balance.`;
+
+    const result = await model.generateContent({ contents: [{ role: 'user', parts: [{ text: prompt }] }] });
     const text = result?.response?.text?.() || result?.response?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    return String(text || '').trim();
+    const planText = String(text || '').trim();
+    
+    // Update App.js with the generated plan
+    if (planText) {
+      updateAppJsWithMealPlan(planText);
+    }
+    
+    return planText;
   } catch (e) {
     // Fallback to manual template on any SDK error
     return null;
