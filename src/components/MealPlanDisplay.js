@@ -93,11 +93,12 @@ function MealPlanDisplay({ plan, onBack }) {
   }, [fetchMeals]);
 
   return (
-    <div className="meal-plan-container animate-fade-in card-elevate animate-scale-in">
-      <h2 className="animate-fade-in-up">Your Custom Meal Plan</h2>
-      <div className="plan-content animate-fade-in-up">
-        <pre>{plan}</pre>
-      </div>
+    <div className="app-shell max-w-5xl mx-auto p-4 md:p-6 animate-fade-in">
+      <div className="meal-plan-container animate-scale-in">
+        <h2 className="animate-fade-in-up">Your Custom Meal Plan</h2>
+        <div className="plan-content animate-fade-in-up">
+          <pre>{plan}</pre>
+        </div>
       
       <div className="plan-actions">
         <button 
@@ -117,7 +118,13 @@ function MealPlanDisplay({ plan, onBack }) {
           </button>
         </div>
         <div className="meal-history-content animate-fade-in">
-          {loadingMeals && <div>Loading meals…</div>}
+          {loadingMeals && (
+            <div>
+              <div className="skeleton skeleton-card"></div>
+              <div className="skeleton skeleton-card"></div>
+              <div className="skeleton skeleton-card"></div>
+            </div>
+          )}
           {mealsError && <div className="error-message">Error: {mealsError}</div>}
           {!loadingMeals && !mealsError && (
             <ul className="meal-list">
@@ -155,9 +162,8 @@ function MealPlanDisplay({ plan, onBack }) {
         </div>
       </div>
 
-      <button className="btn-secondary btn-animate" onClick={onBack}>
-        Start Over
-      </button>
+      <button className="btn-secondary btn-animate" onClick={onBack}>Start Over</button>
+      </div>
     </div>
   );
 }
