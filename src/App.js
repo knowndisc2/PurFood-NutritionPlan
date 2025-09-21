@@ -1,30 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import GoalForm from './components/GoalForm';
 import Onboarding from './components/Onboarding';
-import MealPlanDisplay from './components/MealPlanDisplay';
-import { auth } from './firebase'; // Auth only
-import { useAuthState } from 'react-firebase-hooks/auth'; // Import the hook
+import Navbar from './components/Navbar';
+import { auth, db } from './firebase'; // Auth + Firestore
+import { collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, doc, getDocs } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import './App.css';
 
 // This is our mock data. In the future, this will come from the AI.
 const MOCK_MEAL_PLAN = `**MEAL PLAN 1**
-* Breaded Pork Tenderloin (1 Each Serving)
-* Creamy Coleslaw (1/2 Cup)
-* Sweet Potato Wedge Fries (6 oz Serving)
-Totals: 515 cal, 24.66g protein, 74.1g carbs, 0g fat
+* Chicken Satay with Peanut Sauce (1 Cup Serving)
+* Tri Color Tortilla Chips (1/2 4 oz Serving)
+* Fresh Sliced Strawberries (4 oz Serving)
+
+Totals: 513 cal, 37.7g protein, 51g carbs, 16g fat
+
 
 **MEAL PLAN 2**
-* Chicken And Noodles (Cup Serving)
-* Green Beans (1/2 Cup Serving)
-* Dinner Rolls (1 Roll)
-Totals: 557 cal, 21.4g protein, 74.2g carbs, 0g fat
+* Spicy Breaded Chicken Breast (1 Each)
+* Cheddar Jalapeno Potato Nugget (4 oz serving)
+* Sriracha Coleslaw (1/2 Cup)
+* Mandarin Oranges (1/2 Cup Serving)
+
+Totals: 492 cal, 29.6g protein, 56g carbs, 15g fat
+
 
 **MEAL PLAN 3**
-* Pork Potstickers (3 Each Serving)
+* Spicy Breaded Chicken Breast (1 Each)
+* Queso Blanco Cheese Sauce w Salsa Verde (1/2 Cup Serving)
 * Long Grain Rice (1/2 Cup)
-* Fried Rice (1/2 Cup Serving)
-* Sliced Smoked Polish Sausage (1 ounce)
-Totals: 428 cal, 12.76g protein, 60.7g carbs, 0g fat`;
+* Dark Chocolate Sea Salt Seed'nola (1 Ounce)
+
+
+Totals: 511 cal, 31g protein, 54g carbs, 17g fat`;
 
 function App() {
   const [user, loading] = useAuthState(auth); // include loading to avoid flicker
@@ -40,6 +48,7 @@ function App() {
     }
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [mealHistory, setMealHistory] = useState([]);
 
   // If a user logs in and has not completed onboarding, force onboarding
   useEffect(() => {
@@ -64,6 +73,23 @@ function App() {
       else localStorage.removeItem('mealPlan');
     } catch {}
   }, [mealPlan]);
+
+  // Subscribe to Firestore meal history for current user
+  useEffect(() => {
+    if (!user) {
+      setMealHistory([]);
+      return;
+    }
+    const colRef = collection(db, 'users', user.uid, 'mealHistory');
+    const q = query(colRef, orderBy('createdAt', 'desc'));
+    const unsub = onSnapshot(q, (snap) => {
+      const items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      setMealHistory(items);
+    }, (err) => {
+      console.error('Failed to subscribe to meal history:', err);
+    });
+    return () => unsub();
+  }, [user]);
 
   const getApiBase = () => {
     if (process.env.NODE_ENV !== 'production') {
@@ -131,6 +157,22 @@ function App() {
     if (planText && typeof planText === 'string') {
       const parsedPlans = parseMealPlans(planText);
       setMealPlan({ rawText: planText, plans: parsedPlans });
+      // Write to Firestore history (schema includes nutritional totals per plan)
+      if (user?.uid) {
+        addDoc(collection(db, 'users', user.uid, 'mealHistory'), {
+          createdAt: serverTimestamp(),
+          rawText: planText,
+          plans: parsedPlans.map(p => ({
+            id: p.id,
+            name: p.name,
+            foodItems: p.foodItems,
+            calories: p.calories,
+            protein: p.protein,
+            carbs: p.carbs,
+            fat: p.fat,
+          })),
+        }).catch((e) => console.error('Failed to save meal history:', e));
+      }
     } else {
       // Fallback for safety, though GoalForm should handle this
       console.error('Received invalid planText. Displaying a fallback message.');
@@ -143,6 +185,30 @@ function App() {
 
   const handleStartOver = () => {
     setMealPlan(null);
+  };
+  const clearHistory = async () => {
+    if (!user?.uid) return;
+    try {
+      const colRef = collection(db, 'users', user.uid, 'mealHistory');
+      const snap = await getDocs(colRef);
+      await Promise.all(snap.docs.map(d => deleteDoc(doc(db, 'users', user.uid, 'mealHistory', d.id))));
+    } catch (e) {
+      console.error('Failed to clear history:', e);
+    }
+  };
+  const restoreFromHistory = (id) => {
+    const item = mealHistory.find((h) => h.id === id);
+    if (item) {
+      setMealPlan({ rawText: item.rawText, plans: item.plans });
+    }
+  };
+  const deleteHistoryItem = async (id) => {
+    if (!user?.uid) return;
+    try {
+      await deleteDoc(doc(db, 'users', user.uid, 'mealHistory', id));
+    } catch (e) {
+      console.error('Failed to delete history item:', e);
+    }
   };
   const handleOnboardingComplete = () => {
     try { localStorage.removeItem('onboarding.pending'); } catch {}
@@ -161,15 +227,15 @@ function App() {
   }
 
   return (
-    <div className="App">
-      {/* If a user is logged in, show the main app content */}
+    <div className="min-h-screen bg-neutral-950">
+      <Navbar user={user} />
+      <div className="container mx-auto px-4 py-8">
       {user ? (
         onboardingPending ? (
           <Onboarding onComplete={handleOnboardingComplete} />
         ) : (
         mealPlan ? (
-          <div className="min-h-screen bg-neutral-950 p-4">
-            <div className="max-w-6xl mx-auto">
+          <div className="max-w-6xl mx-auto">
               <div className="text-center mb-8">
                 <h1 className="text-4xl font-bold text-purdue-gold mb-4">Your Personalized Meal Plans</h1>
                 <button 
@@ -178,6 +244,55 @@ function App() {
                 >
                   ← Generate New Plan
                 </button>
+              </div>
+              {/* Meal History Panel */}
+              <div className="mb-8 bg-neutral-900 border border-gray-800 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-lg font-semibold text-purdue-gold">Meal History</h2>
+                  {mealHistory.length > 0 && (
+                    <button
+                      onClick={clearHistory}
+                      className="text-xs px-3 py-1 rounded bg-neutral-800 border border-gray-700 hover:bg-neutral-700"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+                {mealHistory.length === 0 ? (
+                  <div className="text-sm text-gray-400">No saved meal plans yet.</div>
+                ) : (
+                  <ul className="space-y-2">
+                    {mealHistory
+                      .slice()
+                      .reverse()
+                      .slice(0, 5)
+                      .map((item) => (
+                        <li key={item.id} className="flex items-center justify-between text-sm">
+                          <div className="text-gray-300">
+                            {(() => {
+                              const ts = item.createdAt;
+                              const date = ts && typeof ts.toDate === 'function' ? ts.toDate() : new Date(ts);
+                              return date.toLocaleString();
+                            })()}
+                          </div>
+                          <div className="space-x-2">
+                            <button
+                              onClick={() => restoreFromHistory(item.id)}
+                              className="px-3 py-1 rounded bg-purdue-gold text-purdue-black font-semibold hover:bg-opacity-90"
+                            >
+                              Restore
+                            </button>
+                            <button
+                              onClick={() => deleteHistoryItem(item.id)}
+                              className="px-3 py-1 rounded bg-neutral-800 border border-gray-700 hover:bg-neutral-700"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                  </ul>
+                )}
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -216,22 +331,20 @@ function App() {
                   </div>
                 ))}
               </div>
-              
-              <div className="mt-8 text-center">
-                <MealPlanDisplay plan={mealPlan.rawText} onBack={handleStartOver} />
+              </div>
+            ) : (
+              <GoalForm onGeneratePlan={handleGeneratePlan} isLoading={isLoading} />
+            ))
+          ) : (
+            <div className="flex items-center justify-center min-h-[calc(100vh-200px)] text-purdue-gold">
+              <div className="text-center p-8 max-w-md w-full">
+                <h1 className="text-3xl font-bold mb-6">Welcome to PurFood</h1>
+                <p className="mb-8">Please sign in to access your personalized meal plans.</p>
               </div>
             </div>
-          </div>
-        ) : (
-          <GoalForm onGeneratePlan={handleGeneratePlan} isLoading={isLoading} />
-        )
-        )
-      ) : (
-        /* If no user is logged in, Auth.js will handle showing the login UI */
-        // This part will likely not be visible as Auth.js gatekeeps the App component
-        <p>Please log in.</p>
-      )}
-    </div>
+          )}
+        </div>
+      </div>
   );
 }
 
