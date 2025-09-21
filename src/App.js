@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import GoalForm from './components/GoalForm';
+import Onboarding from './components/Onboarding';
 import MealPlanDisplay from './components/MealPlanDisplay';
 import { auth } from './firebase'; // Auth only
 import { useAuthState } from 'react-firebase-hooks/auth'; // Import the hook
@@ -50,6 +51,9 @@ Totals: 1224 cal, 33.2g protein, 177.76g carbs, 0g fat *(Needs significant fat a
 
 function App() {
   const [user, loading] = useAuthState(auth); // include loading to avoid flicker
+  const [onboardingPending, setOnboardingPending] = useState(() => {
+    try { return localStorage.getItem('onboarding.pending') === '1'; } catch { return false; }
+  });
   const [mealPlan, setMealPlan] = useState(() => {
     try {
       const saved = localStorage.getItem('mealPlan');
@@ -59,6 +63,20 @@ function App() {
     }
   });
   const [isLoading, setIsLoading] = useState(false);
+
+  // If a user logs in and has not completed onboarding, force onboarding
+  useEffect(() => {
+    if (!user) return;
+    try {
+      const completed = localStorage.getItem(`onboarding.completed:${user.uid}`) === '1';
+      const hasDaily = !!localStorage.getItem('onboarding.dailyGoalCalories');
+      const hasMeal = !!localStorage.getItem('onboarding.mealCalories');
+      if (!completed || !(hasDaily && hasMeal)) {
+        localStorage.setItem('onboarding.pending', '1');
+        setOnboardingPending(true);
+      }
+    } catch {}
+  }, [user]);
 
   // (restore no longer needed due to lazy initializer)
 
@@ -146,6 +164,13 @@ function App() {
   const handleStartOver = () => {
     setMealPlan(null);
   };
+  const handleOnboardingComplete = () => {
+    try { localStorage.removeItem('onboarding.pending'); } catch {}
+    try {
+      if (user?.uid) localStorage.setItem(`onboarding.completed:${user.uid}`, '1');
+    } catch {}
+    setOnboardingPending(false);
+  };
   // While auth state is resolving, avoid rendering login or clearing content
   if (loading) {
     return (
@@ -159,6 +184,9 @@ function App() {
     <div className="App">
       {/* If a user is logged in, show the main app content */}
       {user ? (
+        onboardingPending ? (
+          <Onboarding onComplete={handleOnboardingComplete} />
+        ) : (
         mealPlan ? (
           <div className="min-h-screen bg-neutral-950 p-4">
             <div className="max-w-6xl mx-auto">
@@ -216,6 +244,7 @@ function App() {
           </div>
         ) : (
           <GoalForm onGeneratePlan={handleGeneratePlan} isLoading={isLoading} />
+        )
         )
       ) : (
         /* If no user is logged in, Auth.js will handle showing the login UI */

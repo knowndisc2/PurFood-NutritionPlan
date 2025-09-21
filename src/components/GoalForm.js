@@ -4,8 +4,15 @@ import { authenticatedFetch } from '../api';
 // The props ({ onGeneratePlan, isLoading }) are passed down from App.js
 function GoalForm({ onGeneratePlan, isLoading }) {
     // State for each form input
-    const [calories, setCalories] = useState('2000');
-    const [goalCalories] = useState(2000); // internal daily goal for remaining ring
+    const [calories, setCalories] = useState(() => {
+        try { return localStorage.getItem('onboarding.mealCalories') || '2000'; } catch { return '2000'; }
+    });
+    const [goalCalories] = useState(() => {
+        try {
+            const v = localStorage.getItem('onboarding.dailyGoalCalories');
+            return v ? parseInt(v, 10) : 2000;
+        } catch { return 2000; }
+    }); // internal daily goal for remaining ring
     const [macros, setMacros] = useState({ protein: 0, carbs: 0, fats: 0 });
     const [dietaryPrefs, setDietaryPrefs] = useState([]);
     const [aiPrompt, setAiPrompt] = useState('');
@@ -199,7 +206,7 @@ function GoalForm({ onGeneratePlan, isLoading }) {
     };
 
     return (
-        <div className="min-h-screen bg-neutral-950 flex flex-col justify-center items-center p-4 relative">
+        <div className="min-h-screen bg-neutral-950 flex flex-col justify-center items-center p-4 relative animate-fade-in">
             <div className="text-center mb-8">
                 <h1 className="text-4xl font-bold text-purdue-gold">
                     Personalized Nutrition at Purdue
@@ -210,10 +217,10 @@ function GoalForm({ onGeneratePlan, isLoading }) {
             </div>
 
             {/* The main form card: white, rounded, shadowed, and responsive width */}
-            <div className="bg-black text-purdue-gold p-8 rounded-xl shadow-lg w-full max-w-4xl relative">
+            <div className="bg-black text-purdue-gold p-8 rounded-xl shadow-lg w-full max-w-4xl relative card-elevate animate-scale-in">
                 <div className="grid grid-cols-1 md:grid-cols-2 md:gap-x-8 gap-y-4">
                     <div>
-                        <h2 className="text-lg font-semibold mb-4">Daily Targets</h2>
+                        <h2 className="text-lg font-semibold mb-4 animate-fade-in-up">Daily Targets</h2>
                         <div className="mb-6">
                             <label htmlFor="calories" className="block text-sm font-medium mb-1">
                                 Calorie Target (this meal)
@@ -223,7 +230,7 @@ function GoalForm({ onGeneratePlan, isLoading }) {
                                 id="calories"
                                 value={calories}
                                 onChange={(e) => setCalories(e.target.value)}
-                                className="w-full p-2 border border-gray-700 rounded-md bg-neutral-900 focus:ring-2 focus:ring-purdue-gold focus:border-purdue-gold"
+                                className="w-full p-2 border border-gray-700 rounded-md bg-neutral-900 focus:ring-2 focus:ring-purdue-gold focus:border-purdue-gold focus-glow"
                             />
                         </div>
                         <div>
@@ -304,7 +311,7 @@ function GoalForm({ onGeneratePlan, isLoading }) {
 
                     <div>
                         {/* Calories ring card at top of right column */}
-                        <div className="mb-4">
+                        <div className="mb-4 animate-fade-in-up">
                           <CaloriesRing
                             goal={goalCalories}
                             food={(() => { const n = parseInt((calories || '0'), 10); return Number.isNaN(n) ? 0 : Math.max(n, 0); })()}
@@ -312,7 +319,7 @@ function GoalForm({ onGeneratePlan, isLoading }) {
                           />
                         </div>
                         <div className="mb-4">
-                            <h3 className="text-lg font-semibold mb-4">Dietary Preferences</h3>
+                            <h3 className="text-lg font-semibold mb-4 animate-fade-in-up">Dietary Preferences</h3>
                             {['Vegetarian','Vegan','Gluten-Free','Dairy-Free','Nut-Free','Shellfish-Free'].map((label) => {
                                 const active = dietaryPrefs.includes(label);
                                 return (
@@ -320,7 +327,7 @@ function GoalForm({ onGeneratePlan, isLoading }) {
                                       key={label}
                                       type="button"
                                       onClick={() => handlePrefToggle(label, dietaryPrefs, setDietaryPrefs)}
-                                      className={`mr-2 mb-2 py-2 px-4 rounded-md text-sm border ${active ? 'border-purple-400 bg-purple-50 text-purple-700 ring-2 ring-purple-200' : 'border-gray-600 text-purdue-gold hover:bg-neutral-800'}`}
+                                      className={`mr-2 mb-2 py-2 px-4 rounded-md text-sm border hover-lift ${active ? 'border-purple-400 bg-purple-50 text-purple-700 ring-2 ring-purple-200' : 'border-gray-600 text-purdue-gold hover:bg-neutral-800'}`}
                                     >
                                       {label}
                                     </button>
