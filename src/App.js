@@ -9,28 +9,26 @@ import './App.css';
 
 // This is our mock data. In the future, this will come from the AI.
 const MOCK_MEAL_PLAN = `**MEAL PLAN 1**
-Windsor
-* Halal Shepherds Pie (1) Calories: 397 Protein: 20.0718g Carbs: 25.5481g Fat: 22.9497g
-* Fajita Seasoned Beef (4 oz Serving) Calories: 173 Protein: 18.6528g Carbs: 1.0201g Fat: 9.6622g
-* Homefree Chocolate Chip Cookie (1 Cookie) Calories: 140 Protein: 1.0017g Carbs: 19.032g Fat: 7.0118g
-* Vegan Lentil Marinara Sauce (1 Cup) Calories: 204 Protein: 10.2154g Carbs: 35.1743g Fat: 2.5076g
-Totals: 914 cal, 50g protein, 81g carbs, 42g fat
+Earhart
+* Breaded Pork Tenderloin (1 Each Serving) Calories: 176 Protein: 22.6569g Carbs: 11.3398g Fat: 4.4112g
+* Sweet Potato Wedge Fries (6 oz Serving) Calories: 320 Protein: 2.0012g Carbs: 50.0286g Fat: 12.0068g
+* Chicken And Noodles (Cup Serving) Calories: 443 Protein: 18.4105g Carbs: 51.1823g Fat: 17.2983g
+Totals: 939 cal, 43g protein, 113g carbs, 34g fat
 
 **MEAL PLAN 2**
-Windsor
-* Halal Shepherds Pie (1) Calories: 397 Protein: 20.0718g Carbs: 25.5481g Fat: 22.9497g
-* Fajita Seasoned Beef (1) Calories: 173 Protein: 18.6528g Carbs: 1.0201g Fat: 9.6622g
-* Ooey Gooey Cake Bar Cookie (1) Calories: 287 Protein: 3.6275g Carbs: 36.3387g Fat: 13.781g
-* Balsamic Brussels Sprouts (1 Serving) Calories: 65 Protein: 1.2061g Carbs: 12.8304g Fat: 1.4032g
-Totals: 922 cal, 44g protein, 76g carbs, 48g fat
+Earhart
+* Breaded Pork Tenderloin (1 Each Serving) Calories: 176 Protein: 22.6569g Carbs: 11.3398g Fat: 4.4112g
+* Chicken And Noodles (Cup Serving) Calories: 443 Protein: 18.4105g Carbs: 51.1823g Fat: 17.2983g
+* Long Grain Rice (1/2 Cup) Calories: 122 Protein: 2.2791g Carbs: 27.3489g Fat: 0g
+* Green Beans (1/2 Cup Serving) Calories: 15 Protein: 0.975g Carbs: 2.925g Fat: 0g
+Totals: 756 cal, 44g protein, 93g carbs, 22g fat
 
 **MEAL PLAN 3**
-Windsor
-* Halal Shepherds Pie (1) Calories: 397 Protein: 20.0718g Carbs: 25.5481g Fat: 22.9497g
-* Homefree Chocolate Chip Brownie (1 Brownie) Calories: 235 Protein: 2.9327g Carbs: 36.17g Fat: 8.7981g
-* Fajita Seasoned Beef (1) Calories: 173 Protein: 18.6528g Carbs: 1.0201g Fat: 9.6622g
-* Shaved Brussels Sprouts (1 Serving) Calories: 102 Protein: 4.0788g Carbs: 15.3126g Fat: 3.5437g
-Totals: 907 cal, 46g protein, 78g carbs, 45g fat`;
+Ford
+* Breaded Chicken Strips (5 Per Serving) Calories: 453 Protein: 27.6887g Carbs: 17.6201g Fat: 27.6887g
+* Lasagna (4x4 Cut Serving) Calories: 202 Protein: 12.7386g Carbs: 24.7277g Fat: 5.9946g
+* Fresh Spinach (Ounce) Calories: 7 Protein: 0.8108g Carbs: 1.0291g Fat: 0.1106g
+Totals: 662 cal, 41g protein, 43g carbs, 34g fat`;
 
 function App() {
   const [user, loading] = useAuthState(auth); // include loading to avoid flicker
@@ -48,6 +46,15 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [historyError, setHistoryError] = useState("");
   const [mealHistory, setMealHistory] = useState([]);
+  const [consumedCalories, setConsumedCalories] = useState(() => {
+    try {
+      const today = new Date().toISOString().slice(0, 10);
+      const stored = localStorage.getItem(`consumedCalories.${today}`);
+      return stored ? parseInt(stored, 10) : 0;
+    } catch {
+      return 0;
+    }
+  });
 
   // If a user logs in and has not completed onboarding, force onboarding
   useEffect(() => {
@@ -92,6 +99,19 @@ function App() {
     });
     return () => unsub();
   }, [user]);
+
+  // Daily reset of consumed calories
+  useEffect(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    const lastResetDate = localStorage.getItem('consumedCalories.lastResetDate');
+    
+    if (lastResetDate !== today) {
+      // New day, reset consumed calories
+      setConsumedCalories(0);
+      localStorage.setItem(`consumedCalories.${today}`, '0');
+      localStorage.setItem('consumedCalories.lastResetDate', today);
+    }
+  }, []);
 
   const getApiBase = () => {
     if (process.env.NODE_ENV !== 'production') {
@@ -236,6 +256,40 @@ function App() {
   const handleStartOver = () => {
     setMealPlan(null);
   };
+
+  const handleLogMeal = async (plan) => {
+    if (!user) {
+      alert('You must be logged in to log meals!');
+      return;
+    }
+    
+    try {
+      console.log('Logging meal:', plan);
+      
+      // Save to Firestore
+      await addDoc(collection(db, 'users', user.uid, 'loggedMeals'), {
+        ...plan,
+        loggedAt: serverTimestamp(),
+      });
+      
+      // Update consumed calories
+      const newConsumedCalories = consumedCalories + plan.calories;
+      setConsumedCalories(newConsumedCalories);
+      
+      // Persist to localStorage for today
+      const today = new Date().toISOString().slice(0, 10);
+      localStorage.setItem(`consumedCalories.${today}`, String(newConsumedCalories));
+      
+      // Show success message
+      alert(`Successfully logged ${plan.name} (${plan.calories} calories)!`);
+      
+      // Return to GoalForm
+      setMealPlan(null);
+    } catch (e) {
+      console.error('Failed to log meal:', e);
+      alert(`Failed to log meal: ${e.message}`);
+    }
+  };
   const clearHistory = async () => {
     if (!user?.uid) return;
     try {
@@ -367,10 +421,10 @@ function App() {
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {mealPlan.plans.map((plan) => (
-                  <div key={plan.id} className="bg-black text-purdue-gold p-6 rounded-xl shadow-lg border border-gray-800">
+                  <div key={plan.id} className="bg-black text-purdue-gold p-6 rounded-xl shadow-lg border border-gray-800 flex flex-col">
                     <h2 className="text-xl font-bold mb-4 text-center">{plan.name}</h2>
                     
-                    <div className="mb-4">
+                    <div className="flex-grow mb-4">
                       <h3 className="text-sm font-semibold mb-2 text-gray-300">Food Items:</h3>
                       <div className="text-sm whitespace-pre-line leading-relaxed">
                         {plan.foodItems}
@@ -398,12 +452,20 @@ function App() {
                         </div>
                       </div>
                     </div>
+                    <div className="mt-6">
+                      <button 
+                        onClick={() => handleLogMeal(plan)}
+                        className="w-full bg-purdue-gold text-purdue-black font-bold py-2 px-4 rounded-lg hover:bg-opacity-90 transition-colors"
+                      >
+                        Log This Meal
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
               </div>
             ) : (
-              <GoalForm onGeneratePlan={handleGeneratePlan} isLoading={isLoading} />
+              <GoalForm onGeneratePlan={handleGeneratePlan} isLoading={isLoading} consumedCalories={consumedCalories} />
             ))
           ) : (
             <div className="flex items-center justify-center min-h-[calc(100vh-200px)] text-purdue-gold">

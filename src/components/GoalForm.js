@@ -2,11 +2,26 @@ import React, { useState } from 'react';
 import { authenticatedFetch } from '../api';
 
 // The props ({ onGeneratePlan, isLoading }) are passed down from App.js
-function GoalForm({ onGeneratePlan, isLoading }) {
+function GoalForm({ onGeneratePlan, isLoading, consumedCalories = 0 }) {
     // State for each form input
     const [calories, setCalories] = useState(() => {
-        try { return localStorage.getItem('onboarding.mealCalories') || '2000'; } catch { return '2000'; }
+        try {
+            const dailyGoal = parseInt(localStorage.getItem('onboarding.dailyGoalCalories') || '2000', 10);
+            const remaining = dailyGoal - consumedCalories;
+            return remaining > 0 ? String(remaining) : localStorage.getItem('onboarding.mealCalories') || '500';
+        } catch { return '500'; }
     });
+
+    // Update calories when consumedCalories changes
+    React.useEffect(() => {
+        try {
+            const dailyGoal = parseInt(localStorage.getItem('onboarding.dailyGoalCalories') || '2000', 10);
+            const remaining = dailyGoal - consumedCalories;
+            if (remaining > 0) {
+                setCalories(String(remaining));
+            }
+        } catch {}
+    }, [consumedCalories]);
     const [goalCalories, setGoalCalories] = useState(() => {
         try {
             const baselineStr = localStorage.getItem('onboarding.dailyGoalCalories');
@@ -202,26 +217,17 @@ function GoalForm({ onGeneratePlan, isLoading }) {
                 throw new Error(`Gemini endpoint failed: ${resp.status} ${resp.statusText} — ${text.slice(0,200)}`);
             }
 
-            const { planText, file } = await resp.json();
+            const responseData = await resp.json();
+            console.log('[GoalForm] Gemini response:', responseData);
+            const { planText } = responseData;
 
-            // Trigger client-side download of the generated plan
+            // Show the generated plan in the app
             if (planText) {
-                const blob = new Blob([planText], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = file || `gemini_plan_${Date.now()}.txt`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }
-
-            // Show the generated plan in the app flow as well
-            if (planText) {
+                console.log('[GoalForm] Plan text received, calling onGeneratePlan');
                 onGeneratePlan(planText);
                 showToast('success', 'Meal plan generated successfully!');
             } else {
+                console.log('[GoalForm] No plan text received');
                 onGeneratePlan(null); // Pass null to indicate failure
                 showToast('warning', 'Generated an empty plan.');
             }
@@ -232,6 +238,7 @@ function GoalForm({ onGeneratePlan, isLoading }) {
             // Fallback to existing flow
             onGeneratePlan(null);
         } finally {
+            console.log('[GoalForm] Finally block reached, setting submitting to false');
             setSubmitting(false);
         }
     };
@@ -316,7 +323,7 @@ function GoalForm({ onGeneratePlan, isLoading }) {
                         </div>
                         {/* Meal Time (moved under macros to tighten spacing) */}
                         <div className="mt-3">
-                            <h3 className="text-md font-semibold mb-2">Meal Time (for scraping)</h3>
+                            <h3 className="text-md font-semibold mb-2">Meal Time</h3>
                             <div className="grid grid-cols-2 gap-2">
                                 {[
                                     { label: 'Breakfast', value: 'breakfast' },
@@ -345,7 +352,7 @@ function GoalForm({ onGeneratePlan, isLoading }) {
                         <div className="mb-4 animate-fade-in-up">
                           <CaloriesRing
                             goal={goalCalories}
-                            food={(() => { const n = parseInt((calories || '0'), 10); return Number.isNaN(n) ? 0 : Math.max(n, 0); })()}
+                            food={consumedCalories}
                             exercise={0}
                           />
                         </div>
@@ -373,7 +380,7 @@ function GoalForm({ onGeneratePlan, isLoading }) {
                 {/* AI Assistant Text Area */}
                 <div className="mt-4">
                     <label htmlFor="ai-assistant" className="block text-sm font-medium mb-1">
-                        AI Assistant (Optional)
+                        Preferences (Powered by Gemini)
                     </label>
                     <textarea
                         id="ai-assistant"

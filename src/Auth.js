@@ -118,7 +118,7 @@ export default function Auth() {
       <div className="app-shell w-full max-w-2xl p-4 md:p-6">
         <div className="w-full max-w-md bg-black text-purdue-gold rounded-2xl shadow-lg p-8 border border-[color:var(--purdue-gold)] card-elevate animate-scale-in">
           <h1 className="text-2xl font-bold mb-2 animate-fade-in-up">Welcome back</h1>
-          <p className="opacity-90 mb-6 animate-fade-in-up">Sign in to continue to Purdue Fitness Pal</p>
+          <p className="opacity-90 mb-6 animate-fade-in-up">Sign in to continue to PurFood</p>
 
           <button
             type="button"
