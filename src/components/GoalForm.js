@@ -211,7 +211,7 @@ function GoalForm({ onGeneratePlan, isLoading }) {
 
             {/* The main form card: white, rounded, shadowed, and responsive width */}
             <div className="bg-black text-purdue-gold p-8 rounded-xl shadow-lg w-full max-w-4xl relative">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 md:gap-x-8 gap-y-4">
                     <div>
                         <h2 className="text-lg font-semibold mb-4">Daily Targets</h2>
                         <div className="mb-6">
@@ -276,18 +276,42 @@ function GoalForm({ onGeneratePlan, isLoading }) {
                                 />
                             </div>
                         </div>
+                        {/* Meal Time (moved under macros to tighten spacing) */}
+                        <div className="mt-3">
+                            <h3 className="text-md font-semibold mb-2">Meal Time (for scraping)</h3>
+                            <div className="grid grid-cols-2 gap-2">
+                                {[
+                                    { label: 'Breakfast', value: 'breakfast' },
+                                    { label: 'Lunch', value: 'lunch' },
+                                    { label: 'Dinner', value: 'dinner' },
+                                    { label: 'Late Lunch', value: 'late lunch' }
+                                ].map(({ label, value }) => {
+                                  const active = mealTime === value;
+                                  return (
+                                    <button
+                                      key={value}
+                                      type="button"
+                                      onClick={() => setMealTime(value)}
+                                      className={`py-2 px-4 rounded-md text-sm ${active ? 'border-purple-400 bg-purple-50 text-purple-700 ring-2 ring-purple-200' : 'border border-gray-600 text-gray-200 hover:bg-neutral-800'}`}
+                                    >
+                                      {label}
+                                    </button>
+                                  );
+                                })}
+                            </div>
+                        </div>
                     </div>
 
                     <div>
                         {/* Calories ring card at top of right column */}
-                        <div className="mb-6">
+                        <div className="mb-4">
                           <CaloriesRing
                             goal={goalCalories}
                             food={(() => { const n = parseInt((calories || '0'), 10); return Number.isNaN(n) ? 0 : Math.max(n, 0); })()}
                             exercise={0}
                           />
                         </div>
-                        <div className="mb-6">
+                        <div className="mb-4">
                             <h3 className="text-lg font-semibold mb-4">Dietary Preferences</h3>
                             {['Vegetarian','Vegan','Gluten-Free','Dairy-Free','Nut-Free','Shellfish-Free'].map((label) => {
                                 const active = dietaryPrefs.includes(label);
@@ -305,33 +329,11 @@ function GoalForm({ onGeneratePlan, isLoading }) {
                         </div>
                     </div>
 
-                    <div>
-                        <h3 className="text-md font-semibold mb-2">Meal Time (for scraping)</h3>
-                        <div className="grid grid-cols-2 gap-3">
-                            {[
-                                { label: 'Breakfast', value: 'breakfast' },
-                                { label: 'Lunch', value: 'lunch' },
-                                { label: 'Dinner', value: 'dinner' },
-                                { label: 'Late Lunch', value: 'late lunch' }
-                            ].map(({ label, value }) => {
-                              const active = mealTime === value;
-                              return (
-                                <button
-                                  key={value}
-                                  type="button"
-                                  onClick={() => setMealTime(value)}
-                                  className={`py-2 px-4 rounded-md text-sm ${active ? 'border-purple-400 bg-purple-50 text-purple-700 ring-2 ring-purple-200' : 'border border-gray-600 text-gray-200 hover:bg-neutral-800'}`}
-                                >
-                                  {label}
-                                </button>
-                              );
-                            })}
-                        </div>
-                    </div>
+                    
                 </div>
 
                 {/* AI Assistant Text Area */}
-                <div className="mt-8">
+                <div className="mt-4">
                     <label htmlFor="ai-assistant" className="block text-sm font-medium mb-1">
                         AI Assistant (Optional)
                     </label>
