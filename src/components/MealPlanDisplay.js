@@ -92,12 +92,27 @@ function MealPlanDisplay({ plan, onBack }) {
     fetchMeals();
   }, [fetchMeals]);
 
+  const displayPlan = React.useMemo(() => {
+    if (!plan) return '';
+    // Strip macro segments like "Calories: 123 Protein: 10g Carbs: 5g Fat: 2g" from item lines
+    let cleaned = plan
+      .replace(/Calories:\s*[^\s]+g?/ig, '')
+      .replace(/Protein:\s*[^\s]+g/ig, '')
+      .replace(/Carbs?:\s*[^\s]+g/ig, '')
+      .replace(/Fat:\s*[^\s]+g/ig, '');
+    // Remove legacy bracket format blocks
+    cleaned = cleaned.replace(/\[\s*[\d,.]+\s*\]\s*\[\s*[\d,.]+g\s*\]\s*\[\s*[\d,.]+g\s*\]\s*\[\s*[\d,.]+g\s*\]/ig, '');
+    // Tidy whitespace around list items
+    cleaned = cleaned.replace(/\s{2,}/g, ' ').replace(/[ \t]+$/gm, '');
+    return cleaned;
+  }, [plan]);
+
   return (
     <div className="app-shell max-w-5xl mx-auto p-4 md:p-6 animate-fade-in">
       <div className="meal-plan-container animate-scale-in">
         <h2 className="animate-fade-in-up">Your Custom Meal Plan</h2>
         <div className="plan-content animate-fade-in-up">
-          <pre>{plan}</pre>
+          <pre>{displayPlan}</pre>
         </div>
       
       <div className="plan-actions">

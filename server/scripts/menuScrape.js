@@ -56,6 +56,37 @@ async function scrapeAndGeneratePlans({ mealTime = 'lunch', date, goals } = {}) 
     console.log(`[Scrape] Cache hit for ${filename}. Using cached menu.`);
     const cachedData = fs.readFileSync(filePath, 'utf8');
     menuData = JSON.parse(cachedData);
+    // Validate cache for fat fields; if missing, trigger live re-scrape
+    try {
+      let missingFat = false;
+      for (const court of Object.keys(menuData || {})) {
+        const stations = menuData[court]?.stations || {};
+        for (const st of Object.keys(stations)) {
+          for (const it of stations[st]) {
+            const hasFat = typeof it?.fat_g === 'number' || typeof it?.total_fat_g === 'number';
+            const hasProtein = typeof it?.protein_g === 'number';
+            const hasCarbs = typeof it?.total_carbs_g === 'number';
+            const hasCal = typeof it?.total_calories === 'number';
+            if (!hasFat || !hasProtein || !hasCarbs || !hasCal) { missingFat = true; break; }
+          }
+          if (missingFat) break;
+        }
+        if (missingFat) break;
+      }
+      if (missingFat) {
+        console.log('[Scrape] Cached menu missing numeric macros. Performing live API scrape to refresh cache.');
+        menuData = await scrapeMenu({ mealTime, date: useDate });
+        try {
+          if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+          fs.writeFileSync(filePath, JSON.stringify(menuData, null, 2), 'utf8');
+          console.log(`[Scrape] Refreshed cache written: ${filename}`);
+        } catch (e) {
+          console.error(`[Scrape] Failed to refresh cache: ${e.message}`);
+        }
+      }
+    } catch (e) {
+      console.warn('[Scrape] Cache validation failed:', e.message);
+    }
   } else {
     console.log(`[Scrape] Cache miss for ${filename}. Performing live API scrape.`);
     menuData = await scrapeMenu({ mealTime, date: useDate });

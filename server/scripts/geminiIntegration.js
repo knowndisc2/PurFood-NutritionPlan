@@ -5,17 +5,36 @@ const fs = require('fs');
 const path = require('path');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-function pickFirstCourtWithItems(menu = {}) {
-  try {
-    for (const [courtName, courtData] of Object.entries(menu)) {
-      if (courtData && typeof courtData === 'object' && (courtData.total_items || 0) > 0) {
-        return [courtName, courtData];
+function pickFirstCourtWithItems(menu = {}, goals = {}) {
+  const aiPrompt = goals?.aiPrompt || '';
+  const diningCourts = Object.keys(menu);
+  let preferredCourt = null;
+
+  console.log(`[Gemini Debug] Received aiPrompt: "${aiPrompt}"`);
+  console.log(`[Gemini Debug] Available dining courts: ${diningCourts.join(', ')}`);
+
+  if (aiPrompt) {
+    const promptLower = aiPrompt.toLowerCase();
+    for (const court of diningCourts) {
+      if (promptLower.includes(court.toLowerCase())) {
+        preferredCourt = court;
+        break;
       }
     }
-  } catch {}
-  // Fallback: pick the first court if any
-  const first = Object.entries(menu || {})[0];
-  return first || [null, null];
+  }
+
+  if (preferredCourt) {
+    const courtData = menu[preferredCourt];
+    if (courtData && (courtData.total_items || 0) > 0) {
+      console.log(`[Gemini] Found and using preferred dining court: ${preferredCourt}`);
+      return [preferredCourt, courtData];
+    }
+    console.log(`[Gemini] Preferred court "${preferredCourt}" was found, but has no items. No fallback.`);
+    return [null, null]; // Return null if preferred court is empty
+  }
+
+  console.log('[Gemini] No preferred dining court specified.');
+  return [null, null]; // No preference, so return null to signal using all courts
 }
 
 function formatFoodDataForAI(courtData = {}) {
@@ -25,13 +44,16 @@ function formatFoodDataForAI(courtData = {}) {
     formatted += `Station: ${stationName}\n`;
     for (const item of items || []) {
       const name = item?.name ?? 'Unknown';
-      const calories = item?.total_calories ?? 'N/A';
-      const protein = item?.protein_g ?? 'N/A';
-      const carbs = item?.total_carbs_g ?? 'N/A';
-      const fiber = item?.dietary_fiber_g ?? 'N/A';
-      const cholesterol = item?.cholesterol_mg ?? 'N/A';
+      const calories = typeof item?.total_calories === 'number' ? item.total_calories : null;
+      const protein = typeof item?.protein_g === 'number' ? item.protein_g : null;
+      const carbs = typeof item?.total_carbs_g === 'number' ? item.total_carbs_g : null;
+      const fat = typeof item?.fat_g === 'number' ? item.fat_g : (typeof item?.total_fat_g === 'number' ? item.total_fat_g : null);
       const serving = item?.serving_size ?? 'N/A';
-      formatted += `  - ${name} (${serving}): ${calories} cal, ${protein}g protein, ${carbs}g carbs, ${fiber}g fiber, ${cholesterol}mg cholesterol\n`;
+
+      // Only include items with complete numeric macros to avoid N/A propagation
+      if (calories != null && protein != null && carbs != null && fat != null) {
+        formatted += `  - ${name} (${serving}) Calories: ${calories} Protein: ${protein}g Carbs: ${carbs}g Fat: ${fat}g\n`;
+      }
     }
     formatted += `\n`;
   }
@@ -72,6 +94,67 @@ function updateAppJsWithMealPlan(planText) {
   }
 }
 
+// Normalize and validate the AI output. This recomputes totals from per-item lines and
+// replaces totals lines to avoid any 'N/A' macros. It also ensures calories are within range.
+function parseAndNormalizePlan(planText, calorieLower, calorieUpper) {
+  try {
+    const planRegex = /\*\*MEAL PLAN (\d+)\*\*([\s\S]*?)(?=\*\*MEAL PLAN|$)/g;
+    let match;
+    const rebuilt = [];
+    let globalOk = true;
+
+    while ((match = planRegex.exec(planText)) !== null) {
+      const number = match[1];
+      const content = String(match[2] || '').trim();
+      const lines = content.split('\n');
+      let totalsIdx = -1;
+      let sumCal = 0, sumProt = 0, sumCarb = 0, sumFat = 0;
+      let anyItem = false;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (/^\s*totals:/i.test(line)) totalsIdx = i;
+        if (/^\s*\*/.test(line)) {
+          const mCal = line.match(/Calories:\s*([\d,.]+)/i);
+          const mProt = line.match(/Protein:\s*([\d,.]+)\s*g/i);
+          const mCarb = line.match(/Carbs?:\s*([\d,.]+)\s*g/i);
+          const mFat = line.match(/Fat:\s*([\d,.]+)\s*g/i);
+          if (mCal && mProt && mCarb && mFat) {
+            anyItem = true;
+            sumCal += parseFloat(mCal[1].replace(/,/g, '')) || 0;
+            sumProt += parseFloat(mProt[1].replace(/,/g, '')) || 0;
+            sumCarb += parseFloat(mCarb[1].replace(/,/g, '')) || 0;
+            sumFat += parseFloat(mFat[1].replace(/,/g, '')) || 0;
+          } else if (/Fat:\s*N\/?A/i.test(line) || /Protein:\s*N\/?A/i.test(line) || /Carbs?:\s*N\/?A/i.test(line) || /Calories:\s*N\/?A/i.test(line)) {
+            globalOk = false;
+          }
+        }
+      }
+
+      sumCal = Math.round(sumCal);
+      sumProt = Math.round(sumProt);
+      sumCarb = Math.round(sumCarb);
+      sumFat = Math.round(sumFat);
+
+      if (anyItem && typeof calorieLower === 'number' && typeof calorieUpper === 'number') {
+        if (sumCal < calorieLower || sumCal > calorieUpper) globalOk = false;
+      }
+
+      const totalsLine = `Totals: ${sumCal} cal, ${sumProt}g protein, ${sumCarb}g carbs, ${sumFat}g fat`;
+      const newLines = [...lines];
+      if (totalsIdx >= 0) newLines[totalsIdx] = totalsLine;
+      else newLines.push(totalsLine);
+
+      rebuilt.push(`**MEAL PLAN ${number}**\n` + newLines.join('\n'));
+    }
+
+    return { text: rebuilt.join('\n\n'), allOk: globalOk };
+  } catch (err) {
+    console.warn('[Gemini] parseAndNormalizePlan failed:', err?.message || err);
+    return { text: planText, allOk: false };
+  }
+}
+
 async function generateWithGemini(goals, menu) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return null;
@@ -80,8 +163,28 @@ async function generateWithGemini(goals, menu) {
     const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-1.5-flash' });
 
     // Get court data and format it
-    const [, courtData] = pickFirstCourtWithItems(menu);
-    const court_food_data = formatFoodDataForAI(courtData || {});
+    const [courtName, courtData] = pickFirstCourtWithItems(menu, goals);
+    let court_food_data = '';
+    let isSingleCourt = false;
+
+    if (courtName && courtData) {
+      // A specific court was chosen, use only its data
+      court_food_data = formatFoodDataForAI(courtData);
+      isSingleCourt = true;
+    } else {
+      // No specific court, so combine all of them
+      console.log('[Gemini] No preferred court. Combining all available menus for variety.');
+      for (const key in menu) {
+        if (menu[key] && (menu[key].total_items || 0) > 0) {
+          court_food_data += formatFoodDataForAI(menu[key]) + '\n';
+        }
+      }
+    }
+
+    if (!court_food_data.trim()) {
+      console.error('[Gemini] No food data available to generate a plan.');
+      return null; // Can't generate a plan without food
+    }
 
     // Extract user requirements
     const target_calories = Number(goals.calories ?? 2000) || 2000;
@@ -94,57 +197,84 @@ async function generateWithGemini(goals, menu) {
     const target_carbs = Math.round((target_calories * carb_percentage / 100) / 4);
     const target_fat = Math.round((target_calories * fat_percentage / 100) / 9);
     const restrictions_text = dietary_restrictions.length ? dietary_restrictions.join(', ') : 'None';
-    const preferences_text = goals.preferences || 'None';
+    const preferences_text = goals.aiPrompt || 'None';
+
+    const calorie_lower = Math.max(0, target_calories - 100);
+    const calorie_upper = target_calories + 100;
 
     const prompt = `You are a nutrition expert creating single-meal plans using dining hall food options.
 
 USER REQUIREMENTS:
-- Meal calorie target: ${target_calories}
+- Meal calorie target: ${target_calories} (acceptable range: ${calorie_lower} to ${calorie_upper} calories)
 - Protein target: ${target_protein}g (${protein_percentage}% of calories)
 - Carb target: ${target_carbs}g (${carb_percentage}% of calories)
 - Fat target: ${target_fat}g (${fat_percentage}% of calories)
 - Dietary restrictions: ${restrictions_text}
 - Other preferences: ${preferences_text}
+${isSingleCourt ? '- IMPORTANT: The user has requested food from a specific dining hall. You MUST only use food from the dining hall listed under AVAILABLE FOOD OPTIONS.' : ''}
 
 AVAILABLE FOOD OPTIONS:
 ${court_food_data}
 
 TASK: Create exactly 3 different meal plans. Each meal plan must:
-1. Strictly meet the user's calorie and macro targets.
+1. Keep total calories WITHIN the acceptable range (±100 of the target). Do not go below ${calorie_lower} or above ${calorie_upper}.
 2. Only use foods from the provided list.
 3. Strictly adhere to all dietary restrictions and preferences.
 4. Provide variety across the 3 plans.
 5. Show total calories and macros for each plan.
+6. Display the Dining Hall the food is from.
+7. Strictly adhere to the user's specific goals or extra information.
+8. Strictly adhere to the calorie and macro values given for each food, especially for fat.
+ 9. Never output 'N/A' for any macro. Use only numeric values as provided. If a food item does not list numeric fat/protein/carbs/calories, do not use it.
 
 FORMAT your response as:
 
 **MEAL PLAN 1**
-* Food item 1 (quantity)
-* Food item 2 (quantity)
+<Dining Hall>
+* Food item 1 (quantity) Calories: [Calories] Protein: [Protein]g Carbs: [Carbs]g Fat: [Fat]g
+* Food item 2 (quantity) Calories: [Calories] Protein: [Protein]g Carbs: [Carbs]g Fat: [Fat]g
 Totals: [calories] cal, [protein]g protein, [carbs]g carbs, [fat]g fat
 
 **MEAL PLAN 2**
-* Food item 1 (quantity)
-* Food item 2 (quantity)
+<Dining Hall>
+* Food item 1 (quantity) Calories: [Calories] Protein: [Protein]g Carbs: [Carbs]g Fat: [Fat]g
+* Food item 2 (quantity) Calories: [Calories] Protein: [Protein]g Carbs: [Carbs]g Fat: [Fat]g
 Totals: [calories] cal, [protein]g protein, [carbs]g carbs, [fat]g fat
 
 **MEAL PLAN 3**
-* Food item 1 (quantity)
-* Food item 2 (quantity)
+<Dining Hall>
+* Food item 1 (quantity) Calories: [Calories] Protein: [Protein]g Carbs: [Carbs]g Fat: [Fat]g
+* Food item 2 (quantity) Calories: [Calories] Protein: [Protein]g Carbs: [Carbs]g Fat: [Fat]g
 Totals: [calories] cal, [protein]g protein, [carbs]g carbs, [fat]g fat
 
-Do not include any conversational notes or disclaimers.`;
+Do not include any conversational notes or disclaimers.  Do not try to round up or down for any macronutrient values.`;
 
-    const result = await model.generateContent({ contents: [{ role: 'user', parts: [{ text: prompt }] }] });
-    const text = result?.response?.text?.() || result?.response?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    const planText = String(text || '').trim();
-    
-    // Update App.js with the generated plan
-    if (planText) {
-      updateAppJsWithMealPlan(planText);
+    let result = await model.generateContent({ contents: [{ role: 'user', parts: [{ text: prompt }] }] });
+    let text = result?.response?.text?.() || result?.response?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    let planText = String(text || '').trim();
+
+    // Normalize: recompute totals, replace any non-numeric macro totals, and validate calorie range
+    const firstPass = parseAndNormalizePlan(planText, calorie_lower, calorie_upper);
+    let normalizedPlan = firstPass.text;
+    let allOk = firstPass.allOk;
+
+    if (!allOk) {
+      console.warn('[Gemini] Output failed validation (N/A macros or calories out of range). Retrying once...');
+      const retryPrompt = `${prompt}\n\nIMPORTANT: Your last output contained invalid macros (e.g., N/A) or totals outside the allowed calorie range. Regenerate now strictly following ALL rules. Use only numeric macros. Keep totals within the acceptable range.`;
+      const retryResult = await model.generateContent({ contents: [{ role: 'user', parts: [{ text: retryPrompt }] }] });
+      const retryText = retryResult?.response?.text?.() || retryResult?.response?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      planText = String(retryText || '').trim();
+      const secondPass = parseAndNormalizePlan(planText, calorie_lower, calorie_upper);
+      normalizedPlan = secondPass.text;
+      allOk = secondPass.allOk;
     }
-    
-    return planText;
+
+    // Update App.js with the normalized plan
+    if (normalizedPlan) {
+      updateAppJsWithMealPlan(normalizedPlan);
+    }
+
+    return normalizedPlan;
   } catch (e) {
     // Fallback to manual template on any SDK error
     return null;

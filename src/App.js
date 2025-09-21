@@ -8,23 +8,24 @@ import './App.css';
 
 // This is our mock data. In the future, this will come from the AI.
 const MOCK_MEAL_PLAN = `**MEAL PLAN 1**
-* Breaded Pork Tenderloin (1 Each Serving)
-* Creamy Coleslaw (1/2 Cup)
-* Sweet Potato Wedge Fries (6 oz Serving)
-Totals: 515 cal, 24.66g protein, 74.1g carbs, 0g fat
+Earhart
+* Polish Sausage (1 Each Serving) Calories: 266 Protein: 10.0887g Carbs: 3.6686g Fat: 22.9288g
+* Long Grain Rice (1/2 Cup) Calories: 122 Protein: 2.2791g Carbs: 27.3489g Fat: 0g
+* Green Beans (1/2 Cup Serving) Calories: 15 Protein: 0.975g Carbs: 2.925g Fat: 0g
+Totals: 403 cal, 13g protein, 34g carbs, 23g fat
 
 **MEAL PLAN 2**
-* Chicken And Noodles (Cup Serving)
-* Green Beans (1/2 Cup Serving)
-* Dinner Rolls (1 Roll)
-Totals: 557 cal, 21.4g protein, 74.2g carbs, 0g fat
+Ford
+* Breaded Chicken Strips (5 Per Serving) Calories: 453 Protein: 27.6887g Carbs: 17.6201g Fat: 27.6887g
+* Peas (1/2 Cup) Calories: 62 Protein: 4.3936g Carbs: 10.5445g Fat: 0g
+Totals: 515 cal, 32g protein, 28g carbs, 28g fat
 
 **MEAL PLAN 3**
-* Pork Potstickers (3 Each Serving)
-* Long Grain Rice (1/2 Cup)
-* Fried Rice (1/2 Cup Serving)
-* Sliced Smoked Polish Sausage (1 ounce)
-Totals: 428 cal, 12.76g protein, 60.7g carbs, 0g fat`;
+Wiley
+* Chicken Fajitas (Cup) Calories: 214 Protein: 27.3395g Carbs: 9.1069g Fat: 7.5623g
+* Shredded 3 Cheese Blend (Ounce) Calories: 97 Protein: 6.0749g Carbs: 1.0125g Fat: 8.0998g
+* Cilantro Green Rice (1/2 Cup) Calories: 133 Protein: 1.8789g Carbs: 21.9152g Fat: 3.8755g
+Totals: 444 cal, 35g protein, 32g carbs, 20g fat`;
 
 function App() {
   const [user, loading] = useAuthState(auth); // include loading to avoid flicker
@@ -77,45 +78,69 @@ function App() {
     const plans = [];
     const planRegex = /\*\*MEAL PLAN (\d+)\*\*([\s\S]*?)(?=\*\*MEAL PLAN|$)/g;
     let match;
-    
+
     while ((match = planRegex.exec(planText)) !== null) {
       const [, number, content] = match;
       const lines = content.trim().split('\n').filter(line => line.trim());
-      
-      // The first line is now the dining hall
-      const diningHall = lines.length > 0 && !lines[0].startsWith('*') ? lines.shift() : 'Unknown Dining Hall';
 
-      // Extract totals line
-      const totalsLine = lines.find(line => line.toLowerCase().includes('totals:'));
+      const diningHall = lines.length > 0 && !lines[0].startsWith('*') ? lines.shift() : 'Unknown';
+
+      const totalsLine = lines.find(line => line.toLowerCase().startsWith('totals:'));
       let calories = 0, protein = 0, carbs = 0, fat = 0;
-      
-      if (totalsLine) {
-        const caloriesMatch = totalsLine.match(/([\d,]+)\s*cal/);
-        const proteinMatch = totalsLine.match(/([\d.]+)\s*g protein/);
-        const carbsMatch = totalsLine.match(/([\d.]+)\s*g carbs/);
-        const fatMatch = totalsLine.match(/~?([\d.]+)\s*g fat/);
 
-        calories = caloriesMatch ? parseFloat(caloriesMatch[1].replace(',', '')) : 0;
-        protein = proteinMatch ? parseFloat(proteinMatch[1]) : 0;
-        carbs = carbsMatch ? parseFloat(carbsMatch[1]) : 0;
+      if (totalsLine) {
+        const calMatch = totalsLine.match(/([\d,.]+)\s*cal/);
+        const protMatch = totalsLine.match(/([\d,.]+)\s*g protein/);
+        const carbMatch = totalsLine.match(/([\d,.]+)\s*g carbs/);
+        const fatMatch = totalsLine.match(/([\d,.]+)\s*g fat/);
+        calories = calMatch ? parseFloat(calMatch[1].replace(',', '')) : 0;
+        protein = protMatch ? parseFloat(protMatch[1]) : 0;
+        carbs = carbMatch ? parseFloat(carbMatch[1]) : 0;
         fat = fatMatch ? parseFloat(fatMatch[1]) : 0;
       }
-      
-      // Extract food items (everything except totals line and dining hall)
-      const foodItems = lines.filter(line => !line.toLowerCase().includes('totals:')).join('\n');
-      
+
+      const foodItems = lines
+        .filter(line => !line.toLowerCase().startsWith('totals:'))
+        .map(line => {
+          // Remove macro segments regardless of whether values are numeric (handles N/A cases)
+          let cleaned = line
+            .replace(/Calories:\s*[^\s]+g?/ig, '')
+            .replace(/Protein:\s*[^\s]+g/ig, '')
+            .replace(/Carbs?:\s*[^\s]+g/ig, '')
+            .replace(/Fat:\s*[^\s]+g/ig, '');
+
+          // Remove legacy bracketed macro block format if present
+          cleaned = cleaned.replace(/\[\s*[\d,.]+\s*\]\s*\[\s*[\d,.]+g\s*\]\s*\[\s*[\d,.]+g\s*\]\s*\[\s*[\d,.]+g\s*\]/ig, '');
+
+          // Collapse extra whitespace and trim trailing separators
+          cleaned = cleaned.replace(/\s{2,}/g, ' ').replace(/[\s\-–—:|]+$/g, '').trim();
+
+          return cleaned;
+        })
+        .join('\n');
+
       plans.push({
         id: number,
-        name: diningHall.trim(), // Use the dining hall as the name
+        name: diningHall.trim(),
         foodItems,
-        calories,
-        protein,
-        carbs,
-        fat
+        calories: Math.round(calories),
+        protein: Math.round(protein),
+        carbs: Math.round(carbs),
+        fat: Math.round(fat),
       });
     }
-    
     return plans;
+  };
+
+  // Rebuild a clean plan text from parsed values (no per-item macros, numeric totals only)
+  const rebuildPlanText = (plans) => {
+    try {
+      return plans
+        .map(p => `**MEAL PLAN ${p.id}**\n${p.name}\n${p.foodItems}\nTotals: ${p.calories} cal, ${p.protein}g protein, ${p.carbs}g carbs, ${p.fat}g fat`)
+        .join('\n\n');
+    } catch {
+      return '';
+    }
   };
 
   // This function receives the generated plan text from GoalForm
@@ -130,7 +155,8 @@ function App() {
 
     if (planText && typeof planText === 'string') {
       const parsedPlans = parseMealPlans(planText);
-      setMealPlan({ rawText: planText, plans: parsedPlans });
+      const normalizedText = rebuildPlanText(parsedPlans) || planText;
+      setMealPlan({ rawText: normalizedText, plans: parsedPlans });
     } else {
       // Fallback for safety, though GoalForm should handle this
       console.error('Received invalid planText. Displaying a fallback message.');

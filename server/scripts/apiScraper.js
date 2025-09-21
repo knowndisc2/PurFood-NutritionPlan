@@ -86,13 +86,15 @@ async function getNutritionData(itemId) {
                     nutritionInfo.total_calories = parseInt(fact.value, 10) || 0;
                     break;
                 case 'protein':
-                    nutritionInfo.protein_g = parseInt(fact.value, 10) || 0;
+                    nutritionInfo.protein_g = parseFloat(fact.value) || 0;
                     break;
                 case 'total carbohydrate':
-                    nutritionInfo.total_carbs_g = parseInt(fact.value, 10) || 0;
+                case 'carbohydrate':
+                    nutritionInfo.total_carbs_g = parseFloat(fact.value) || 0;
                     break;
                 case 'total fat':
-                    nutritionInfo.total_fat_g = parseInt(fact.value, 10) || 0;
+                case 'fat':
+                    nutritionInfo.fat_g = parseFloat(fact.value) || 0;
                     break;
                  case 'dietary fiber':
                     nutritionInfo.dietary_fiber_g = parseInt(fact.value, 10) || 0;
