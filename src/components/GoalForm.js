@@ -5,7 +5,7 @@ import { authenticatedFetch } from '../api';
 function GoalForm({ onGeneratePlan, isLoading }) {
     // State for each form input
     const [calories, setCalories] = useState('2000');
-    const [macros, setMacros] = useState({ protein: 25, carbs: 45, fats: 30 });
+    const [macros, setMacros] = useState({ protein: 0, carbs: 0, fats: 0 });
     const [dietaryPrefs, setDietaryPrefs] = useState([]);
     const [aiPrompt, setAiPrompt] = useState('');
     const [mealTime, setMealTime] = useState('lunch'); // breakfast | lunch | dinner | brunch | late lunch
@@ -28,6 +28,30 @@ function GoalForm({ onGeneratePlan, isLoading }) {
         } else {
             setPrefList([...prefList, preference]);
         }
+    };
+
+    // Ensure macros (protein + carbs + fats) never exceed 100
+    const handleMacroChange = (key, nextValRaw) => {
+        const nextVal = parseInt(nextValRaw, 10);
+        if (Number.isNaN(nextVal)) return;
+        const currentVal = macros[key];
+        if (nextVal === currentVal) return;
+
+        const total = macros.protein + macros.carbs + macros.fats;
+
+        // If attempting to increase when total is already >= 100, block movement
+        if (nextVal > currentVal && total >= 100) {
+            return; // do nothing
+        }
+
+        // If this change would push the sum over 100, block movement
+        const others = total - currentVal;
+        if (nextVal > currentVal && (others + nextVal) > 100) {
+            return;
+        }
+
+        // Otherwise, allow the change
+        setMacros({ ...macros, [key]: nextVal });
     };
 
     const handleSubmit = async () => {
@@ -147,7 +171,7 @@ function GoalForm({ onGeneratePlan, isLoading }) {
                                     max="100"
                                     className="w-full h-2 bg-neutral-800 rounded-lg appearance-none cursor-pointer"
                                     value={macros.protein}
-                                    onChange={(e) => setMacros({ ...macros, protein: parseInt(e.target.value, 10) })}
+                                    onChange={(e) => handleMacroChange('protein', e.target.value)}
                                 />
                             </div>
                             {/* Carbs Slider */}
@@ -161,7 +185,7 @@ function GoalForm({ onGeneratePlan, isLoading }) {
                                     min="0"
                                     max="100"
                                     value={macros.carbs}
-                                    onChange={(e) => setMacros({ ...macros, carbs: parseInt(e.target.value, 10) })}
+                                    onChange={(e) => handleMacroChange('carbs', e.target.value)}
                                     className="w-full h-2 bg-neutral-800 rounded-lg appearance-none cursor-pointer"
                                 />
                             </div>
@@ -176,7 +200,7 @@ function GoalForm({ onGeneratePlan, isLoading }) {
                                     min="0"
                                     max="100"
                                     value={macros.fats}
-                                    onChange={(e) => setMacros({ ...macros, fats: parseInt(e.target.value, 10) })}
+                                    onChange={(e) => handleMacroChange('fats', e.target.value)}
                                     className="w-full h-2 bg-neutral-800 rounded-lg appearance-none cursor-pointer"
                                 />
                             </div>

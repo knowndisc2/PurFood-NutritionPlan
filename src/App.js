@@ -6,7 +6,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'; // Import the hook
 import './App.css';
 
 // This is our mock data. In the future, this will come from the AI.
-const MOCK_MEAL_PLAN = `Please provide me with the food options available at Hillenbrand Dining Court.  I need a list of the specific dishes, with their nutritional information (calories, protein, carbs, and fat per serving) to create the meal plans.  Once you provide that data, I can fulfill your request.`;
+const MOCK_MEAL_PLAN = `Please provide me with the food options available at the Hillenbrand Dining Court.  I need a list of the available food items with their nutritional information (calories, protein, carbs, and fat per serving) to create the meal plans.  Once you provide that information, I can fulfill your request.`;
 
 function App() {
   const [user, loading] = useAuthState(auth); // include loading to avoid flicker

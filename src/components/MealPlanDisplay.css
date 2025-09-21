@@ -2,7 +2,7 @@
   max-width: 800px;
   margin: 2rem auto;
   padding: 2rem;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   background-color: #fff;
 }
@@ -10,7 +10,7 @@
 .plan-content {
   background-color: #f9f9f9;
   border: 1px solid #eee;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   padding: 1rem;
   white-space: pre-wrap; /* This makes the text wrap nicely */
   font-family: monospace;
@@ -20,10 +20,10 @@
 .btn-secondary {
   margin-top: 1.5rem;
   padding: 0.75rem 1.5rem;
-  border: 1px solid #CEB888;
-  border-radius: 4px;
+  border: 1px solid var(--purdue-gold);
+  border-radius: var(--radius-md);
   background-color: transparent;
-  color: #CEB888;
+  color: var(--purdue-gold);
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
@@ -31,7 +31,7 @@
 }
 
 .btn-secondary:hover {
-  background-color: #CEB888;
+  background-color: var(--purdue-gold);
   color: #000;
 }
 
@@ -64,7 +64,7 @@
 
 .meal-history-content {
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   padding: 1rem;
   background: #fafafa;
 }
@@ -94,8 +94,8 @@
 .btn-primary {
   padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 4px;
-  background-color: #CEB888;
+  border-radius: var(--radius-lg);
+  background-color: var(--purdue-gold);
   color: #000;
   font-size: 1rem;
   font-weight: bold;
@@ -104,7 +104,7 @@
 }
 
 .btn-primary:hover {
-  background-color: #B8A678;
+  background-color: #b89f6a;
   transform: translateY(-1px);
 }
 
@@ -118,7 +118,7 @@
 .meal-history-item {
   background: #fff;
   border: 1px solid #e0e0e0;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   padding: 1rem;
   margin-bottom: 0.75rem;
   list-style: none;
@@ -138,7 +138,7 @@
 }
 
 .meal-calories {
-  color: #CEB888;
+  color: var(--purdue-gold);
   font-weight: 600;
 }
 
@@ -153,8 +153,8 @@
   color: #666;
   background: #f8f8f8;
   padding: 0.5rem;
-  border-radius: 4px;
-  border-left: 3px solid #CEB888;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--purdue-gold);
 }
 
 .no-meals-message {
@@ -163,7 +163,7 @@
   font-style: italic;
   padding: 2rem;
   background: #f9f9f9;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   list-style: none;
 }
 
@@ -173,3 +173,4 @@
   margin: 0;
   list-style-type: none;
 }
+

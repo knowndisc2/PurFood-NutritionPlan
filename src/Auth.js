@@ -106,15 +106,15 @@ export default function Auth() {
   if (user) return <App />;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div className="w-full max-w-md bg-white rounded-lg shadow p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome back</h1>
-        <p className="text-gray-600 mb-6">Sign in to continue to Purdue Fitness Pal</p>
+    <div className="min-h-screen flex items-center justify-center bg-purdue-gold text-purdue-black p-4">
+      <div className="w-full max-w-md bg-black text-purdue-gold rounded-2xl shadow-lg p-8 border border-[color:var(--purdue-gold)]">
+        <h1 className="text-2xl font-bold mb-2">Welcome back</h1>
+        <p className="opacity-90 mb-6">Sign in to continue to Purdue Fitness Pal</p>
 
         <button
           type="button"
           onClick={handleGoogle}
-          className="w-full inline-flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded hover:bg-gray-50 transition-colors mb-6"
+          className="w-full inline-flex items-center justify-center gap-2 bg-white border border-[color:var(--purdue-gold)] text-purdue-black font-semibold py-2 px-4 rounded-xl hover:bg-[#f7f2e6] transition-colors mb-6"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="h-5 w-5" aria-hidden="true">
             <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.5-.4-3.5z"/>
@@ -127,7 +127,7 @@ export default function Auth() {
 
         <form onSubmit={handleSignIn} className="space-y-4">
           <div className="text-left">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium">Email</label>
             <input
               id="email"
               name="email"
@@ -136,12 +136,12 @@ export default function Auth() {
               placeholder="you@example.com"
               type="email"
               autoComplete="email"
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purdueGold"
+              className="mt-1 w-full rounded-lg border border-gray-700 bg-neutral-900 text-purdue-gold placeholder-gray-400 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purdue-gold focus:border-purdue-gold"
             />
           </div>
 
           <div className="text-left">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+            <label htmlFor="password" className="block text-sm font-medium">Password</label>
             <input
               id="password"
               name="password"
@@ -150,21 +150,21 @@ export default function Auth() {
               placeholder="••••••••"
               type="password"
               autoComplete="current-password"
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purdueGold"
+              className="mt-1 w-full rounded-lg border border-gray-700 bg-neutral-900 text-purdue-gold placeholder-gray-400 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purdue-gold focus:border-purdue-gold"
             />
           </div>
 
           <div className="flex items-center gap-3">
             <button
               type="submit"
-              className="inline-flex justify-center bg-purdueGold text-black font-semibold py-2 px-4 rounded hover:bg-[#b89f6a] transition-colors"
+              className="inline-flex justify-center bg-purdue-gold text-purdue-black font-semibold py-2 px-4 rounded-xl hover:bg-[#b89f6a] transition-colors"
             >
               Sign In
             </button>
             <button
               type="button"
               onClick={handleSignUp}
-              className="inline-flex justify-center bg-gray-800 text-white font-semibold py-2 px-4 rounded hover:bg-gray-700 transition-colors"
+              className="inline-flex justify-center border border-[color:var(--purdue-gold)] text-purdue-gold font-semibold py-2 px-4 rounded-xl hover:bg-neutral-900 transition-colors"
             >
               Sign Up
             </button>
@@ -175,7 +175,7 @@ export default function Auth() {
           let parsed
           try { parsed = JSON.parse(error) } catch { parsed = { title: "Authentication error", detail: error, steps: [] } }
           return (
-            <div className="mt-6 rounded border border-red-200 bg-red-50 text-red-800 p-4">
+            <div className="mt-6 rounded-lg border border-red-400 bg-red-50/20 text-red-300 p-4">
               <div className="font-semibold mb-1">{parsed.title}</div>
               {parsed.detail && <div className="mb-2">{parsed.detail}</div>}
               {parsed.steps && parsed.steps.length > 0 && (
