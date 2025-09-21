@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import { db } from '../firebase';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../firebase';
 
 // Simple onboarding to capture basic metrics and compute calorie targets
 // Assumptions:
@@ -7,6 +11,7 @@ import React, { useState } from 'react';
 // - Goal offset: -500 kcal/day if goal weight < current weight; +300 if gaining
 // - If user supplies an explicit daily intake, use that instead
 export default function Onboarding({ onComplete }) {
+  const [user] = useAuthState(auth);
   const [heightIn, setHeightIn] = useState('68');
   const [weightLb, setWeightLb] = useState('160');
   const [age, setAge] = useState('20');
@@ -66,28 +71,61 @@ export default function Onboarding({ onComplete }) {
     return Math.max(tdee + delta, 0);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (submitting) return;
     setSubmitting(true);
 
     const dailyGoal = computeDailyCalories();
     const mealTarget = Math.max(Math.round(dailyGoal / 3), 0); // simple 3-meals split
+    const bmi = Number(computeBMI().toFixed(1));
+
+    const userData = {
+      height: String(parseFloat(heightIn) * 2.54), // Convert inches to cm for consistency
+      weight: String(parseFloat(weightLb) * 0.453592), // Convert lbs to kg for consistency
+      age: String(age),
+      gender,
+      activityLevel: activity,
+      goalWeight: String(parseFloat(goalWeightLb) * 0.453592), // Convert to kg
+      dailyGoalCalories: String(dailyGoal),
+      mealCalories: String(mealTarget),
+      bmi: bmi,
+      explicitDaily: explicitDaily || '',
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      email: user?.email || ''
+    };
 
     try {
+      // Save to localStorage for backward compatibility
       localStorage.setItem('onboarding.dailyGoalCalories', String(dailyGoal));
       localStorage.setItem('onboarding.mealCalories', String(mealTarget));
+      localStorage.setItem('onboarding.height', userData.height);
+      localStorage.setItem('onboarding.weight', userData.weight);
+      localStorage.setItem('onboarding.age', userData.age);
+      localStorage.setItem('onboarding.gender', userData.gender);
+      localStorage.setItem('onboarding.activityLevel', userData.activityLevel);
       localStorage.setItem('onboarding.metrics', JSON.stringify({
         heightIn,
         weightLb,
         age,
         gender,
         activity,
-        bmi: Number(computeBMI().toFixed(1)),
+        bmi,
         goalWeightLb,
         explicitDaily,
       }));
-    } catch {}
+
+      // Save to Firestore if user is authenticated
+      if (user?.uid) {
+        const userDocRef = doc(db, 'users', user.uid);
+        await setDoc(userDocRef, userData, { merge: true });
+        console.log('Onboarding data saved to Firestore');
+      }
+    } catch (error) {
+      console.error('Error saving onboarding data:', error);
+      // Continue anyway - don't block the user
+    }
 
     setTimeout(() => {
       onComplete?.();

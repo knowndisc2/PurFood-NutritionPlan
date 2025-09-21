@@ -62,13 +62,20 @@ export default function Auth() {
           });
       });
 
-    // Always listen for auth state changes as a fallback
+    // Always listen for auth state changes (including sign out)
     const unsub = onAuthStateChanged(auth, (u) => {
-      if (u && isMounted) {
-        setUser(u);
+      if (isMounted) {
+        setUser(u); // This will be null when signed out
+        if (!u) {
+          // User signed out, clear any error states
+          setError("");
+        }
       }
     });
-    return () => { isMounted = false; };
+    return () => { 
+      isMounted = false;
+      unsub(); // Clean up the listener
+    };
   }, []);
 
   const handleGoogle = async () => {

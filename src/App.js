@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import GoalForm from './components/GoalForm';
 import Onboarding from './components/Onboarding';
-import MealPlanDisplay from './components/MealPlanDisplay';
-import { auth } from './firebase'; // Auth only
-import { useAuthState } from 'react-firebase-hooks/auth'; // Import the hook
+import Navbar from './components/Navbar';
+import { auth, db } from './firebase'; // Auth + Firestore
+import { collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, doc, getDocs } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import './App.css';
 
 // This is our mock data. In the future, this will come from the AI.
@@ -41,6 +42,8 @@ function App() {
     }
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [historyError, setHistoryError] = useState("");
+  const [mealHistory, setMealHistory] = useState([]);
 
   // If a user logs in and has not completed onboarding, force onboarding
   useEffect(() => {
@@ -65,6 +68,26 @@ function App() {
       else localStorage.removeItem('mealPlan');
     } catch {}
   }, [mealPlan]);
+
+  // Subscribe to Firestore meal history for current user
+  useEffect(() => {
+    if (!user) {
+      setMealHistory([]);
+      setHistoryError("");
+      return;
+    }
+    const colRef = collection(db, 'users', user.uid, 'mealHistory');
+    const q = query(colRef, orderBy('createdAt', 'desc'));
+    const unsub = onSnapshot(q, (snap) => {
+      const items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      setMealHistory(items);
+      setHistoryError(""); // Clear error on successful read
+    }, (err) => {
+      console.error('Failed to subscribe to meal history:', err);
+      setHistoryError(`Firestore read error: ${err.message}. Check your Firestore rules.`);
+    });
+    return () => unsub();
+  }, [user]);
 
   const getApiBase = () => {
     if (process.env.NODE_ENV !== 'production') {
@@ -144,7 +167,7 @@ function App() {
   };
 
   // This function receives the generated plan text from GoalForm
-  const handleGeneratePlan = (planText) => {
+  const handleGeneratePlan = async (planText) => {
     if (!user) {
       alert('You must be logged in to generate a plan!');
       return;
@@ -157,6 +180,45 @@ function App() {
       const parsedPlans = parseMealPlans(planText);
       const normalizedText = rebuildPlanText(parsedPlans) || planText;
       setMealPlan({ rawText: normalizedText, plans: parsedPlans });
+
+      // Compute aggregate totals across plans for Firestore
+      const totals = parsedPlans.reduce((acc, p) => ({
+        calories: acc.calories + (Number(p.calories) || 0),
+        protein: acc.protein + (Number(p.protein) || 0),
+        carbs: acc.carbs + (Number(p.carbs) || 0),
+        fat: acc.fat + (Number(p.fat) || 0),
+      }), { calories: 0, protein: 0, carbs: 0, fat: 0 });
+
+      // Write to Firestore history
+      if (user?.uid) {
+        try {
+          setHistoryError("");
+          const docData = {
+            createdAt: serverTimestamp(),
+            rawText: normalizedText, // Save the cleaned text
+            totals: {
+              calories: Number(totals.calories) || 0,
+              protein: Number(totals.protein) || 0,
+              carbs: Number(totals.carbs) || 0,
+              fat: Number(totals.fat) || 0
+            },
+            plans: parsedPlans.map(p => ({
+              id: String(p.id),
+              name: String(p.name || 'Unknown'),
+              foodItems: String(p.foodItems || ''),
+              calories: Number(p.calories) || 0,
+              protein: Number(p.protein) || 0,
+              carbs: Number(p.carbs) || 0,
+              fat: Number(p.fat) || 0,
+            })),
+            userId: user.uid
+          };
+          await addDoc(collection(db, 'users', user.uid, 'mealHistory'), docData);
+        } catch (e) {
+          console.error('Failed to save meal history:', e);
+          setHistoryError(`Save error: ${e.message}.`);
+        }
+      }
     } else {
       // Fallback for safety, though GoalForm should handle this
       console.error('Received invalid planText. Displaying a fallback message.');
@@ -169,6 +231,30 @@ function App() {
 
   const handleStartOver = () => {
     setMealPlan(null);
+  };
+  const clearHistory = async () => {
+    if (!user?.uid) return;
+    try {
+      const colRef = collection(db, 'users', user.uid, 'mealHistory');
+      const snap = await getDocs(colRef);
+      await Promise.all(snap.docs.map(d => deleteDoc(doc(db, 'users', user.uid, 'mealHistory', d.id))));
+    } catch (e) {
+      console.error('Failed to clear history:', e);
+    }
+  };
+  const restoreFromHistory = (id) => {
+    const item = mealHistory.find((h) => h.id === id);
+    if (item) {
+      setMealPlan({ rawText: item.rawText, plans: item.plans });
+    }
+  };
+  const deleteHistoryItem = async (id) => {
+    if (!user?.uid) return;
+    try {
+      await deleteDoc(doc(db, 'users', user.uid, 'mealHistory', id));
+    } catch (e) {
+      console.error('Failed to delete history item:', e);
+    }
   };
   const handleOnboardingComplete = () => {
     try { localStorage.removeItem('onboarding.pending'); } catch {}
@@ -187,15 +273,15 @@ function App() {
   }
 
   return (
-    <div className="App">
-      {/* If a user is logged in, show the main app content */}
+    <div className="min-h-screen bg-neutral-950">
+      <Navbar user={user} />
+      <div className="container mx-auto px-4 py-8">
       {user ? (
         onboardingPending ? (
           <Onboarding onComplete={handleOnboardingComplete} />
         ) : (
         mealPlan ? (
-          <div className="min-h-screen bg-neutral-950 p-4">
-            <div className="max-w-6xl mx-auto">
+          <div className="max-w-6xl mx-auto">
               <div className="text-center mb-8">
                 <h1 className="text-4xl font-bold text-purdue-gold mb-4">Your Personalized Meal Plans</h1>
                 <button 
@@ -204,6 +290,75 @@ function App() {
                 >
                   ← Generate New Plan
                 </button>
+              </div>
+              {/* Meal History Panel */}
+              <div className="mb-8 bg-neutral-900 border border-gray-800 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-lg font-semibold text-purdue-gold">Meal History</h2>
+                  {mealHistory.length > 0 && (
+                    <button
+                      onClick={clearHistory}
+                      className="text-xs px-3 py-1 rounded bg-neutral-800 border border-gray-700 hover:bg-neutral-700"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+                {historyError && (
+                  <div className="mb-2 text-sm text-red-400">{historyError}</div>
+                )}
+                {mealHistory.length === 0 ? (
+                  <div className="text-sm text-gray-400">No saved meal plans yet.</div>
+                ) : (
+                  <ul className="space-y-2">
+                    {mealHistory
+                      .slice()
+                      .reverse()
+                      .slice(0, 5)
+                      .map((item) => (
+                        <li key={item.id} className="flex items-center justify-between text-sm">
+                          <div className="text-gray-300">
+                            {(() => {
+                              const ts = item.createdAt;
+                              const date = ts && typeof ts.toDate === 'function' ? ts.toDate() : new Date(ts);
+                              return date.toLocaleString();
+                            })()}
+                            {item.totals && (
+                              <div className="mt-1 text-xs text-gray-400">
+                                Totals — Cal: {Math.round(item.totals.calories)} | P: {Math.round(item.totals.protein)}g | C: {Math.round(item.totals.carbs)}g | F: {Math.round(item.totals.fat)}g
+                              </div>
+                            )}
+                            {Array.isArray(item.plans) && item.plans.length > 0 && (
+                              <div className="mt-2 space-y-1">
+                                {item.plans.slice(0, 3).map((p, idx) => (
+                                  <div key={idx} className="text-xs text-gray-400">
+                                    Plan {p.id || idx + 1}: {p.name} — Cal: {Math.round(p.calories)} | P: {Math.round(p.protein)}g | C: {Math.round(p.carbs)}g | F: {Math.round(p.fat)}g
+                                  </div>
+                                ))}
+                                {item.plans.length > 3 && (
+                                  <div className="text-[11px] text-gray-500">(+{item.plans.length - 3} more)</div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                          <div className="space-x-2">
+                            <button
+                              onClick={() => restoreFromHistory(item.id)}
+                              className="px-3 py-1 rounded bg-purdue-gold text-purdue-black font-semibold hover:bg-opacity-90"
+                            >
+                              Restore
+                            </button>
+                            <button
+                              onClick={() => deleteHistoryItem(item.id)}
+                              className="px-3 py-1 rounded bg-neutral-800 border border-gray-700 hover:bg-neutral-700"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                  </ul>
+                )}
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -242,22 +397,20 @@ function App() {
                   </div>
                 ))}
               </div>
-              
-              <div className="mt-8 text-center">
-                <MealPlanDisplay plan={mealPlan.rawText} onBack={handleStartOver} />
+              </div>
+            ) : (
+              <GoalForm onGeneratePlan={handleGeneratePlan} isLoading={isLoading} />
+            ))
+          ) : (
+            <div className="flex items-center justify-center min-h-[calc(100vh-200px)] text-purdue-gold">
+              <div className="text-center p-8 max-w-md w-full">
+                <h1 className="text-3xl font-bold mb-6">Welcome to PurFood</h1>
+                <p className="mb-8">Please sign in to access your personalized meal plans.</p>
               </div>
             </div>
-          </div>
-        ) : (
-          <GoalForm onGeneratePlan={handleGeneratePlan} isLoading={isLoading} />
-        )
-        )
-      ) : (
-        /* If no user is logged in, Auth.js will handle showing the login UI */
-        // This part will likely not be visible as Auth.js gatekeeps the App component
-        <p>Please log in.</p>
-      )}
-    </div>
+          )}
+        </div>
+      </div>
   );
 }
 
