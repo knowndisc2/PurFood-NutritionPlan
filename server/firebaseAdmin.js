@@ -15,36 +15,31 @@ if (!admin.apps.length) {
     console.log('[Firebase Admin] Debug: FIREBASE_SERVICE_ACCOUNT_PATH =', saPath);
     console.log('[Firebase Admin] Debug: FIREBASE_SERVICE_ACCOUNT_JSON =', saJson ? '[SET]' : '[NOT SET]');
     try {
-      // Try multiple path resolution strategies
-      let resolvedPath = path.resolve(__dirname, saPath);
-      console.log('[Firebase Admin] Trying path resolution strategy 1:', resolvedPath);
+      // Build candidate paths to support running from repo root or from server/ directory
+      const candidates = [];
+      if (path.isAbsolute(saPath)) {
+        candidates.push(saPath);
+      } else {
+        candidates.push(path.resolve(process.cwd(), saPath));
+        candidates.push(path.resolve(__dirname, saPath));
+        // If path starts with ./server and __dirname already ends with server, try one directory up
+        const cleaned = saPath.replace(/^\.\//, '');
+        if (cleaned.startsWith('server') && path.basename(__dirname) === 'server') {
+          candidates.push(path.resolve(__dirname, '..', path.basename(saPath)));
+        }
+      }
 
-      if (fs.existsSync(resolvedPath)) {
-        serviceAccount = require(resolvedPath);
-        console.log('[Firebase Admin] ✓ Successfully loaded service account from:', resolvedPath);
-        console.log('[Firebase Admin] ✓ Service account type:', serviceAccount.type);
+      console.log('[Firebase Admin] Candidate service account paths:', candidates);
+      const found = candidates.find(p => {
+        try { return fs.existsSync(p); } catch { return false; }
+      });
+
+      if (found) {
+        serviceAccount = require(found);
+        console.log('[Firebase Admin] ✓ Loaded service account from:', found);
         console.log('[Firebase Admin] ✓ Service account project_id:', serviceAccount.project_id);
       } else {
-        // Try from project root
-        resolvedPath = path.resolve(process.cwd(), saPath);
-        console.log('[Firebase Admin] Trying path resolution strategy 2:', resolvedPath);
-
-        if (fs.existsSync(resolvedPath)) {
-          serviceAccount = require(resolvedPath);
-          console.log('[Firebase Admin] ✓ Successfully loaded service account from:', resolvedPath);
-          console.log('[Firebase Admin] ✓ Service account type:', serviceAccount.type);
-          console.log('[Firebase Admin] ✓ Service account project_id:', serviceAccount.project_id);
-        } else {
-          console.error(`[Firebase Admin] ✗ Service account file not found at path: ${resolvedPath}`);
-          console.error('[Firebase Admin] Available JSON files in server directory:');
-          try {
-            fs.readdirSync(__dirname).filter(f => f.endsWith('.json')).forEach(f => {
-              console.error(`[Firebase Admin]   - ${f}`);
-            });
-          } catch (e) {
-            console.error('[Firebase Admin] Could not read server directory');
-          }
-        }
+        console.error('[Firebase Admin] ✗ Could not find service account file at any candidate path.');
       }
     } catch (e) {
       console.error('[Firebase Admin] ✗ Error reading service account file from path:', e.message);
@@ -63,6 +58,8 @@ if (!admin.apps.length) {
     try {
       admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
+        projectId: process.env.FIREBASE_PROJECT_ID || serviceAccount.project_id,
+        databaseURL: process.env.FIREBASE_DATABASE_URL || undefined,
       });
       console.log('[Firebase Admin] ✓ Firebase Admin SDK initialized successfully');
     } catch (e) {

@@ -10,6 +10,9 @@ const admin = require('./firebaseAdmin');
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// Trust the first proxy (fixes express-rate-limit X-Forwarded-For validation)
+app.set('trust proxy', 1);
+
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -66,8 +69,67 @@ app.get('/api/test-auth', async (req, res) => {
   }
 });
 
+// Debug endpoint: Firestore smoke test (set/get a doc at a known path)
+app.get('/api/debug/firestore/smoke', async (req, res) => {
+  try {
+    const db = admin.firestore();
+    const ts = Date.now();
+    const ref = db.collection('_debug').doc('smoke');
+    await ref.set({ ok: true, ts }, { merge: true });
+    const snap = await ref.get();
+    const result = snap.exists ? snap.data() : null;
+    res.json({ ok: true, wrote: ts, read: result });
+  } catch (e) {
+    console.error('[Debug] Firestore smoke failed:', e);
+    res.status(500).json({ ok: false, error: e.message, stack: e.stack });
+  }
+});
+
+// Debug endpoint: test user subcollection path
+app.get('/api/debug/firestore/user-meals-smoke', async (req, res) => {
+  try {
+    // Use a provided uid or a placeholder to test path access
+    const uid = req.query.uid || 'debug_user_placeholder';
+    const db = admin.firestore();
+    // Write a meal
+    const col = db.collection('users').doc(uid).collection('meals');
+    const write = await col.add({ name: 'debug-meal', createdAt: admin.firestore.FieldValue.serverTimestamp() });
+    // Query meals
+    const q = col.orderBy('createdAt', 'desc').limit(5);
+    const snap = await q.get();
+    const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    res.json({ ok: true, testWriteId: write.id, count: items.length, items });
+  } catch (e) {
+    console.error('[Debug] Firestore user-meals smoke failed:', e);
+    res.status(500).json({ ok: false, error: e.message, stack: e.stack });
+  }
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// Debug endpoint to verify Firebase Admin project configuration
+app.get('/api/debug/firebase', (req, res) => {
+  try {
+    const appOptions = admin.app().options || {};
+    res.json({
+      adminOptions: {
+        projectId: appOptions.projectId || null,
+        databaseURL: appOptions.databaseURL || null,
+      },
+      env: {
+        FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID || null,
+        GOOGLE_CLOUD_PROJECT: process.env.GOOGLE_CLOUD_PROJECT || null,
+        FIREBASE_DATABASE_URL: process.env.FIREBASE_DATABASE_URL || null,
+        FIREBASE_SERVICE_ACCOUNT_PATH: process.env.FIREBASE_SERVICE_ACCOUNT_PATH || null,
+        has_SERVICE_ACCOUNT_JSON: Boolean(process.env.FIREBASE_SERVICE_ACCOUNT_JSON),
+      }
+    });
+  } catch (e) {
+    console.error('[Debug] Firebase inspect failed', e);
+    res.status(500).json({ error: 'Debug failed', details: e.message });
+  }
 });
 
 // Firebase ID token verification middleware
@@ -119,16 +181,20 @@ app.put('/api/fb/profile', fbAuthMiddleware, async (req, res) => {
   }
 });
 
-// Meal history endpoints (GET/POST on meals subcollection)
+// Meal history endpoints (GET/POST on meals subcollection in Firestore)
 app.post('/api/fb/meals', fbAuthMiddleware, async (req, res) => {
   try {
     const db = admin.firestore();
     const mealData = req.body;
     if (!mealData || !mealData.name) return res.status(400).json({ error: 'Meal data is invalid' });
-    const docRef = await db.collection('users').doc(req.fbUid).collection('meals').add({
-      ...mealData,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
+    const docRef = await db
+      .collection('users')
+      .doc(req.fbUid)
+      .collection('meals')
+      .add({
+        ...mealData,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
     return res.status(201).json({ id: docRef.id });
   } catch (e) {
     console.error('Meal create failed', e);
