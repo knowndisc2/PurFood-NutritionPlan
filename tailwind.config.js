@@ -12,8 +12,7 @@ module.exports = {
         'purdue-clay': '#DDB945',
       },
       fontFamily: {
-        sans: ['Acumin Pro', 'Acumin Pro SemiCondensed', 'Acumin Pro Condensed', 'sans-serif'],
-        display: ['United Sans', 'sans-serif'],
+        sans: ['acumin-pro', 'sans-serif'],
       },
     },
   },
