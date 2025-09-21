@@ -1,10 +1,11 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, SoupStrainer
 import time
 import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
+
 
 def setup_headless_driver():
     chrome_options = Options()
@@ -16,8 +17,10 @@ def setup_headless_driver():
     driver = webdriver.Chrome(options=chrome_options)
     return driver
 
+
 def get_todays_date():
     return datetime.now().strftime("%Y/%m/%d")
+
 
 def get_meal_time_url(meal_time):
     if meal_time == "late lunch":
@@ -25,20 +28,54 @@ def get_meal_time_url(meal_time):
     else:
         return meal_time.capitalize()
 
+
+label_map = {
+    'total fat': 'total_fat_g',
+    'saturated fat': 'saturated_fat_g',
+    'trans fat': 'trans_fat_g',
+    'cholesterol': 'cholesterol_mg',
+    'sodium': 'sodium_mg',
+    'total carbohydrate': 'total_carbs_g',
+    'dietary fiber': 'dietary_fiber_g',
+    'total sugar': 'total_sugar_g',
+    'protein': 'protein_g',
+    'vitamin d': 'vitamin_d_mcg',
+    'calcium': 'calcium_mg',
+    'iron': 'iron_mg',
+    'potassium': 'potassium_mg',
+    'vitamin a': 'vitamin_a_mcg',
+    'vitamin c': 'vitamin_c_mg',
+    'thiamin': 'thiamin_mg',
+    'riboflavin': 'riboflavin_mg',
+    'niacin': 'niacin_mg',
+    'vitamin b6': 'vitamin_b6_mg',
+    'folate': 'folate_mcg',
+    'vitamin b12': 'vitamin_b12_mcg',
+    'phosphorus': 'phosphorus_mg',
+    'magnesium': 'magnesium_mg',
+    'zinc': 'zinc_mg'
+}
+
+
 def scrape_nutrition_data(driver, nutrition_url):
     try:
         driver.get(nutrition_url)
-        time.sleep(2)
-        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        time.sleep(1.5)  # Reduced sleep to speed up
+        strainer = SoupStrainer('div', class_='nutrition-table-row')
+        soup = BeautifulSoup(driver.page_source, 'lxml', parse_only=strainer)
         nutrition_data = {}
-        serving_size_elem = soup.find('span', class_='nutrition-feature-servingSize-quantity')
+        # Parse serving size and calories from full page once (outside strainer)
+        full_soup = BeautifulSoup(driver.page_source, 'lxml')
+        serving_size_elem = full_soup.find('span', class_='nutrition-feature-servingSize-quantity')
         if serving_size_elem:
             nutrition_data['serving_size'] = serving_size_elem.get_text().strip()
-        calories_elem = soup.find('span', class_='nutrition-feature-calories-quantity')
+        calories_elem = full_soup.find('span', class_='nutrition-feature-calories-quantity')
         if calories_elem:
-            nutrition_data['total_calories'] = int(calories_elem.get_text().strip())
-        nutrition_rows = soup.find_all('div', class_='nutrition-table-row')
-        for row in nutrition_rows:
+            try:
+                nutrition_data['total_calories'] = int(calories_elem.get_text().strip())
+            except ValueError:
+                nutrition_data['total_calories'] = 0
+        for row in soup:
             label_elem = row.find('span', class_='table-row-label')
             value_elem = row.find('span', class_='table-row-labelValue')
             if label_elem and value_elem:
@@ -55,61 +92,18 @@ def scrape_nutrition_data(driver, nutrition_url):
                             value = float(numeric_part)
                         else:
                             continue
-                    if 'total fat' in label:
-                        nutrition_data['total_fat_g'] = value
-                    elif 'saturated fat' in label:
-                        nutrition_data['saturated_fat_g'] = value
-                    elif 'trans fat' in label:
-                        nutrition_data['trans_fat_g'] = value
-                    elif 'cholesterol' in label:
-                        nutrition_data['cholesterol_mg'] = value
-                    elif 'sodium' in label:
-                        nutrition_data['sodium_mg'] = value
-                    elif 'total carbohydrate' in label:
-                        nutrition_data['total_carbs_g'] = value
-                    elif 'dietary fiber' in label:
-                        nutrition_data['dietary_fiber_g'] = value
-                    elif 'total sugar' in label or ('sugar' in label and 'added' not in label):
-                        nutrition_data['total_sugar_g'] = value
-                    elif 'added sugar' in label:
+                    if 'added sugar' in label:
                         nutrition_data['added_sugar_g'] = value
-                    elif 'protein' in label:
-                        nutrition_data['protein_g'] = value
-                    elif 'vitamin d' in label:
-                        nutrition_data['vitamin_d_mcg'] = value
-                    elif 'calcium' in label:
-                        nutrition_data['calcium_mg'] = value
-                    elif 'iron' in label:
-                        nutrition_data['iron_mg'] = value
-                    elif 'potassium' in label:
-                        nutrition_data['potassium_mg'] = value
-                    elif 'vitamin a' in label:
-                        nutrition_data['vitamin_a_mcg'] = value
-                    elif 'vitamin c' in label:
-                        nutrition_data['vitamin_c_mg'] = value
-                    elif 'thiamin' in label:
-                        nutrition_data['thiamin_mg'] = value
-                    elif 'riboflavin' in label:
-                        nutrition_data['riboflavin_mg'] = value
-                    elif 'niacin' in label:
-                        nutrition_data['niacin_mg'] = value
-                    elif 'vitamin b6' in label:
-                        nutrition_data['vitamin_b6_mg'] = value
-                    elif 'folate' in label:
-                        nutrition_data['folate_mcg'] = value
-                    elif 'vitamin b12' in label:
-                        nutrition_data['vitamin_b12_mcg'] = value
-                    elif 'phosphorus' in label:
-                        nutrition_data['phosphorus_mg'] = value
-                    elif 'magnesium' in label:
-                        nutrition_data['magnesium_mg'] = value
-                    elif 'zinc' in label:
-                        nutrition_data['zinc_mg'] = value
-                except:
+                    else:
+                        matched_key = next((label_map[k] for k in label_map if k in label), None)
+                        if matched_key:
+                            nutrition_data[matched_key] = value
+                except Exception:
                     continue
         return nutrition_data
     except Exception:
         return {}
+
 
 def scrape_single_court_meal_time(court_name="Earhart", meal_time="lunch", date=None):
     if date is None:
@@ -120,10 +114,12 @@ def scrape_single_court_meal_time(court_name="Earhart", meal_time="lunch", date=
         meal_time_url = get_meal_time_url(meal_time)
         url = f"https://dining.purdue.edu/menus/{court_name}/{date}/{meal_time_url}/"
         driver.get(url)
-        time.sleep(5)
-        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        time.sleep(4)  # Reduced wait time
+        strainer = SoupStrainer('div', class_='station')
+        soup = BeautifulSoup(driver.page_source, 'lxml', parse_only=strainer)
         stations = soup.find_all('div', class_='station')
         print(f"[{court_name} - {meal_time.capitalize()}] Found {len(stations)} stations")
+
         court_data = {
             'dining_court': court_name,
             'meal_time': meal_time,
@@ -131,38 +127,46 @@ def scrape_single_court_meal_time(court_name="Earhart", meal_time="lunch", date=
             'stations': {},
             'total_items': 0
         }
+
+        # Parallelize nutrition scraping inside each station
+        def fetch_item_nutrition(container, station_name):
+            name_span = container.find('span', class_='station-item-text')
+            if name_span:
+                food_name = name_span.get_text().strip()
+                link = container.find('a', class_='station-item')
+                if link and link.get('href'):
+                    nutrition_url = "https://dining.purdue.edu" + link.get('href')
+                    nutrition_data = scrape_nutrition_data(driver, nutrition_url)
+                    food_item = {
+                        'name': food_name,
+                        'station': station_name,
+                        'court': court_name,
+                        'meal_time': meal_time,
+                        'nutrition_url': nutrition_url,
+                        **nutrition_data
+                    }
+                    return food_item
+            return None
+
         for station in stations:
             station_name_elem = station.find('div', class_='station-name')
-            if station_name_elem:
-                station_name = station_name_elem.get_text().strip()
-                print(f"[{court_name} - {meal_time.capitalize()}] Processing station: {station_name}")
-                station_items = []
-                food_containers = station.find_all('div', class_='station-item--container_plain')
-                print(f"[{court_name} - {meal_time.capitalize()}] {station_name}: {len(food_containers)} items")
-                for container in food_containers:
-                    name_span = container.find('span', class_='station-item-text')
-                    if name_span:
-                        food_name = name_span.get_text().strip()
-                        link = container.find('a', class_='station-item')
-                        if link and link.get('href'):
-                            nutrition_url = "https://dining.purdue.edu" + link.get('href')
-                            nutrition_data = scrape_nutrition_data(driver, nutrition_url)
-                            food_item = {
-                                'name': food_name,
-                                'station': station_name,
-                                'court': court_name,
-                                'meal_time': meal_time,
-                                'nutrition_url': nutrition_url,
-                                **nutrition_data
-                            }
-                            station_items.append(food_item)
-                            calories = nutrition_data.get('total_calories', 'N/A')
-                            protein = nutrition_data.get('protein_g', 'N/A')
-                            sodium = nutrition_data.get('sodium_mg', 'N/A')
-                            print(f"[{court_name} - {meal_time.capitalize()}]   {food_name}: {calories} cal, {protein}g protein, {sodium}mg sodium")
-                            time.sleep(1)
-                court_data['stations'][station_name] = station_items
-                court_data['total_items'] += len(station_items)
+            if not station_name_elem:
+                continue
+            station_name = station_name_elem.get_text().strip()
+            food_containers = station.find_all('div', class_='station-item--container_plain')
+
+            station_items = []
+            with ThreadPoolExecutor(max_workers=5) as nutrition_executor:
+                futures = [nutrition_executor.submit(fetch_item_nutrition, container, station_name) for container in food_containers]
+                for future in as_completed(futures):
+                    item = future.result()
+                    if item:
+                        station_items.append(item)
+
+            court_data['stations'][station_name] = station_items
+            court_data['total_items'] += len(station_items)
+            print(f"[{court_name} - {meal_time.capitalize()}] {station_name}: {len(station_items)} items")
+
         print(f"[{court_name} - {meal_time.capitalize()}] Complete! {court_data['total_items']} items across {len(court_data['stations'])} stations")
         return court_name, court_data
     except Exception as e:
@@ -171,19 +175,19 @@ def scrape_single_court_meal_time(court_name="Earhart", meal_time="lunch", date=
     finally:
         driver.quit()
 
+
 def scrape_all_courts_meal_time(meal_time="lunch", date=None):
     if date is None:
         date = get_todays_date()
-    # Courts to scrape depend on meal time
     if meal_time == "late lunch":
         dining_courts = ['Hillenbrand', 'Windsor']
     else:
         dining_courts = ['Earhart', 'Ford', 'Hillenbrand', 'Wiley', 'Windsor']
     all_data = {}
     print(f"Starting concurrent scraping of all dining courts for {meal_time.capitalize()} on {date}...")
-    with ThreadPoolExecutor(max_workers=5) as executor:
+    with ThreadPoolExecutor(max_workers=len(dining_courts)) as executor:
         future_to_court = {
-            executor.submit(scrape_single_court_meal_time, court, meal_time, date): court 
+            executor.submit(scrape_single_court_meal_time, court, meal_time, date): court
             for court in dining_courts
         }
         for future in as_completed(future_to_court):
@@ -195,9 +199,8 @@ def scrape_all_courts_meal_time(meal_time="lunch", date=None):
             stations = court_data.get('stations', {})
             total_items = court_data.get('total_items', 0)
             print(f"    {len(stations)} stations, {total_items} total items")
-            for station_name, items in stations.items():
-                print(f"      • {station_name}: {len(items)} items")
     return all_data
+
 
 def print_detailed_summary(all_data, meal_time):
     print("\n" + "="*80)
@@ -236,6 +239,7 @@ def print_detailed_summary(all_data, meal_time):
     print(f"   {len(all_data)} dining courts")
     print(f"   {total_stations} total stations")
     print(f"   {total_items} total food items")
+
 
 if __name__ == "__main__":
     print("🍽️ Purdue Dining Scraper with Meal Times")
