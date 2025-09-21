@@ -10,9 +10,28 @@ export default function Onboarding({ onComplete }) {
   const [heightIn, setHeightIn] = useState('68');
   const [weightLb, setWeightLb] = useState('160');
   const [age, setAge] = useState('20');
+  const [gender, setGender] = useState('male'); // male | female
+  const [activity, setActivity] = useState('sedentary'); // sedentary|light|moderate|active|very
   const [goalWeightLb, setGoalWeightLb] = useState('155');
   const [explicitDaily, setExplicitDaily] = useState(''); // optional override
   const [submitting, setSubmitting] = useState(false);
+
+  const activityFactor = (lvl) => ({
+    sedentary: 1.2,
+    light: 1.375,
+    moderate: 1.55,
+    active: 1.725,
+    very: 1.9,
+  }[lvl] || 1.2);
+
+  const computeBMI = () => {
+    const w = parseFloat(weightLb) || 0;
+    const hIn = parseFloat(heightIn) || 0;
+    if (!w || !hIn) return 0;
+    const kg = w * 0.45359237;
+    const m = (hIn * 2.54) / 100;
+    return kg / (m * m);
+  };
 
   const computeDailyCalories = () => {
     const h = parseFloat(heightIn) || 0;
@@ -22,12 +41,11 @@ export default function Onboarding({ onComplete }) {
 
     // Convert to metric for Mifflin-St Jeor (male approximation; no gender captured)
     // Mifflin (male): 10*kg + 6.25*cm - 5*age + 5
-    // Use neutral offset of +5; this is a simplification
+    // Mifflin (female): 10*kg + 6.25*cm - 5*age - 161
     const kg = w * 0.45359237;
     const cm = h * 2.54;
-    const bmr = 10 * kg + 6.25 * cm - 5 * a + 5;
-    const activity = 1.2; // sedentary default
-    const tdee = Math.max(Math.round(bmr * activity), 0);
+    const bmr = 10 * kg + 6.25 * cm - 5 * a + (gender === 'female' ? -161 : 5);
+    const tdee = Math.max(Math.round(bmr * activityFactor(activity)), 0);
 
     if (explicitDaily) {
       return Math.max(parseInt(explicitDaily, 10) || 0, 0);
@@ -35,6 +53,12 @@ export default function Onboarding({ onComplete }) {
 
     // Goal adjustment
     let delta = 0;
+    const bmi = computeBMI();
+    // BMI-based adjustment: underweight -> surplus, overweight/obese -> deficit
+    if (bmi && bmi < 18.5) delta = 300; // gentle surplus
+    else if (bmi >= 30) delta = -500;   // stronger deficit for obesity
+    else if (bmi >= 25) delta = -300;   // moderate deficit for overweight
+
     if (gw && w) {
       if (gw < w) delta = -500; // losing weight
       else if (gw > w) delta = 300; // gaining weight
@@ -57,6 +81,9 @@ export default function Onboarding({ onComplete }) {
         heightIn,
         weightLb,
         age,
+        gender,
+        activity,
+        bmi: Number(computeBMI().toFixed(1)),
         goalWeightLb,
         explicitDaily,
       }));
@@ -90,6 +117,30 @@ export default function Onboarding({ onComplete }) {
               value={age} onChange={(e)=>setAge(e.target.value)} />
           </div>
           <div className="animate-fade-in-up">
+            <label className="block text-sm mb-1">Gender</label>
+            <select className="w-full p-2 rounded-md bg-neutral-900 border border-gray-700 focus:ring-2 focus:ring-purdue-gold focus-glow" value={gender} onChange={(e)=>setGender(e.target.value)}>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <div className="animate-fade-in-up md:col-span-2">
+            <label className="block text-sm mb-1">Activity Level</label>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+              {[
+                {label:'Sedentary', value:'sedentary'},
+                {label:'Light', value:'light'},
+                {label:'Moderate', value:'moderate'},
+                {label:'Active', value:'active'},
+                {label:'Very Active', value:'very'},
+              ].map(opt => (
+                <button type="button" key={opt.value} onClick={() => setActivity(opt.value)}
+                  className={`py-2 px-3 rounded-md text-sm border hover-lift ${activity===opt.value ? 'border-purple-400 bg-purple-50 text-purple-700 ring-2 ring-purple-200' : 'border-gray-600 text-purdue-gold hover:bg-neutral-800'}`}>
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="animate-fade-in-up">
             <label className="block text-sm mb-1">Goal Weight (lb)</label>
             <input type="number" inputMode="numeric" className="w-full p-2 rounded-md bg-neutral-900 border border-gray-700 focus:ring-2 focus:ring-purdue-gold focus-glow" 
               value={goalWeightLb} onChange={(e)=>setGoalWeightLb(e.target.value)} />
@@ -102,14 +153,21 @@ export default function Onboarding({ onComplete }) {
             <p className="text-xs text-gray-400 mt-1">If provided, we'll use this as your daily goal instead of our estimate.</p>
           </div>
 
-          <div className="md:col-span-2 mt-2 flex items-center justify-between bg-neutral-900 border border-gray-800 rounded-xl p-4 animate-scale-in">
-            <div>
+          <div className="md:col-span-2 mt-2 grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="bg-neutral-900 border border-gray-800 rounded-xl p-4 animate-scale-in">
               <div className="text-sm text-gray-400">Estimated Daily Goal</div>
               <div className="text-2xl font-semibold text-purdue-gold">{computeDailyCalories().toLocaleString()} kcal</div>
             </div>
-            <div>
+            <div className="bg-neutral-900 border border-gray-800 rounded-xl p-4 animate-scale-in">
               <div className="text-sm text-gray-400">Per-Meal Target (x3)</div>
               <div className="text-2xl font-semibold text-purdue-gold">{Math.max(Math.round(computeDailyCalories()/3),0).toLocaleString()} kcal</div>
+            </div>
+            <div className="bg-neutral-900 border border-gray-800 rounded-xl p-4 animate-scale-in">
+              <div className="text-sm text-gray-400">BMI</div>
+              <div className="text-2xl font-semibold text-purdue-gold">{Number(computeBMI().toFixed(1))}</div>
+              <div className="text-xs text-gray-400 mt-1">
+                {(() => { const v = computeBMI(); if (!v) return '—'; if (v<18.5) return 'Underweight'; if (v<25) return 'Healthy'; if (v<30) return 'Overweight'; return 'Obese'; })()}
+              </div>
             </div>
           </div>
 

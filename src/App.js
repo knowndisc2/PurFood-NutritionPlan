@@ -9,29 +9,22 @@ import './App.css';
 // This is our mock data. In the future, this will come from the AI.
 const MOCK_MEAL_PLAN = `**MEAL PLAN 1**
 * Breaded Pork Tenderloin (1 Each Serving)
-* Sliced Smoked Polish Sausage (10 Ounce)
+* Creamy Coleslaw (1/2 Cup)
 * Sweet Potato Wedge Fries (6 oz Serving)
-* Peanut Butter Cookie (1 Cookie)
-* Green Beans (1/2 Cup Serving)
-Totals: 1202 cal, 141.6g protein, 75.6g carbs, 37.3g fat
+Totals: 515 cal, 24.66g protein, 74.1g carbs, 0g fat
 
 **MEAL PLAN 2**
-* Breaded Pork Tenderloin (2 Each Serving)
-* Chicken And Noodles (1 Cup Serving)
-* Whipped Potatoes (1/2 Cup Serving)
+* Chicken And Noodles (Cup Serving)
 * Green Beans (1/2 Cup Serving)
-* Pork Potstickers (4 Each Serving)
-* Peanut Butter Cookie (1 Cookie)
-Totals: 1197 cal, 141.2g protein, 74.9g carbs, 36.8g fat
+* Dinner Rolls (1 Roll)
+Totals: 557 cal, 21.4g protein, 74.2g carbs, 0g fat
 
 **MEAL PLAN 3**
-* Breaded Pork Tenderloin (1 Each Serving)
-* Sliced Smoked Polish Sausage (8 Ounce)
-* Chicken And Noodles (1 Cup Serving)
+* Pork Potstickers (3 Each Serving)
+* Long Grain Rice (1/2 Cup)
 * Fried Rice (1/2 Cup Serving)
-* Green Beans (1/2 Cup Serving)
-* Dirt Pudding (1/2 Cup)
-Totals: 1201 cal, 140.9g protein, 75.1g carbs, 37g fat`;
+* Sliced Smoked Polish Sausage (1 ounce)
+Totals: 428 cal, 12.76g protein, 60.7g carbs, 0g fat`;
 
 function App() {
   const [user, loading] = useAuthState(auth); // include loading to avoid flicker

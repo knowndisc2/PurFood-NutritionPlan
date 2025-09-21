@@ -7,12 +7,15 @@ function GoalForm({ onGeneratePlan, isLoading }) {
     const [calories, setCalories] = useState(() => {
         try { return localStorage.getItem('onboarding.mealCalories') || '2000'; } catch { return '2000'; }
     });
-    const [goalCalories] = useState(() => {
+    const [goalCalories, setGoalCalories] = useState(() => {
         try {
-            const v = localStorage.getItem('onboarding.dailyGoalCalories');
-            return v ? parseInt(v, 10) : 2000;
+            const baselineStr = localStorage.getItem('onboarding.dailyGoalCalories');
+            const baseline = baselineStr ? parseInt(baselineStr, 10) : 2000;
+            const currentStr = localStorage.getItem('dailyGoal.current');
+            const current = currentStr ? parseInt(currentStr, 10) : baseline;
+            return Number.isFinite(current) ? current : baseline;
         } catch { return 2000; }
-    }); // internal daily goal for remaining ring
+    }); // internal daily goal for remaining ring (auto-resets daily)
     const [macros, setMacros] = useState({ protein: 0, carbs: 0, fats: 0 });
     const [dietaryPrefs, setDietaryPrefs] = useState([]);
     const [aiPrompt, setAiPrompt] = useState('');
@@ -99,6 +102,34 @@ function GoalForm({ onGeneratePlan, isLoading }) {
             showToast._t = window.setTimeout(() => setToast({ visible: false, type, message: '' }), duration);
         }
     };
+
+    // Daily reset of goal calories back to baseline
+    React.useEffect(() => {
+        try {
+            const today = new Date();
+            const keyDate = 'dailyGoal.lastDate';
+            const keyCurrent = 'dailyGoal.current';
+            const keyBaseline = 'onboarding.dailyGoalCalories';
+            const storedDate = localStorage.getItem(keyDate);
+            const todayStr = today.toISOString().slice(0, 10); // YYYY-MM-DD
+            const baselineStr = localStorage.getItem(keyBaseline);
+            const baseline = baselineStr ? parseInt(baselineStr, 10) : goalCalories;
+            if (storedDate !== todayStr) {
+                localStorage.setItem(keyCurrent, String(baseline));
+                localStorage.setItem(keyDate, todayStr);
+                setGoalCalories(baseline);
+            } else {
+                // Keep current, but ensure state matches stored
+                const currStr = localStorage.getItem(keyCurrent);
+                if (currStr) {
+                    const v = parseInt(currStr, 10);
+                    if (Number.isFinite(v) && v !== goalCalories) setGoalCalories(v);
+                }
+            }
+        } catch {}
+        // run once on mount
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handlePrefToggle = (preference, prefList, setPrefList) => {
         if (prefList.includes(preference)) {
