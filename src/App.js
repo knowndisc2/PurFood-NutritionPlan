@@ -6,7 +6,53 @@ import { useAuthState } from 'react-firebase-hooks/auth'; // Import the hook
 import './App.css';
 
 // This is our mock data. In the future, this will come from the AI.
-const MOCK_MEAL_PLAN = `Please provide me with the food options available at the Hillenbrand Dining Court.  I need a list of the available food items with their nutritional information (calories, protein, carbs, and fat per serving) to create the meal plans.  Once you provide that information, I can fulfill your request.`;
+const MOCK_MEAL_PLAN = `It's impossible to create a completely accurate vegan meal plan hitting the specified macro targets (especially the high fat requirement) using only the provided Earhart Dining Court options.  Vegan options for high-fat foods are limited.  The following plans attempt to get as close as possible, prioritizing protein and carbs while acknowledging the fat limitations.  The fat content will be significantly lower than the goal.
+
+
+**MEAL PLAN 1: Hearty Harvest Bowl**
+
+* 1 Cup Linguini (172 cal, 5.67g protein, 34.02g carbs)
+* 1/2 Cup Whipped Potatoes (107 cal, 2.38g protein, 20.21g carbs)
+* 1/2 Cup Long Grain Rice (122 cal, 2.28g protein, 27.35g carbs)
+* 1/2 Cup Fried Rice (182 cal, 3.89g protein, 27.47g carbs)
+* 1/2 Cup Green Beans (15 cal, 0.98g protein, 2.93g carbs)
+* 2 oz Vegan Shredded Mozzarella Cheese (180 cal, 2g protein, 12g carbs)  *(Note: This is an estimation assuming 90 calories per ounce)*
+* Summer Symphony Fruit Salad (65 cal, 0.71g protein, 16.68g carbs)
+
+
+Totals: ~843 cal, 17.91g protein, 141.64g carbs,  (Fat content cannot be accurately calculated from the provided information and is likely low)
+
+
+**MEAL PLAN 2:  Global Grain Fusion**
+
+* 2 Cups Linguini (344 cal, 11.34g protein, 68.04g carbs)
+* 1/2 Cup Long Grain Rice (122 cal, 2.28g protein, 27.35g carbs)
+* 1/2 Cup Fried Rice (182 cal, 3.89g protein, 27.47g carbs)
+* 1 Cup Green Beans (30 cal, 1.95g protein, 5.85g carbs)
+* Summer Symphony Fruit Salad (65 cal, 0.71g protein, 16.68g carbs)
+* 2 oz Vegan Shredded Mozzarella Cheese (180 cal, 2g protein, 12g carbs) *(Note: This is an estimation assuming 90 calories per ounce)*
+* 2 GF Blueberry Muffins (540 cal, 6g protein, 78g carbs)
+
+
+Totals: ~1483 cal, 28.17g protein, 258.09g carbs (Fat content cannot be accurately calculated from the provided information and is likely low)
+
+
+
+**MEAL PLAN 3:  Pasta Powerhouse**
+
+* 2 Cups Linguini (344 cal, 11.34g protein, 68.04g carbs)
+* 1/2 Cup Whipped Potatoes (107 cal, 2.38g protein, 20.21g carbs)
+* 1/2 Cup Long Grain Rice (122 cal, 2.28g protein, 27.35g carbs)
+* 1 Cup Green Beans (30 cal, 1.95g protein, 5.85g carbs)
+* 2 oz Vegan Shredded Mozzarella Cheese (180 cal, 2g protein, 12g carbs) *(Note: This is an estimation assuming 90 calories per ounce)*
+* Summer Symphony Fruit Salad (65 cal, 0.71g protein, 16.68g carbs)
+* Peanut Butter Cookie (120 cal, 2g protein, 17g carbs)
+
+
+Totals: ~968 cal, 22.66g protein, 168.13g carbs (Fat content cannot be accurately calculated from the provided information and is likely low)
+
+
+**Important Note:**  These meal plans significantly underestimate the desired fat intake due to the limited availability of high-fat vegan options in the provided list. To achieve the desired fat macro, additional vegan food sources would be necessary. The calorie and carbohydrate counts are reasonably close to the target; however, protein is somewhat low. Consider supplementing with additional vegan protein sources if available.`;
 
 function App() {
   const [user, loading] = useAuthState(auth); // include loading to avoid flicker

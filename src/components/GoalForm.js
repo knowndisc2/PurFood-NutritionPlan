@@ -5,6 +5,7 @@ import { authenticatedFetch } from '../api';
 function GoalForm({ onGeneratePlan, isLoading }) {
     // State for each form input
     const [calories, setCalories] = useState('2000');
+    const [goalCalories] = useState(2000); // internal daily goal for remaining ring
     const [macros, setMacros] = useState({ protein: 0, carbs: 0, fats: 0 });
     const [dietaryPrefs, setDietaryPrefs] = useState([]);
     const [aiPrompt, setAiPrompt] = useState('');
@@ -13,6 +14,76 @@ function GoalForm({ onGeneratePlan, isLoading }) {
     const [submitting, setSubmitting] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
     const [toast, setToast] = useState({ visible: false, type: 'info', message: '' });
+
+    // Helper component: circular remaining calories ring
+    const CaloriesRing = ({ goal = 0, food = 0, exercise = 0 }) => {
+        const g = Math.max(parseInt(goal || 0, 10) || 0, 0);
+        const f = Math.max(parseInt(food || 0, 10) || 0, 0);
+        const ex = Math.max(parseInt(exercise || 0, 10) || 0, 0);
+        const consumed = Math.max(f - ex, 0);
+        const remaining = Math.max(g - consumed, 0);
+        const radius = 54; // px
+        const circumference = 2 * Math.PI * radius;
+        const progress = g > 0 ? Math.min(consumed / g, 1) : 0;
+        const dash = circumference * progress;
+        const gap = circumference - dash;
+
+        return (
+            <div className="bg-neutral-900 text-purdue-gold rounded-xl shadow p-6 border border-gray-700">
+                <h2 className="text-xl font-semibold mb-1">Calories</h2>
+                <div className="text-sm text-gray-300 mb-4">Remaining = Goal − Food</div>
+                <div className="flex items-center gap-6">
+                    {/* Ring */}
+                    <div className="relative w-32 h-32">
+                        <svg width="128" height="128" viewBox="0 0 128 128">
+                            <circle
+                                cx="64" cy="64" r={radius}
+                                stroke="#2a2a2a" strokeWidth="12" fill="none"
+                            />
+                            <circle
+                                cx="64" cy="64" r={radius}
+                                stroke="var(--purdue-gold)"
+                                strokeWidth="12" fill="none"
+                                strokeDasharray={`${dash} ${gap}`}
+                                strokeLinecap="round"
+                                transform="rotate(-90 64 64)"
+                            />
+                        </svg>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                            <div className="text-2xl font-bold text-purdue-gold">
+                                {remaining.toLocaleString()}
+                            </div>
+                            <div className="text-xs text-gray-300">Remaining</div>
+                        </div>
+                    </div>
+                    {/* Details */}
+                    <div className="space-y-3 text-sm">
+                        <div className="flex items-center gap-2">
+                            <span className="inline-block w-4 h-4 rounded bg-purdue-gold" aria-hidden></span>
+                            <div className="flex-1 flex justify-between gap-6">
+                                <span className="text-gray-300">Base Goal</span>
+                                <span className="font-bold text-purdue-gold">{g.toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="inline-block w-4 h-4 rounded bg-blue-500" aria-hidden></span>
+                            <div className="flex-1 flex justify-between gap-6">
+                                <span className="text-gray-300">Food</span>
+                                <span className="font-bold text-white">{f.toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="inline-block w-4 h-4 rounded bg-purple-600" aria-hidden></span>
+                            <div className="flex-1 flex justify-between gap-6">
+                                <span className="text-gray-300">Exercise</span>
+                                <span className="font-bold text-white">{ex.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
 
     const showToast = (type, message, duration = 3500) => {
         setToast({ visible: true, type, message });
@@ -145,7 +216,7 @@ function GoalForm({ onGeneratePlan, isLoading }) {
                         <h2 className="text-lg font-semibold mb-4">Daily Targets</h2>
                         <div className="mb-6">
                             <label htmlFor="calories" className="block text-sm font-medium mb-1">
-                                Daily Calories
+                                Calorie Target (this meal)
                             </label>
                             <input
                                 type="text"
@@ -208,6 +279,14 @@ function GoalForm({ onGeneratePlan, isLoading }) {
                     </div>
 
                     <div>
+                        {/* Calories ring card at top of right column */}
+                        <div className="mb-6">
+                          <CaloriesRing
+                            goal={goalCalories}
+                            food={(() => { const n = parseInt((calories || '0'), 10); return Number.isNaN(n) ? 0 : Math.max(n, 0); })()}
+                            exercise={0}
+                          />
+                        </div>
                         <div className="mb-6">
                             <h3 className="text-lg font-semibold mb-4">Dietary Preferences</h3>
                             {['Vegetarian','Vegan','Gluten-Free','Dairy-Free','Nut-Free','Shellfish-Free'].map((label) => {
