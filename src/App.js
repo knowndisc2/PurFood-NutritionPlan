@@ -9,30 +9,25 @@ import './App.css';
 
 // This is our mock data. In the future, this will come from the AI.
 const MOCK_MEAL_PLAN = `**MEAL PLAN 1**
-* Chicken Satay with Peanut Sauce (1 Cup Serving)
-* Tri Color Tortilla Chips (1/2 4 oz Serving)
-* Fresh Sliced Strawberries (4 oz Serving)
-
-Totals: 513 cal, 37.7g protein, 51g carbs, 16g fat
+* Breaded Pork Tenderloin (1 Each Serving)
+* Creamy Coleslaw (1/2 Cup)
+* Sweet Potato Wedge Fries (6 oz Serving)
+Totals: 515 cal, 24.6581g protein, 63.0917g carbs, 17g fat (estimated)
 
 
 **MEAL PLAN 2**
-* Spicy Breaded Chicken Breast (1 Each)
-* Cheddar Jalapeno Potato Nugget (4 oz serving)
-* Sriracha Coleslaw (1/2 Cup)
-* Mandarin Oranges (1/2 Cup Serving)
-
-Totals: 492 cal, 29.6g protein, 56g carbs, 15g fat
+* Chicken And Noodles (Cup Serving)
+* Green Beans (1/2 Cup Serving)
+* Long Grain Rice (1/2 Cup)
+Totals: 515 cal, 21.6696g protein, 75.4003g carbs, 13g fat (estimated)
 
 
 **MEAL PLAN 3**
-* Spicy Breaded Chicken Breast (1 Each)
-* Queso Blanco Cheese Sauce w Salsa Verde (1/2 Cup Serving)
-* Long Grain Rice (1/2 Cup)
-* Dark Chocolate Sea Salt Seed'nola (1 Ounce)
-
-
-Totals: 511 cal, 31g protein, 54g carbs, 17g fat`;
+* Pork Potstickers (3 Each Serving)
+* Fried Rice (1/2 Cup Serving)
+* Sliced Smoked Polish Sausage (2 Ounce)
+* Summer Symphony Fruit Salad (1/2 Cup)
+Totals: 516 cal, 31.705g protein, 57.4556g carbs, 15g fat (estimated)`;
 
 function App() {
   const [user, loading] = useAuthState(auth); // include loading to avoid flicker
@@ -48,6 +43,7 @@ function App() {
     }
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [historyError, setHistoryError] = useState("");
   const [mealHistory, setMealHistory] = useState([]);
 
   // If a user logs in and has not completed onboarding, force onboarding
@@ -78,6 +74,7 @@ function App() {
   useEffect(() => {
     if (!user) {
       setMealHistory([]);
+      setHistoryError("");
       return;
     }
     const colRef = collection(db, 'users', user.uid, 'mealHistory');
@@ -85,8 +82,10 @@ function App() {
     const unsub = onSnapshot(q, (snap) => {
       const items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
       setMealHistory(items);
+      setHistoryError(""); // Clear error on successful read
     }, (err) => {
       console.error('Failed to subscribe to meal history:', err);
+      setHistoryError(`Firestore read error: ${err.message}. Check your Firestore rules.`);
     });
     return () => unsub();
   }, [user]);
@@ -145,7 +144,7 @@ function App() {
   };
 
   // This function receives the generated plan text from GoalForm
-  const handleGeneratePlan = (planText) => {
+  const handleGeneratePlan = async (planText) => {
     if (!user) {
       alert('You must be logged in to generate a plan!');
       return;
@@ -157,21 +156,45 @@ function App() {
     if (planText && typeof planText === 'string') {
       const parsedPlans = parseMealPlans(planText);
       setMealPlan({ rawText: planText, plans: parsedPlans });
-      // Write to Firestore history (schema includes nutritional totals per plan)
+      // Compute aggregate totals across plans (optional, for quick glance)
+      const totals = parsedPlans.reduce((acc, p) => ({
+        calories: acc.calories + (Number(p.calories) || 0),
+        protein: acc.protein + (Number(p.protein) || 0),
+        carbs: acc.carbs + (Number(p.carbs) || 0),
+        fat: acc.fat + (Number(p.fat) || 0),
+      }), { calories: 0, protein: 0, carbs: 0, fat: 0 });
+      // Write to Firestore history (schema includes per-plan totals and aggregate)
       if (user?.uid) {
-        addDoc(collection(db, 'users', user.uid, 'mealHistory'), {
-          createdAt: serverTimestamp(),
-          rawText: planText,
-          plans: parsedPlans.map(p => ({
-            id: p.id,
-            name: p.name,
-            foodItems: p.foodItems,
-            calories: p.calories,
-            protein: p.protein,
-            carbs: p.carbs,
-            fat: p.fat,
-          })),
-        }).catch((e) => console.error('Failed to save meal history:', e));
+        try {
+          setHistoryError("");
+          console.log('Attempting to save meal history for user:', user.uid);
+          const docData = {
+            createdAt: serverTimestamp(),
+            rawText: planText,
+            totals: {
+              calories: Number(totals.calories) || 0,
+              protein: Number(totals.protein) || 0,
+              carbs: Number(totals.carbs) || 0,
+              fat: Number(totals.fat) || 0
+            },
+            plans: parsedPlans.map(p => ({
+              id: String(p.id),
+              name: String(p.name || 'Unknown'),
+              foodItems: String(p.foodItems || ''),
+              calories: Number(p.calories) || 0,
+              protein: Number(p.protein) || 0,
+              carbs: Number(p.carbs) || 0,
+              fat: Number(p.fat) || 0,
+            })),
+            userId: user.uid // Add userId for easier querying
+          };
+          console.log('Saving document:', docData);
+          const docRef = await addDoc(collection(db, 'users', user.uid, 'mealHistory'), docData);
+          console.log('Successfully saved meal history with ID:', docRef.id);
+        } catch (e) {
+          console.error('Failed to save meal history:', e);
+          setHistoryError(`Save error: ${e.message}. Check Firestore rules and authentication.`);
+        }
       }
     } else {
       // Fallback for safety, though GoalForm should handle this
@@ -258,6 +281,9 @@ function App() {
                     </button>
                   )}
                 </div>
+                {historyError && (
+                  <div className="mb-2 text-sm text-red-400">{historyError}</div>
+                )}
                 {mealHistory.length === 0 ? (
                   <div className="text-sm text-gray-400">No saved meal plans yet.</div>
                 ) : (
@@ -274,6 +300,23 @@ function App() {
                               const date = ts && typeof ts.toDate === 'function' ? ts.toDate() : new Date(ts);
                               return date.toLocaleString();
                             })()}
+                            {item.totals && (
+                              <div className="mt-1 text-xs text-gray-400">
+                                Totals — Cal: {Math.round(item.totals.calories)} | P: {Math.round(item.totals.protein)}g | C: {Math.round(item.totals.carbs)}g | F: {Math.round(item.totals.fat)}g
+                              </div>
+                            )}
+                            {Array.isArray(item.plans) && item.plans.length > 0 && (
+                              <div className="mt-2 space-y-1">
+                                {item.plans.slice(0, 3).map((p, idx) => (
+                                  <div key={idx} className="text-xs text-gray-400">
+                                    Plan {p.id || idx + 1}: {p.name} — Cal: {Math.round(p.calories)} | P: {Math.round(p.protein)}g | C: {Math.round(p.carbs)}g | F: {Math.round(p.fat)}g
+                                  </div>
+                                ))}
+                                {item.plans.length > 3 && (
+                                  <div className="text-[11px] text-gray-500">(+{item.plans.length - 3} more)</div>
+                                )}
+                              </div>
+                            )}
                           </div>
                           <div className="space-x-2">
                             <button
