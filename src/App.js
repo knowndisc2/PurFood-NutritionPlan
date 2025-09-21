@@ -123,10 +123,11 @@ function App() {
   }, [user?.uid]);
 
   const getApiBase = () => {
-    if (process.env.NODE_ENV !== 'production') {
-      return 'http://localhost:4000';
+    // In production on GitHub Pages, use environment variable or fallback
+    if (process.env.NODE_ENV === 'production') {
+      return process.env.REACT_APP_API_BASE_URL || 'https://your-backend-url.com';
     }
-    return window.location.origin;
+    return 'http://localhost:4000';
   };
 
   // Parse meal plans from the generated text
