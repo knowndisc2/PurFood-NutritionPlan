@@ -94,9 +94,9 @@ async function generateWithGemini(goals, menu) {
     const target_carbs = Math.round((target_calories * carb_percentage / 100) / 4);
     const target_fat = Math.round((target_calories * fat_percentage / 100) / 9);
     const restrictions_text = dietary_restrictions.length ? dietary_restrictions.join(', ') : 'None';
+    const preferences_text = goals.preferences || 'None';
 
     const prompt = `You are a nutrition expert creating single-meal plans using dining hall food options.
-
 
 USER REQUIREMENTS:
 - Meal calorie target: ${target_calories}
@@ -104,39 +104,36 @@ USER REQUIREMENTS:
 - Carb target: ${target_carbs}g (${carb_percentage}% of calories)
 - Fat target: ${target_fat}g (${fat_percentage}% of calories)
 - Dietary restrictions: ${restrictions_text}
-
+- Other preferences: ${preferences_text}
 
 AVAILABLE FOOD OPTIONS:
 ${court_food_data}
 
-
-TASK: Create exactly 3 different meal plans for this dining court. Each meal plan should:
-1. Meet the calorie and macro targets as closely as possible
-2. Only use foods from the provided list above
-3. Respect dietary restrictions
-4. Provide variety across the 3 plans
-5. Show total calories and macros for each plan
-
+TASK: Create exactly 3 different meal plans. Each meal plan must:
+1. Strictly meet the user's calorie and macro targets.
+2. Only use foods from the provided list.
+3. Strictly adhere to all dietary restrictions and preferences.
+4. Provide variety across the 3 plans.
+5. Show total calories and macros for each plan.
 
 FORMAT your response as:
 
+**MEAL PLAN 1**
+* Food item 1 (quantity)
+* Food item 2 (quantity)
+Totals: [calories] cal, [protein]g protein, [carbs]g carbs, [fat]g fat
 
-**MEAL PLAN 1: [Creative Name]**
-Food items with quantities (e.g., "2 pancakes, 1 cup rice")
-Totals: [calories]cal, [protein]g protein, [carbs]g carbs, [fat]g fat
+**MEAL PLAN 2**
+* Food item 1 (quantity)
+* Food item 2 (quantity)
+Totals: [calories] cal, [protein]g protein, [carbs]g carbs, [fat]g fat
 
+**MEAL PLAN 3**
+* Food item 1 (quantity)
+* Food item 2 (quantity)
+Totals: [calories] cal, [protein]g protein, [carbs]g carbs, [fat]g fat
 
-**MEAL PLAN 2: [Creative Name]**
-Food items with quantities
-Totals: [calories]cal, [protein]g protein, [carbs]g carbs, [fat]g fat
-
-
-**MEAL PLAN 3: [Creative Name]**
-Food items with quantities
-Totals: [calories]cal, [protein]g protein, [carbs]g carbs, [fat]g fat
-
-
-Be specific about portions and prioritize nutritional balance.`;
+Do not include any conversational notes or disclaimers.`;
 
     const result = await model.generateContent({ contents: [{ role: 'user', parts: [{ text: prompt }] }] });
     const text = result?.response?.text?.() || result?.response?.candidates?.[0]?.content?.parts?.[0]?.text || '';

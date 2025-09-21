@@ -38,7 +38,7 @@ function GoalForm({ onGeneratePlan, isLoading }) {
             calories,
             macros,
             dietaryPrefs,
-            aiPrompt,
+            preferences: aiPrompt, // Use the 'preferences' key for the AI prompt
         };
 
         try {

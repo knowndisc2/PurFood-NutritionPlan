@@ -6,7 +6,47 @@ import { useAuthState } from 'react-firebase-hooks/auth'; // Import the hook
 import './App.css';
 
 // This is our mock data. In the future, this will come from the AI.
-const MOCK_MEAL_PLAN = `Please provide me with the food options available at Hillenbrand Dining Court.  I need a list of the specific dishes, with their nutritional information (calories, protein, carbs, and fat per serving) to create the meal plans.  Once you provide that data, I can fulfill your request.`;
+const MOCK_MEAL_PLAN = `**MEAL PLAN 1: The Hearty Harvest**
+
+* Breaded Pork Tenderloin (1): 176 cal, 22.66g protein, 11.34g carbs, 0g fat
+* Sweet Potato Wedge Fries (6 oz): 320 cal, 2.00g protein, 50.03g carbs, 0g fat
+* Chicken And Noodles (1 cup): 443 cal, 18.41g protein, 51.18g carbs, 0g fat (assuming minimal fat in this serving)
+* Whipped Potatoes (1/2 cup): 107 cal, 2.38g protein, 20.21g carbs, 0g fat (assuming minimal fat in this serving)
+* Green Beans (1/2 cup): 15 cal, 1g protein, 2.93g carbs, 0g fat
+* Dinner Rolls (1): 99 cal, 2.98g protein, 18.9g carbs, 0g fat (assuming minimal fat in this serving)
+* Dark Chocolate Sea Salt Seed'nola (1 oz): 132 cal, 4g protein, 13.16g carbs, 0g fat (assuming minimal fat in this serving)
+
+
+Totals: 1292 cal, 53.43g protein, 167.65g carbs, 0g fat  *(Need to add fat sources)*
+
+
+**MEAL PLAN 2:  The Italian Adventure**
+
+* Linguini (1 cup): 172 cal, 5.67g protein, 34.02g carbs, 0g fat
+* Pesto Alfredo Cream Sauce (1/2 cup): 281 cal, 5.91g protein, 7.82g carbs, ~20g fat (estimated fat content, needs adjustment if actual data is available)
+* Pork Potstickers (3): 159 cal, 7g protein, 24g carbs, 0g fat (estimated fat content, needs adjustment if actual data is available)
+* Potsticker Sauce (1 tbsp): 17 cal, 0.58g protein, 3.32g carbs, 0g fat
+* Fried Rice (1/2 cup): 182 cal, 3.89g protein, 27.47g carbs, ~10g fat (estimated fat content, needs adjustment if actual data is available)
+* Sliced Smoked Polish Sausage (2 oz): 174 cal, 7.32g protein, 2.74g carbs, ~15g fat (estimated fat content, needs adjustment if actual data is available)
+* Long Grain Rice (1/2 cup): 122 cal, 2.28g protein, 27.35g carbs, 0g fat
+
+Totals: 1107 cal, 32.65g protein, 136.72g carbs, ~45g fat *(Needs more protein and carbs; less fat)*
+
+
+**MEAL PLAN 3:  The Balanced Plate**
+
+* Malibu Burger (1): 160 cal, 3.99g protein, 20.94g carbs, 0g fat
+* GF Hamburger Bun (1): 240 cal, 5g protein, 44g carbs, 0g fat
+* Creamy Coleslaw (1/2 cup): 89 cal, 0.67g protein, 11.75g carbs, 0g fat
+* Chicken And Noodles (1 cup): 443 cal, 18.41g protein, 51.18g carbs, 0g fat (assuming minimal fat in this serving)
+* Whipped Potatoes (1/2 cup): 107 cal, 2.38g protein, 20.21g carbs, 0g fat (assuming minimal fat in this serving)
+* Summer Symphony Fruit Salad (1/2 cup): 65 cal, 0.71g protein, 16.68g carbs, 0g fat
+* Peanut Butter Cookie (1): 120 cal, 2g protein, 17g carbs, 0g fat (assuming minimal fat in this serving)
+
+Totals: 1224 cal, 33.2g protein, 177.76g carbs, 0g fat *(Needs significant fat and protein increase)*
+
+
+**Note:**  The fat content in many of these items isn't specified.  Accurate fat estimations are crucial for balancing the macronutrients.  These meal plans are preliminary and require adjustment once the precise fat content of each dish is known.  Furthermore, additional food items may be needed to meet the required macronutrient targets precisely.`;
 
 function App() {
   const [user, loading] = useAuthState(auth); // include loading to avoid flicker
@@ -52,15 +92,15 @@ function App() {
       let calories = 0, protein = 0, carbs = 0, fat = 0;
       
       if (totalsLine) {
-        const caloriesMatch = totalsLine.match(/(\d+)cal/);
-        const proteinMatch = totalsLine.match(/(\d+)g protein/);
-        const carbsMatch = totalsLine.match(/(\d+)g carbs/);
-        const fatMatch = totalsLine.match(/(\d+)g fat/);
-        
-        calories = caloriesMatch ? parseInt(caloriesMatch[1]) : 0;
-        protein = proteinMatch ? parseInt(proteinMatch[1]) : 0;
-        carbs = carbsMatch ? parseInt(carbsMatch[1]) : 0;
-        fat = fatMatch ? parseInt(fatMatch[1]) : 0;
+        const caloriesMatch = totalsLine.match(/([\d,]+)\s*cal/);
+        const proteinMatch = totalsLine.match(/([\d.]+)\s*g protein/);
+        const carbsMatch = totalsLine.match(/([\d.]+)\s*g carbs/);
+        const fatMatch = totalsLine.match(/~?([\d.]+)\s*g fat/);
+
+        calories = caloriesMatch ? parseFloat(caloriesMatch[1].replace(',', '')) : 0;
+        protein = proteinMatch ? parseFloat(proteinMatch[1]) : 0;
+        carbs = carbsMatch ? parseFloat(carbsMatch[1]) : 0;
+        fat = fatMatch ? parseFloat(fatMatch[1]) : 0;
       }
       
       // Extract food items (everything except totals line)
