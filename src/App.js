@@ -115,22 +115,27 @@ function App() {
     return plans;
   };
 
-  // This function now saves the goal to Firestore and then fetches the plan
-  const handleGeneratePlan = async (goal) => {
+  // This function receives the generated plan text from GoalForm
+  const handleGeneratePlan = (planText) => {
     if (!user) {
       alert('You must be logged in to generate a plan!');
       return;
     }
 
-    console.log('Generating plan in App.js for goal:', goal);
+    console.log('Displaying generated plan in App.js');
     setIsLoading(true);
 
-    // Use the updated meal plan from the constant
-    setTimeout(() => {
-      const parsedPlans = parseMealPlans(MOCK_MEAL_PLAN);
-      setMealPlan({ rawText: MOCK_MEAL_PLAN, plans: parsedPlans });
-      setIsLoading(false);
-    }, 1200);
+    if (planText && typeof planText === 'string') {
+      const parsedPlans = parseMealPlans(planText);
+      setMealPlan({ rawText: planText, plans: parsedPlans });
+    } else {
+      // Fallback for safety, though GoalForm should handle this
+      console.error('Received invalid planText. Displaying a fallback message.');
+      const fallbackText = 'Could not generate a valid meal plan. Please try again.';
+      setMealPlan({ rawText: fallbackText, plans: [] });
+    }
+
+    setIsLoading(false);
   };
 
   const handleStartOver = () => {

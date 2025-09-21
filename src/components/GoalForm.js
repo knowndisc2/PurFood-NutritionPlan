@@ -90,15 +90,15 @@ function GoalForm({ onGeneratePlan, isLoading }) {
                 onGeneratePlan(planText);
                 showToast('success', 'Meal plan generated successfully!');
             } else {
-                onGeneratePlan(allGoals);
-                showToast('warning', 'Generated a fallback plan.');
+                onGeneratePlan(null); // Pass null to indicate failure
+                showToast('warning', 'Generated an empty plan.');
             }
         } catch (e) {
             console.error('[GoalForm] Failed to generate plan via Gemini:', e);
             setErrorMsg(e.message || 'Failed to generate plan');
             showToast('error', e.message || 'Failed to generate plan');
             // Fallback to existing flow
-            onGeneratePlan(allGoals);
+            onGeneratePlan(null);
         } finally {
             setSubmitting(false);
         }
