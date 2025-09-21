@@ -6,9 +6,59 @@ import { useAuthState } from 'react-firebase-hooks/auth'; // Import the hook
 import './App.css';
 
 // This is our mock data. In the future, this will come from the AI.
-const MOCK_MEAL_PLAN = `It's impossible to create these meal plans without the nutritional information (calories, protein, carbs, fat) for each food item.  The provided data is incomplete.  To create accurate meal plans, please provide the nutritional content for each food item listed in the Earhart Dining Court menu.
+const MOCK_MEAL_PLAN = `**MEAL PLAN 1: The Pulled Pork Powerhouse**
 
-Once the nutritional information is provided, I can generate three diverse and accurate meal plans that meet the specified calorie and macro targets.`;
+* Austin Blues Pulled Pork (4 oz): 408 cal, 26g protein, 25g carbs, 0g fat
+* Hamburger Bun (Bun): 140 cal, 4g protein, 28g carbs, 0g fat
+* Creamy Coleslaw (1/2 Cup): 89 cal, 0.5g protein, 12g carbs, 0g fat (estimating 0g fat for simplicity)
+* Crinkle Cut Fries (4 oz): 162 cal, 3g protein, 24g carbs, 0g fat (estimating 0g fat for simplicity)
+* Lasagna (4x4 Cut): 202 cal, 13g protein, 25g carbs, 0g fat (estimating 0g fat for simplicity)
+* Roasted Brussels Sprouts (4 oz): 110 cal, 4g protein, 11g carbs, 0g fat (estimating 0g fat for simplicity)
+* Long Grain Rice (1/2 Cup): 122 cal, 2g protein, 27g carbs, 0g fat (estimating 0g fat for simplicity)
+*  Grated Parmesan Cheese (1 ounce): 113 cal, 11g protein, 0g carbs, 0g fat (estimating 0g fat for simplicity)
+
+
+Totals: 1346 cal, 63.5g protein, 152g carbs, 0g fat (Note: Fat significantly under target.  This plan needs adjustment to meet the fat requirement, see below.)
+
+
+**ADJUSTMENT FOR MEAL PLAN 1:** To reach the fat target, we need to add high-fat items, which are limited in the provided menu. We will substitute some items to increase fat content, even though this impacts other macros slightly.
+
+* Austin Blues Pulled Pork (4 oz): 408 cal, 26g protein, 25g carbs, 10g fat (corrected to reflect that pulled pork has some fat)
+* Hamburger Bun (1 Bun): 140 cal, 4g protein, 28g carbs, 2g fat (added a conservative estimate for fat content)
+* Creamy Coleslaw (1 Cup): 178 cal, 1g protein, 24g carbs, 5g fat (Doubled portion to boost fat)
+* Crinkle Cut Fries (4 oz): 162 cal, 3g protein, 24g carbs, 5g fat (added a conservative estimate for fat content)
+*  Grated Parmesan Cheese (2 ounce): 226 cal, 22g protein, 0g carbs, 5g fat (Doubled portion to boost fat)
+
+Totals (Adjusted): 1124 cal, 58g protein, 101g carbs, 27g fat (Still significantly short on the fat, but we can improve it in the other meal plans).
+
+
+**MEAL PLAN 2: The Italian Fiesta**
+
+* Thin Pizza Crust (1 Each): 190 cal, 5g protein, 36g carbs, 1g fat (estimating fat)
+* Pizza Sauce (1/2 cup): 70 cal, 1g protein, 10g carbs, 2g fat (doubled portion)
+* Diced Pepperoni (2 Tablespoons): 178 cal, 6g protein, 0g carbs, 10g fat (doubled portion)
+* Shredded 3 Cheese Blend (2 ounces): 194 cal, 12g protein, 2g carbs, 10g fat (doubled portion)
+* Lasagna Rollups with Alfredo Sauce (1 Roll Up): 470 cal, 14g protein, 35g carbs, 20g fat (added to increase fat and calories)
+* Garlic Bread (1 piece): 72 cal, 2g protein, 10g carbs, 5g fat (adding a conservative estimate for fat content)
+* Salad Bar (Large serving of lettuce, tomatoes, and cucumbers): 50 cal, 1g protein, 2g carbs, 0.5g fat (variable – an attempt to add greens for nutritional value and only a minor macro contribution)
+
+Totals: 1224 cal, 41g protein, 105g carbs, 48.5g fat
+
+
+**MEAL PLAN 3: The Asian Fusion**
+
+* Mini Spring Rolls (4 Each): 160 cal, 0g protein, 28g carbs, 5g fat (estimating some fat)
+* Tempura Sweet and Sour Sauce (1 Cup): 376 cal, 1g protein, 94g carbs, 10g fat (doubled portion)
+* Fried Rice (1 Cup): 364 cal, 8g protein, 54g carbs, 10g fat (doubled portion)
+* Long Grain Rice (1 Cup): 244 cal, 4g protein, 54g carbs, 1g fat (doubled portion)
+* Grilled Zucchini (3 oz): 59 cal, 0.5g protein, 2g carbs, 0g fat
+* Austin Blues Pulled Pork (2 oz): 204 cal, 13g protein, 12.5g carbs, 5g fat (half portion of pulled pork for added protein)
+* Dark Chocolate Sea Salt Seed'nola (1 ounce): 132 cal, 4g protein, 13g carbs, 5g fat
+
+Totals: 1539 cal, 30.5g protein, 263.5g carbs, 36g fat
+
+
+**Important Note:** The fat content in these plans remains challenging to accurately meet with the given options and their listed nutritional information.  Many items list only a small amount of fat or 0g fat, and accurate fat content can be variable depending on cooking methods and preparation.  These meal plans provide a reasonable approximation; however, to fully achieve the 2000 calorie, 125g protein, 225g carb, and 67g fat targets, additional high-fat options would be needed in the dining hall.`;
 
 function App() {
   const [user] = useAuthState(auth); // Get the current user
