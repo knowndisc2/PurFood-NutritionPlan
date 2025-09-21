@@ -46,15 +46,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [historyError, setHistoryError] = useState("");
   const [mealHistory, setMealHistory] = useState([]);
-  const [consumedCalories, setConsumedCalories] = useState(() => {
-    try {
-      const today = new Date().toISOString().slice(0, 10);
-      const stored = localStorage.getItem(`consumedCalories.${today}`);
-      return stored ? parseInt(stored, 10) : 0;
-    } catch {
-      return 0;
-    }
-  });
+  const [consumedCalories, setConsumedCalories] = useState(0);
 
   // If a user logs in and has not completed onboarding, force onboarding
   useEffect(() => {
@@ -100,18 +92,35 @@ function App() {
     return () => unsub();
   }, [user]);
 
-  // Daily reset of consumed calories
+  // Load user-specific consumed calories and handle daily reset
   useEffect(() => {
-    const today = new Date().toISOString().slice(0, 10);
-    const lastResetDate = localStorage.getItem('consumedCalories.lastResetDate');
-    
-    if (lastResetDate !== today) {
-      // New day, reset consumed calories
+    if (!user?.uid) {
       setConsumedCalories(0);
-      localStorage.setItem(`consumedCalories.${today}`, '0');
-      localStorage.setItem('consumedCalories.lastResetDate', today);
+      return;
     }
-  }, []);
+
+    const today = new Date().toISOString().slice(0, 10);
+    const userKey = `consumedCalories.${user.uid}.${today}`;
+    const lastResetKey = `consumedCalories.${user.uid}.lastResetDate`;
+    
+    try {
+      const lastResetDate = localStorage.getItem(lastResetKey);
+      
+      if (lastResetDate !== today) {
+        // New day for this user, reset consumed calories
+        setConsumedCalories(0);
+        localStorage.setItem(userKey, '0');
+        localStorage.setItem(lastResetKey, today);
+      } else {
+        // Load existing consumed calories for this user today
+        const stored = localStorage.getItem(userKey);
+        const calories = stored ? parseInt(stored, 10) : 0;
+        setConsumedCalories(calories);
+      }
+    } catch {
+      setConsumedCalories(0);
+    }
+  }, [user?.uid]);
 
   const getApiBase = () => {
     if (process.env.NODE_ENV !== 'production') {
@@ -276,9 +285,10 @@ function App() {
       const newConsumedCalories = consumedCalories + plan.calories;
       setConsumedCalories(newConsumedCalories);
       
-      // Persist to localStorage for today
+      // Persist to localStorage for this user today
       const today = new Date().toISOString().slice(0, 10);
-      localStorage.setItem(`consumedCalories.${today}`, String(newConsumedCalories));
+      const userKey = `consumedCalories.${user.uid}.${today}`;
+      localStorage.setItem(userKey, String(newConsumedCalories));
       
       // Show success message
       alert(`Successfully logged ${plan.name} (${plan.calories} calories)!`);

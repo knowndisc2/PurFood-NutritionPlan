@@ -22,15 +22,27 @@ function GoalForm({ onGeneratePlan, isLoading, consumedCalories = 0 }) {
             }
         } catch {}
     }, [consumedCalories]);
+
+    // Update goalCalories when localStorage changes (e.g., after onboarding)
+    React.useEffect(() => {
+        try {
+            const baselineStr = localStorage.getItem('onboarding.dailyGoalCalories');
+            if (baselineStr) {
+                const baseline = parseInt(baselineStr, 10);
+                if (Number.isFinite(baseline) && baseline !== goalCalories) {
+                    setGoalCalories(baseline);
+                }
+            }
+        } catch {}
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // Run once on mount to pick up any changes from onboarding
     const [goalCalories, setGoalCalories] = useState(() => {
         try {
             const baselineStr = localStorage.getItem('onboarding.dailyGoalCalories');
             const baseline = baselineStr ? parseInt(baselineStr, 10) : 2000;
-            const currentStr = localStorage.getItem('dailyGoal.current');
-            const current = currentStr ? parseInt(currentStr, 10) : baseline;
-            return Number.isFinite(current) ? current : baseline;
+            return Number.isFinite(baseline) ? baseline : 2000;
         } catch { return 2000; }
-    }); // internal daily goal for remaining ring (auto-resets daily)
+    }); // daily goal for calorie ring
     const [macros, setMacros] = useState({ protein: 0, carbs: 0, fats: 0 });
     const [dietaryPrefs, setDietaryPrefs] = useState([]);
     const [aiPrompt, setAiPrompt] = useState('');
@@ -118,33 +130,6 @@ function GoalForm({ onGeneratePlan, isLoading, consumedCalories = 0 }) {
         }
     };
 
-    // Daily reset of goal calories back to baseline
-    React.useEffect(() => {
-        try {
-            const today = new Date();
-            const keyDate = 'dailyGoal.lastDate';
-            const keyCurrent = 'dailyGoal.current';
-            const keyBaseline = 'onboarding.dailyGoalCalories';
-            const storedDate = localStorage.getItem(keyDate);
-            const todayStr = today.toISOString().slice(0, 10); // YYYY-MM-DD
-            const baselineStr = localStorage.getItem(keyBaseline);
-            const baseline = baselineStr ? parseInt(baselineStr, 10) : goalCalories;
-            if (storedDate !== todayStr) {
-                localStorage.setItem(keyCurrent, String(baseline));
-                localStorage.setItem(keyDate, todayStr);
-                setGoalCalories(baseline);
-            } else {
-                // Keep current, but ensure state matches stored
-                const currStr = localStorage.getItem(keyCurrent);
-                if (currStr) {
-                    const v = parseInt(currStr, 10);
-                    if (Number.isFinite(v) && v !== goalCalories) setGoalCalories(v);
-                }
-            }
-        } catch {}
-        // run once on mount
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     const handlePrefToggle = (preference, prefList, setPrefList) => {
         if (prefList.includes(preference)) {
@@ -217,17 +202,13 @@ function GoalForm({ onGeneratePlan, isLoading, consumedCalories = 0 }) {
                 throw new Error(`Gemini endpoint failed: ${resp.status} ${resp.statusText} — ${text.slice(0,200)}`);
             }
 
-            const responseData = await resp.json();
-            console.log('[GoalForm] Gemini response:', responseData);
-            const { planText } = responseData;
+            const { planText } = await resp.json();
 
             // Show the generated plan in the app
             if (planText) {
-                console.log('[GoalForm] Plan text received, calling onGeneratePlan');
                 onGeneratePlan(planText);
                 showToast('success', 'Meal plan generated successfully!');
             } else {
-                console.log('[GoalForm] No plan text received');
                 onGeneratePlan(null); // Pass null to indicate failure
                 showToast('warning', 'Generated an empty plan.');
             }
@@ -238,7 +219,6 @@ function GoalForm({ onGeneratePlan, isLoading, consumedCalories = 0 }) {
             // Fallback to existing flow
             onGeneratePlan(null);
         } finally {
-            console.log('[GoalForm] Finally block reached, setting submitting to false');
             setSubmitting(false);
         }
     };
