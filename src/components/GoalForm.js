@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { authenticatedFetch } from '../api';
 
 // The props ({ onGeneratePlan, isLoading }) are passed down from App.js
 function GoalForm({ onGeneratePlan, isLoading }) {
@@ -42,7 +43,7 @@ function GoalForm({ onGeneratePlan, isLoading }) {
 
         try {
             // Step 1: Scrape menu data non-interactively
-            const scrapeResp = await fetch('/api/scrape/menu', {
+            const scrapeResp = await authenticatedFetch('/api/scrape/menu', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -57,7 +58,7 @@ function GoalForm({ onGeneratePlan, isLoading }) {
             const { data: menuData } = await scrapeResp.json();
 
             // Step 2: Call backend to run Gemini AI integration with goals + scraped menu
-            const resp = await fetch('/api/ai/gemini', {
+            const resp = await authenticatedFetch('/api/ai/gemini', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ goals: allGoals, menu: menuData }),

@@ -5,7 +5,8 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
 const fs = require('fs');
-const { scrapeMenu, scrapeAndGeneratePlans } = require('./scripts/menuScrape');
+const { scrapeMenu, scrapeAndGeneratePlans, scrapeNutritionPageHttp } = require('./scripts/menuScrape');
+const { getNutritionData } = require('./scripts/apiScraper');
 const { generatePlan } = require('./scripts/geminiIntegration');
 const admin = require('./firebaseAdmin');
 // const { router: sessionRouter } = require('./session');
@@ -92,6 +93,24 @@ app.get('/api/scrape/menu', async (req, res) => {
     return res.json({ file: filePath, data });
   } catch (e) {
     console.error('[Scrape][GET] Endpoint error', e);
+    // Fallback to newest cached file if available
+    try {
+      const outDir = path.join(process.cwd(), 'src', 'components', 'tmp');
+      const files = fs.readdirSync(outDir).filter(f => f.endsWith('.json'));
+      if (files.length) {
+        const newest = files.reduce((a, b) => {
+          const sa = fs.statSync(path.join(outDir, a));
+          const sb = fs.statSync(path.join(outDir, b));
+          return sa.mtimeMs > sb.mtimeMs ? a : b;
+        });
+        const fallbackPath = path.join(outDir, newest);
+        const fallbackData = JSON.parse(fs.readFileSync(fallbackPath, 'utf8'));
+        console.warn('[Scrape][GET] Using cached fallback:', newest);
+        return res.json({ file: fallbackPath, data: fallbackData });
+      }
+    } catch (fallbackErr) {
+      console.error('[Scrape][GET] Fallback failed:', fallbackErr);
+    }
     return res.status(500).json({ error: 'Failed to scrape menu (GET)', details: e.message });
   }
 });
@@ -136,28 +155,45 @@ app.post('/api/scrape-and-generate', async (req, res) => {
       date: result.date
     });
   } catch (e) {
-    console.error('[Scrape-Generate] Endpoint error:', e);
+    console.error('[Scrape-Generate] Endpoint error:', e.message);
+    console.error('[Scrape-Generate] Stack:', e.stack);
     return res.status(500).json({ error: 'Failed to scrape and generate plan', details: e.message });
   }
 });
 
 // Scrape menu using Node (Puppeteer + Cheerio) and return the parsed JSON and file path
 app.post('/api/scrape/menu', async (req, res) => {
+  console.log('[Scrape] POST /api/scrape/menu called. Using deep scraper.');
   try {
     const mealTime = (req.body?.mealTime || 'lunch').toLowerCase();
     const date = req.body?.date || '';
     const data = await scrapeMenu({ mealTime, date });
 
-    const outDir = path.join(process.cwd(), 'src', 'components', 'tmp');
-    try { fs.mkdirSync(outDir, { recursive: true }); } catch {}
-    const dateForFilename = (date || new Date().toISOString().slice(0,10).replace(/-/g,'/')).replaceAll('/', '-');
-    const filename = `purdue_${mealTime.replace(' ', '_')}_${dateForFilename}.json`;
-    const filePath = path.join(outDir, filename);
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
-    return res.json({ file: filePath, data });
+    // The frontend expects the menu data under a 'data' key
+    return res.json({ data });
+
   } catch (e) {
-    console.error('[Scrape] Endpoint error', e);
-    return res.status(500).json({ error: 'Failed to scrape menu', details: e.message });
+    console.error('[Scrape] Deep scrape endpoint failed:', e.message);
+    console.error('[Scrape] Stack:', e.stack);
+    // Fallback to newest cached file if available
+    try {
+      const outDir = path.join(process.cwd(), 'src', 'components', 'tmp');
+      const files = fs.readdirSync(outDir).filter(f => f.endsWith('.json'));
+      if (files.length) {
+        const newest = files.reduce((a, b) => {
+          const sa = fs.statSync(path.join(outDir, a));
+          const sb = fs.statSync(path.join(outDir, b));
+          return sa.mtimeMs > sb.mtimeMs ? a : b;
+        });
+        const fallbackPath = path.join(outDir, newest);
+        const fallbackData = JSON.parse(fs.readFileSync(fallbackPath, 'utf8'));
+        console.warn('[Scrape][POST] Using cached fallback:', newest);
+        return res.json({ data: fallbackData });
+      }
+    } catch (fallbackErr) {
+      console.error('[Scrape][POST] Fallback failed:', fallbackErr);
+    }
+    return res.status(500).json({ error: 'Failed to perform deep scrape', details: e.message });
   }
 });
 
@@ -199,6 +235,21 @@ app.get('/api/debug/firestore/user-meals-smoke', async (req, res) => {
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// Debug endpoint to parse a single item nutrition page directly
+// Usage: /api/debug/scrape-item?url=https://dining.purdue.edu/menus/item/<id>
+app.get('/api/debug/scrape-item', async (req, res) => {
+  try {
+    const itemId = req.query?.itemId;
+    if (!itemId) return res.status(400).json({ error: 'Missing itemId query parameter' });
+    console.log('[Debug] scrape-item fetching for itemId:', itemId);
+    const data = await getNutritionData(itemId);
+    return res.json({ itemId, data });
+  } catch (e) {
+    console.error('[Debug] scrape-item failed:', e);
+    return res.status(500).json({ error: 'Failed to scrape item', details: e.message });
+  }
 });
 
 // Debug endpoint to verify Firebase Admin project configuration

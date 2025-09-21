@@ -2,739 +2,1217 @@
   "Earhart": {
     "dining_court": "Earhart",
     "meal_time": "lunch",
-    "date": "2025/09/20",
+    "date": "2025/09/21",
     "stations": {
       "Granite Grill": [
         {
-          "name": "Austin Blues Pulled Pork",
+          "name": "Breaded Pork Tenderloin",
           "station": "Granite Grill",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/4cd4e545-78be-4640-9d23-790d82ce943b"
-        },
-        {
-          "name": "Sliced Red Onions",
-          "station": "Granite Grill",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/88f2a2a7-89c7-456d-a089-788362c1c29a"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/9f2ef8e3-0d9c-4fc3-aa1d-949b3af47633",
+          "total_calories": 176,
+          "total_fat_g": 4.4112,
+          "saturated_fat_g": 1.5082,
+          "cholesterol_mg": 38,
+          "sodium_mg": 453,
+          "total_carbs_g": 11.3398,
+          "dietary_fiber_g": 0,
+          "protein_g": 22.6569,
+          "serving_size": "1 Each Serving",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "Creamy Coleslaw",
           "station": "Granite Grill",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/cc614b40-c72a-4679-83e0-296c780f969d"
-        },
-        {
-          "name": "Dill Pickle Slices",
-          "station": "Granite Grill",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/34cf76c2-ff01-4d24-914a-7587859cbfb2"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/cc614b40-c72a-4679-83e0-296c780f969d",
+          "total_calories": 89,
+          "total_fat_g": 4.3751,
+          "saturated_fat_g": 0.625,
+          "cholesterol_mg": 6,
+          "sodium_mg": 296,
+          "total_carbs_g": 11.7511,
+          "dietary_fiber_g": 1.3334,
+          "protein_g": 0.6666,
+          "serving_size": "1/2 Cup",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "Hamburger Bun",
           "station": "Granite Grill",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/55e312d4-80f1-4349-84f5-57d521347c56"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/55e312d4-80f1-4349-84f5-57d521347c56",
+          "total_calories": 140,
+          "total_fat_g": 1.4962,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 229,
+          "total_carbs_g": 27.9295,
+          "dietary_fiber_g": 0.9975,
+          "protein_g": 3.9899,
+          "serving_size": "Bun",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Crinkle Cut Fries",
+          "name": "Sweet Potato Wedge Fries",
           "station": "Granite Grill",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/1a5dd07f-834b-4465-8d4b-b2f4fcae7e01"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/c4e2cb5e-7e0a-42cf-ba3c-7ac2e98a954d",
+          "total_calories": 320,
+          "total_fat_g": 12.0068,
+          "saturated_fat_g": 2.0012,
+          "cholesterol_mg": 0,
+          "sodium_mg": 380,
+          "total_carbs_g": 50.0286,
+          "dietary_fiber_g": 2.0012,
+          "protein_g": 2.0012,
+          "serving_size": "6 oz Serving",
+          "nutrition_source": "v2_rest"
         }
       ],
       "Heartland Classics": [
         {
-          "name": "Lasagna",
+          "name": "Chicken And Noodles",
           "station": "Heartland Classics",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/111bf101-d390-488d-ae78-75d18749d346"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/21c9dc15-1c15-470c-b608-927f0bca717a",
+          "total_calories": 443,
+          "total_fat_g": 17.2983,
+          "saturated_fat_g": 6.6683,
+          "cholesterol_mg": 160,
+          "sodium_mg": 1024,
+          "total_carbs_g": 51.1823,
+          "dietary_fiber_g": 1.5592,
+          "protein_g": 18.4105,
+          "serving_size": "Cup Serving",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Lasagna Rollups with Alfredo Sauce",
+          "name": "Whipped Potatoes",
           "station": "Heartland Classics",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/9e25d795-02f8-4bf4-ac15-77f4aa620658"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/0a0d1e53-9365-48bc-b449-6d37ce0f3ed5",
+          "total_calories": 107,
+          "total_fat_g": 1.189,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 444,
+          "total_carbs_g": 20.2136,
+          "dietary_fiber_g": 1.189,
+          "protein_g": 2.3781,
+          "serving_size": "1/2 Cup Serving",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Roasted Brussels Sprouts",
+          "name": "Pesto Alfredo Cream Sauce",
           "station": "Heartland Classics",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/140ab3cc-84bb-481b-8de1-89c4f0e3aa0b"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/9ef965f5-75a0-4f50-94c1-1f7a79cdaee4",
+          "total_calories": 281,
+          "total_fat_g": 25.2296,
+          "saturated_fat_g": 7.7839,
+          "cholesterol_mg": 38,
+          "sodium_mg": 690,
+          "total_carbs_g": 7.8238,
+          "dietary_fiber_g": 0.24,
+          "protein_g": 5.9079,
+          "serving_size": "1/2 Cup Serving",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Garlic Bread",
+          "name": "Linguini",
           "station": "Heartland Classics",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/c7a374b7-8e93-4272-a244-c7c8cc4840c3"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/a47bddd6-9a1a-4a28-8482-16c5fbc39277",
+          "total_calories": 172,
+          "total_fat_g": 1.8931,
+          "saturated_fat_g": 0.0772,
+          "cholesterol_mg": 0,
+          "sodium_mg": 595,
+          "total_carbs_g": 34.0194,
+          "dietary_fiber_g": 2.43,
+          "protein_g": 5.6698,
+          "serving_size": "1 Cup",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Grilled Zucchini",
+          "name": "Green Beans",
           "station": "Heartland Classics",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/38ce3f45-44a6-4487-bc7f-f88d8f080e7c"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/793905a8-edce-43b2-be5e-79d545b3c5ee",
+          "total_calories": 15,
+          "total_fat_g": 0,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 283,
+          "total_carbs_g": 2.925,
+          "dietary_fiber_g": 0.975,
+          "protein_g": 0.975,
+          "serving_size": "1/2 Cup Serving",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Dinner Rolls",
+          "station": "Heartland Classics",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/005fa9e5-75b4-4e5b-8483-d4958fbc9ac5",
+          "total_calories": 99,
+          "total_fat_g": 0.9947,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 159,
+          "total_carbs_g": 18.8992,
+          "dietary_fiber_g": 0.9947,
+          "protein_g": 2.9841,
+          "serving_size": "Roll",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Cinnamon Honey Butter",
+          "station": "Heartland Classics",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/ff0b5fe2-f41a-4c3f-87f7-6cc9469523c9",
+          "total_calories": 79,
+          "total_fat_g": 6.9615,
+          "saturated_fat_g": 4.4298,
+          "cholesterol_mg": 19,
+          "sodium_mg": 57,
+          "total_carbs_g": 4.3481,
+          "dietary_fiber_g": 0.0297,
+          "protein_g": 0.0022,
+          "serving_size": "Tablespoon",
+          "nutrition_source": "v2_rest"
         }
       ],
       "The Gallery": [
         {
-          "name": "MYO Stir Fry",
+          "name": "Pork Potstickers",
           "station": "The Gallery",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/494b053e-907f-402d-bdc1-208122cc798c/26f5299f-caed-430f-98c3-924a4c2e7674"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/42b630fd-51b0-499e-a413-a7d55dc91b34",
+          "total_calories": 53,
+          "total_fat_g": 1.5,
+          "saturated_fat_g": 0.5,
+          "cholesterol_mg": 5,
+          "sodium_mg": 150,
+          "total_carbs_g": 8,
+          "dietary_fiber_g": 0.3333,
+          "protein_g": 2.3333,
+          "serving_size": "1 Each Serving",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Mini Spring Rolls",
+          "name": "Potsticker Sauce",
           "station": "The Gallery",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/8250ca53-98cb-4ba9-9699-c760e1375c3d"
-        },
-        {
-          "name": "Tempura Sweet and Sour Sauce",
-          "station": "The Gallery",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/ab98a972-ac86-42d6-8a5a-02b00ade4549"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/ee307a2c-6f3d-47c1-a828-ad5085d60150",
+          "total_calories": 17,
+          "total_fat_g": 0.3315,
+          "saturated_fat_g": 0.0475,
+          "cholesterol_mg": 0,
+          "sodium_mg": 357,
+          "total_carbs_g": 3.3178,
+          "dietary_fiber_g": 0.0851,
+          "protein_g": 0.581,
+          "serving_size": "Tablespoon",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "Long Grain Rice",
           "station": "The Gallery",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/9e6eb50a-0778-49fd-a84e-d9d476f1a297"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/9e6eb50a-0778-49fd-a84e-d9d476f1a297",
+          "total_calories": 122,
+          "total_fat_g": 0,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 0,
+          "total_carbs_g": 27.3489,
+          "dietary_fiber_g": 0.7597,
+          "protein_g": 2.2791,
+          "serving_size": "1/2 Cup",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "Fried Rice",
           "station": "The Gallery",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/923de590-b346-44f9-962d-dbec39f26ab5"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/923de590-b346-44f9-962d-dbec39f26ab5",
+          "total_calories": 182,
+          "total_fat_g": 5.7831,
+          "saturated_fat_g": 0.7826,
+          "cholesterol_mg": 47,
+          "sodium_mg": 442,
+          "total_carbs_g": 27.4732,
+          "dietary_fiber_g": 1.017,
+          "protein_g": 3.8927,
+          "serving_size": "1/2 Cup Serving",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Sliced Smoked Polish Sausage",
+          "station": "The Gallery",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/16057b36-ebae-4075-8a8a-c72d027ddf5e",
+          "total_calories": 87,
+          "total_fat_g": 7.3211,
+          "saturated_fat_g": 2.2874,
+          "cholesterol_mg": 16,
+          "sodium_mg": 233,
+          "total_carbs_g": 1.3719,
+          "dietary_fiber_g": 0,
+          "protein_g": 3.6592,
+          "serving_size": "Ounce",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "Hoisin Sauce",
           "station": "The Gallery",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/8adc27d6-b899-4b14-b234-bc28d88c5fca"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/8adc27d6-b899-4b14-b234-bc28d88c5fca",
+          "total_calories": 31,
+          "total_fat_g": 0.4805,
+          "saturated_fat_g": 0.0805,
+          "cholesterol_mg": 0,
+          "sodium_mg": 229,
+          "total_carbs_g": 6.2482,
+          "dietary_fiber_g": 0.3969,
+          "protein_g": 0.4692,
+          "serving_size": "Tablespoon",
+          "nutrition_source": "v2_rest"
         }
       ],
-      "Totally Italian": [
-        {
-          "name": "Pizza Crust",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/ba8d80dc-70e2-47f0-8f2e-3b77cfcca9bf"
-        },
-        {
-          "name": "Thin Pizza Crust",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/ef86c378-ce9e-4b6a-b51a-c20b4e66b8f1"
-        },
-        {
-          "name": "Pizza Sauce",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/fb1364ab-ee6c-47d1-ad3a-fc6768617fbc"
-        },
-        {
-          "name": "Garlic Butter Spread",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/8595f77d-a155-4b1f-98cf-0e356252b615"
-        },
-        {
-          "name": "White Garlic Sauce",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/924e4e33-c35e-4b3c-bf80-711fc3594a73"
-        },
-        {
-          "name": "Kale Pesto",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/de6f0669-b6fa-4167-bed3-7c407ea3b70e"
-        },
-        {
-          "name": "Frank's Red Hot Buffalo Sauce",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/7aeb9ae6-8fc2-4324-8f13-99345c484e8b"
-        },
-        {
-          "name": "Ken's Cannonball BBQ Sauce",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/dd53ce1d-f2b9-4698-8dc2-f6a5d96b87d1"
-        },
-        {
-          "name": "Hidden Valley Ranch Dressing",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/d8447f28-4d9f-4971-8db1-27bcd7a97ca0"
-        },
-        {
-          "name": "Diced Pepperoni",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/b65b3e04-5cf4-4f97-979c-7797c1a45ed6"
-        },
-        {
-          "name": "Ham Slices",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/eb3959f9-2c0d-4a01-be74-98fdc70d2fcc"
-        },
-        {
-          "name": "Thin Cut Chicken Breast Strips",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/521f5e4b-4665-4f77-8ad5-9b6486dc9731"
-        },
-        {
-          "name": "Sausage Crumbles",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/0932decd-5692-4f08-a279-22faea598129"
-        },
-        {
-          "name": "Bacon Bits",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/8c53e1d4-0d10-401c-b7db-9e77c4996142"
-        },
-        {
-          "name": "Sliced Fresh Mushrooms",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/29a4c1ce-b68d-4699-aab5-b77ab5fca768"
-        },
-        {
-          "name": "Sliced Red Onions",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/88f2a2a7-89c7-456d-a089-788362c1c29a"
-        },
-        {
-          "name": "Diced Green Pepper",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/caac5ecf-6ba3-4703-b538-a9cc1153db16"
-        },
-        {
-          "name": "Black Olives",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/8d5d322c-b015-43f3-8147-2374ec4d8290"
-        },
-        {
-          "name": "Jalapeno Pepper Rings",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/31d8977b-0df7-4ed4-b26b-f70da4b9b183"
-        },
-        {
-          "name": "Sliced Banana Peppers",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/afb013fe-caa2-4a1c-896a-11e34e48ad8b"
-        },
-        {
-          "name": "Shredded 3 Cheese Blend",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/7374a586-2d84-4980-8652-b3c4d4a27a0d"
-        },
-        {
-          "name": "Grated Parmesan Cheese",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/5c7d5c81-f792-4c46-8934-e3e09d731c6c"
-        },
-        {
-          "name": "Mike's Hot Honey",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/5ee25f0e-d71b-4bc5-b598-c406100e0c31"
-        },
-        {
-          "name": "Mike's Extra Hot Honey",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/22b18fdb-c127-41e4-86e5-7a552376f20e"
-        },
-        {
-          "name": "Crushed Red Pepper",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/13fa2fc2-0af2-4193-b215-826c3434fa5a"
-        },
-        {
-          "name": "Italian Seasoning",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/85da87f2-9981-40be-93ef-7ed24cda141a"
-        },
-        {
-          "name": "Oregano",
-          "station": "Totally Italian",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/4181fd3c-96c1-4bb2-a999-0f13caf9eb9f"
-        }
-      ],
+      "Totally Italian": [],
       "The Pastry Shop": [
         {
-          "name": "Chocolate Candy Piece Cookie",
+          "name": "Peanut Butter Cookie",
           "station": "The Pastry Shop",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/08b0e608-89e7-475a-b206-384a66025b92"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/ae545da5-5f18-45b3-8b0a-4ce8ebd44bef",
+          "total_calories": 120,
+          "total_fat_g": 6,
+          "saturated_fat_g": 2,
+          "cholesterol_mg": 5,
+          "sodium_mg": 135,
+          "total_carbs_g": 17,
+          "dietary_fiber_g": 0,
+          "protein_g": 2,
+          "serving_size": "Cookie",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Oreo Cheesecake Bar",
+          "name": "Banana Cake with Banana Frosting",
           "station": "The Pastry Shop",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/5cdef56c-77ea-4cc7-96e4-1946dd090510"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/e0fb8aa1-b40a-49ca-bdb1-b03117e14332",
+          "total_calories": 609,
+          "total_fat_g": 22.6204,
+          "saturated_fat_g": 9.541,
+          "cholesterol_mg": 51,
+          "sodium_mg": 542,
+          "total_carbs_g": 101.1124,
+          "dietary_fiber_g": 2.2857,
+          "protein_g": 5.2337,
+          "serving_size": "8x5 Cut Serving",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Cherry Pie",
+          "name": "Dirt Pudding",
           "station": "The Pastry Shop",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/0a66644f-c556-4a61-9ea5-f40150c00152"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/8233a835-2070-4e94-a9c9-5eb1ea50dd0d",
+          "total_calories": 265,
+          "total_fat_g": 10.2554,
+          "saturated_fat_g": 6.7608,
+          "cholesterol_mg": 23,
+          "sodium_mg": 375,
+          "total_carbs_g": 37.5156,
+          "dietary_fiber_g": 0.3573,
+          "protein_g": 3.7415,
+          "serving_size": "1/2 Cup",
+          "nutrition_source": "v2_rest"
         }
       ],
       "Salad Stop": [
         {
-          "name": "Salad Bar",
+          "name": "Summer Symphony Fruit Salad",
           "station": "Salad Stop",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/fe840b88-8888-4e79-ab2e-814dd9e7a45f/df7d1415-ed3a-4cd0-827c-406efc042297"
-        },
-        {
-          "name": "White Grapes",
-          "station": "Salad Stop",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/512f31b3-2637-475e-8d87-3107f442638c"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/273bf0bc-2e4a-4183-948b-c55626392e16",
+          "total_calories": 65,
+          "total_fat_g": 0.2312,
+          "saturated_fat_g": 0.0289,
+          "cholesterol_mg": 0,
+          "sodium_mg": 1,
+          "total_carbs_g": 16.6833,
+          "dietary_fiber_g": 1.6164,
+          "protein_g": 0.7138,
+          "serving_size": "1/2 Cup",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "Dark Chocolate Sea Salt Seed'nola",
           "station": "Salad Stop",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/5e54c87b-9a54-4073-be2d-125e7408cc3f"
-        },
-        {
-          "name": "Mandarin Oranges",
-          "station": "Salad Stop",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/4b2e3ed0-1935-43be-9697-dcb6f6804158"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/5e54c87b-9a54-4073-be2d-125e7408cc3f",
+          "total_calories": 132,
+          "total_fat_g": 7.0874,
+          "saturated_fat_g": 1.5187,
+          "cholesterol_mg": 0,
+          "sodium_mg": 71,
+          "total_carbs_g": 13.1623,
+          "dietary_fiber_g": 2.025,
+          "protein_g": 4.0499,
+          "serving_size": "Ounce",
+          "nutrition_source": "v2_rest"
         }
       ],
-      "Souper Deli": [
-        {
-          "name": "Deli Bar",
-          "station": "Souper Deli",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/255941ec-72a3-45cb-bfed-cb2d0e4119d9/311f3aa2-d32a-46ba-8cb0-7e4145bbffb7"
-        }
-      ],
+      "Souper Deli": [],
       "By Request": [
         {
           "name": "GF White Bread",
           "station": "By Request",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/4ff6bcd3-d44e-445d-bc02-6243c876440b"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/4ff6bcd3-d44e-445d-bc02-6243c876440b",
+          "total_calories": 130,
+          "total_fat_g": 4.3392,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 234,
+          "total_carbs_g": 20.8282,
+          "dietary_fiber_g": 0.8678,
+          "protein_g": 1.7357,
+          "serving_size": "Slice",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "GF Hamburger Bun",
           "station": "By Request",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/72449982-e58b-4d1f-a472-511a0ac6865a"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/72449982-e58b-4d1f-a472-511a0ac6865a",
+          "total_calories": 240,
+          "total_fat_g": 7,
+          "saturated_fat_g": 0.5,
+          "cholesterol_mg": 0,
+          "sodium_mg": 440,
+          "total_carbs_g": 44,
+          "dietary_fiber_g": 6,
+          "protein_g": 5,
+          "serving_size": "Bun",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "Vegan Shredded Mozzarella Cheese",
           "station": "By Request",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/807ce933-8003-419a-b5c3-b7eef59b45a5"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/807ce933-8003-419a-b5c3-b7eef59b45a5",
+          "total_calories": 90,
+          "total_fat_g": 6,
+          "saturated_fat_g": 5,
+          "cholesterol_mg": 0,
+          "sodium_mg": 280,
+          "total_carbs_g": 6,
+          "dietary_fiber_g": 0,
+          "protein_g": 1,
+          "serving_size": "Ounce",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "GF Blueberry Muffin",
           "station": "By Request",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/376f78d1-56ce-44ce-963a-c6710560c654"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/376f78d1-56ce-44ce-963a-c6710560c654",
+          "total_calories": 270,
+          "total_fat_g": 9,
+          "saturated_fat_g": 2.5,
+          "cholesterol_mg": 60,
+          "sodium_mg": 250,
+          "total_carbs_g": 39,
+          "dietary_fiber_g": 0.99,
+          "protein_g": 3,
+          "serving_size": "Each",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "Malibu Burger",
           "station": "By Request",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/94f931a2-9812-452f-8843-d179e66190e4"
-        },
-        {
-          "name": "Italian Ice",
-          "station": "By Request",
-          "court": "Earhart",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/0944faba-c4c3-46ca-b2bb-bdbd2406ba60"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/94f931a2-9812-452f-8843-d179e66190e4",
+          "total_calories": 160,
+          "total_fat_g": 7.9752,
+          "saturated_fat_g": 0.9969,
+          "cholesterol_mg": 0,
+          "sodium_mg": 439,
+          "total_carbs_g": 20.935,
+          "dietary_fiber_g": 2.9907,
+          "protein_g": 3.9876,
+          "serving_size": "Burger",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "GF Hot Dog Bun",
           "station": "By Request",
           "court": "Earhart",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/1359a560-f891-4657-8bde-23d1ce3995d4"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/1359a560-f891-4657-8bde-23d1ce3995d4",
+          "total_calories": 210,
+          "total_fat_g": 5,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 350,
+          "total_carbs_g": 35,
+          "dietary_fiber_g": 4,
+          "protein_g": 4,
+          "serving_size": "Bun",
+          "nutrition_source": "v2_rest"
         }
       ]
     },
-    "total_items": 59
+    "total_items": 28
   },
   "Ford": {
     "dining_court": "Ford",
     "meal_time": "lunch",
-    "date": "2025/09/20",
+    "date": "2025/09/21",
     "stations": {
       "BoilerQ": [
         {
-          "name": "All Beef Hot Dog",
+          "name": "Breaded Chicken Strips",
           "station": "BoilerQ",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/f5ff32c7-338a-4d3d-8b5d-477daae4c1cc"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/f32a2376-69b0-45c5-a4a0-6697de96fe6f",
+          "total_calories": 453,
+          "total_fat_g": 27.6887,
+          "saturated_fat_g": 6.2929,
+          "cholesterol_mg": 101,
+          "sodium_mg": 1183,
+          "total_carbs_g": 17.6201,
+          "dietary_fiber_g": 0,
+          "protein_g": 27.6887,
+          "serving_size": "5 Per Serving",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Poppy Seed Hot Dog Bun",
+          "name": "Waffle Fries",
           "station": "BoilerQ",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/26f918e5-e48d-41af-8969-ab27aefa441b"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/b3d71414-03e8-4b4d-91b1-04cfc8698808",
+          "total_calories": 202,
+          "total_fat_g": 9.4498,
+          "saturated_fat_g": 1.35,
+          "cholesterol_mg": 0,
+          "sodium_mg": 178,
+          "total_carbs_g": 28.3495,
+          "dietary_fiber_g": 1.35,
+          "protein_g": 2.7,
+          "serving_size": "4 oz Serving",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Chicago Style Relish",
+          "name": "Cheese Sauce",
           "station": "BoilerQ",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/a05300a7-cca3-4bf5-a573-313fe2b3dd64"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/0285358d-fc26-435b-9e52-cd5bb4a8f32a",
+          "total_calories": 46,
+          "total_fat_g": 3.2773,
+          "saturated_fat_g": 1.6387,
+          "cholesterol_mg": 0,
+          "sodium_mg": 374,
+          "total_carbs_g": 3.9328,
+          "dietary_fiber_g": 0,
+          "protein_g": 0,
+          "serving_size": "2 oz Ladle",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Diced Onion",
+          "name": "Hidden Valley Ranch Dressing",
           "station": "BoilerQ",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/158cdf12-7149-46a9-abee-d303282a67ad"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/d8447f28-4d9f-4971-8db1-27bcd7a97ca0",
+          "total_calories": 69,
+          "total_fat_g": 7.3422,
+          "saturated_fat_g": 1.2025,
+          "cholesterol_mg": 4,
+          "sodium_mg": 119,
+          "total_carbs_g": 0.3508,
+          "dietary_fiber_g": 0.0001,
+          "protein_g": 0.2672,
+          "serving_size": "Tablespoon",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Sport Pepper",
+          "name": "Honey Mustard Dressing",
           "station": "BoilerQ",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/d4e67867-d2a1-405c-bf76-1fc9080632eb"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/e4b82473-5b1e-40ca-a863-17abcce2ad76",
+          "total_calories": 55,
+          "total_fat_g": 3.5,
+          "saturated_fat_g": 0.5,
+          "cholesterol_mg": 3,
+          "sodium_mg": 135,
+          "total_carbs_g": 5,
+          "dietary_fiber_g": 0,
+          "protein_g": 0,
+          "serving_size": "Tablespoon",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Yellow Mustard",
+          "name": "Ken's Cannonball BBQ Sauce",
           "station": "BoilerQ",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/a298388f-9c3f-44af-8b24-6827932fe211"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/dd53ce1d-f2b9-4698-8dc2-f6a5d96b87d1",
+          "total_calories": 32,
+          "total_fat_g": 0,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 201,
+          "total_carbs_g": 7.9286,
+          "dietary_fiber_g": 0,
+          "protein_g": 0,
+          "serving_size": "Tablespoon",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Dill Pickle Spear",
+          "name": "Buffalo Sauce",
           "station": "BoilerQ",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/031bb34c-e39c-49bc-9d53-82ba22a246ac"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/c14edcc2-cb9f-4e75-825f-df8b7b4ec717",
+          "total_calories": 34,
+          "total_fat_g": 3.7032,
+          "saturated_fat_g": 1.5149,
+          "cholesterol_mg": 0,
+          "sodium_mg": 415,
+          "total_carbs_g": 0,
+          "dietary_fiber_g": 0,
+          "protein_g": 0,
+          "serving_size": "Tablespoon",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Celery Salt",
+          "name": "Garlic Parmesan Sauce",
           "station": "BoilerQ",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/a7d8c47e-fae7-4f00-a56e-84fdabd16b31"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/848827de-af97-4998-8a79-393001048489",
+          "total_calories": 76,
+          "total_fat_g": 7.5599,
+          "saturated_fat_g": 0.945,
+          "cholesterol_mg": 0,
+          "sodium_mg": 416,
+          "total_carbs_g": 1.89,
+          "dietary_fiber_g": 0,
+          "protein_g": 0,
+          "serving_size": "Ounce",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Diced Tomatoes",
+          "name": "Hot Honey Sauce",
           "station": "BoilerQ",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/43f440fb-cb78-450a-b7f0-6e6b8ca318d1"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/afce9692-680a-4767-9d81-c2ccb0279c0d",
+          "total_calories": 47,
+          "total_fat_g": 0,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 299,
+          "total_carbs_g": 12.5998,
+          "dietary_fiber_g": 0,
+          "protein_g": 0,
+          "serving_size": "Ounce",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Thin Cut Fries",
+          "name": "Honey BBQ Wing Sauce",
           "station": "BoilerQ",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/5befb4c1-9fe2-4d58-aead-4721a7df022b"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/ab29e36b-3087-4375-8f68-ee0b71246798",
+          "total_calories": 155,
+          "total_fat_g": 0,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 603,
+          "total_carbs_g": 40.7854,
+          "dietary_fiber_g": 0,
+          "protein_g": 0,
+          "serving_size": "1/4 Cup Serving",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Kogi Sweet Garlic Teriyaki Sauce",
+          "station": "BoilerQ",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/a25bead0-ff89-497d-a55b-4358fa7f15dd",
+          "total_calories": 47,
+          "total_fat_g": 0,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 576,
+          "total_carbs_g": 10.8944,
+          "dietary_fiber_g": 0,
+          "protein_g": 0.7782,
+          "serving_size": "2 Tbsp",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Frank's Red Hot Buffalo Sauce",
+          "station": "BoilerQ",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/7aeb9ae6-8fc2-4324-8f13-99345c484e8b",
+          "total_calories": 0,
+          "total_fat_g": 0,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 466,
+          "total_carbs_g": 0,
+          "dietary_fiber_g": 0,
+          "protein_g": 0,
+          "serving_size": "Tablespoon",
+          "nutrition_source": "v2_rest"
         }
       ],
       "Potāto, Potäto": [
         {
-          "name": "Country Fried Steak",
+          "name": "Lasagna",
           "station": "Potāto, Potäto",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/3f0c2d47-04f7-40f9-9881-c76d1dd060df"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/111bf101-d390-488d-ae78-75d18749d346",
+          "total_calories": 202,
+          "total_fat_g": 5.9946,
+          "saturated_fat_g": 2.9973,
+          "cholesterol_mg": 22,
+          "sodium_mg": 607,
+          "total_carbs_g": 24.7277,
+          "dietary_fiber_g": 2.248,
+          "protein_g": 12.7386,
+          "serving_size": "4x4 Cut Serving",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Whipped Potatoes",
+          "name": "Vegetable Lasagna",
           "station": "Potāto, Potäto",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/0a0d1e53-9365-48bc-b449-6d37ce0f3ed5"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/15138747-87d9-404d-9b60-7e9a3c48622d",
+          "total_calories": 225,
+          "total_fat_g": 10.4999,
+          "saturated_fat_g": 6,
+          "cholesterol_mg": 34,
+          "sodium_mg": 660,
+          "total_carbs_g": 21,
+          "dietary_fiber_g": 1.4999,
+          "protein_g": 11.25,
+          "serving_size": "4x4 Cut Serving",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Cream Gravy",
+          "name": "Fresh Spinach",
           "station": "Potāto, Potäto",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/d7f8d3f3-c9c5-44da-8e66-903d8ebb6143"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/7550c3b1-812f-4dd0-95fa-af53304cfae2",
+          "total_calories": 7,
+          "total_fat_g": 0.1106,
+          "saturated_fat_g": 0.0179,
+          "cholesterol_mg": 0,
+          "sodium_mg": 22,
+          "total_carbs_g": 1.0291,
+          "dietary_fiber_g": 0.6237,
+          "protein_g": 0.8108,
+          "serving_size": "Ounce",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Corn",
+          "name": "Vegan Quinoa and Peppers",
           "station": "Potāto, Potäto",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/c7ce16ab-523c-425d-969a-c20a9698144a"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/179c4de1-317c-4b45-af35-eb80211fb9de",
+          "total_calories": 454,
+          "total_fat_g": 24.095,
+          "saturated_fat_g": 4.1824,
+          "cholesterol_mg": 0,
+          "sodium_mg": 812,
+          "total_carbs_g": 50.0114,
+          "dietary_fiber_g": 6.8986,
+          "protein_g": 9.7358,
+          "serving_size": "2 # 6 Dishers",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Sweet Yeasty Rolls",
+          "name": "Dinner Rolls",
           "station": "Potāto, Potäto",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/553c5d21-4ddf-4805-8c92-7808d11d4f96"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/005fa9e5-75b4-4e5b-8483-d4958fbc9ac5",
+          "total_calories": 99,
+          "total_fat_g": 0.9947,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 159,
+          "total_carbs_g": 18.8992,
+          "dietary_fiber_g": 0.9947,
+          "protein_g": 2.9841,
+          "serving_size": "Roll",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "Whipped Butter",
           "station": "Potāto, Potäto",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/db3ec71d-8894-41a0-97ca-4106a971ad6f"
-        },
-        {
-          "name": "Roasted Broccolini",
-          "station": "Potāto, Potäto",
-          "court": "Ford",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/026859fa-75f3-4cc0-aae1-cd0613b6401a"
-        },
-        {
-          "name": "Baked Beans",
-          "station": "Potāto, Potäto",
-          "court": "Ford",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/69015f24-d8d9-4514-9592-b09918ec3ecc"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/db3ec71d-8894-41a0-97ca-4106a971ad6f",
+          "total_calories": 50,
+          "total_fat_g": 5,
+          "saturated_fat_g": 3,
+          "cholesterol_mg": 15,
+          "sodium_mg": 40,
+          "total_carbs_g": 0,
+          "dietary_fiber_g": 0,
+          "protein_g": 0,
+          "serving_size": "Tablespoon",
+          "nutrition_source": "v2_rest"
         }
       ],
       "International Market": [
         {
-          "name": "Country Fried Steak",
+          "name": "Breaded Chicken Strips",
           "station": "International Market",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/3f0c2d47-04f7-40f9-9881-c76d1dd060df"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/f32a2376-69b0-45c5-a4a0-6697de96fe6f",
+          "total_calories": 453,
+          "total_fat_g": 27.6887,
+          "saturated_fat_g": 6.2929,
+          "cholesterol_mg": 101,
+          "sodium_mg": 1183,
+          "total_carbs_g": 17.6201,
+          "dietary_fiber_g": 0,
+          "protein_g": 27.6887,
+          "serving_size": "5 Per Serving",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Whipped Potatoes",
+          "name": "Waffle Fries",
           "station": "International Market",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/0a0d1e53-9365-48bc-b449-6d37ce0f3ed5"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/b3d71414-03e8-4b4d-91b1-04cfc8698808",
+          "total_calories": 202,
+          "total_fat_g": 9.4498,
+          "saturated_fat_g": 1.35,
+          "cholesterol_mg": 0,
+          "sodium_mg": 178,
+          "total_carbs_g": 28.3495,
+          "dietary_fiber_g": 1.35,
+          "protein_g": 2.7,
+          "serving_size": "4 oz Serving",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Cream Gravy",
+          "name": "Cheese Sauce",
           "station": "International Market",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/d7f8d3f3-c9c5-44da-8e66-903d8ebb6143"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/0285358d-fc26-435b-9e52-cd5bb4a8f32a",
+          "total_calories": 46,
+          "total_fat_g": 3.2773,
+          "saturated_fat_g": 1.6387,
+          "cholesterol_mg": 0,
+          "sodium_mg": 374,
+          "total_carbs_g": 3.9328,
+          "dietary_fiber_g": 0,
+          "protein_g": 0,
+          "serving_size": "2 oz Ladle",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Corn",
+          "name": "Hidden Valley Ranch Dressing",
           "station": "International Market",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/c7ce16ab-523c-425d-969a-c20a9698144a"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/d8447f28-4d9f-4971-8db1-27bcd7a97ca0",
+          "total_calories": 69,
+          "total_fat_g": 7.3422,
+          "saturated_fat_g": 1.2025,
+          "cholesterol_mg": 4,
+          "sodium_mg": 119,
+          "total_carbs_g": 0.3508,
+          "dietary_fiber_g": 0.0001,
+          "protein_g": 0.2672,
+          "serving_size": "Tablespoon",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Sweet Yeasty Rolls",
+          "name": "Honey Mustard Dressing",
           "station": "International Market",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/553c5d21-4ddf-4805-8c92-7808d11d4f96"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/e4b82473-5b1e-40ca-a863-17abcce2ad76",
+          "total_calories": 55,
+          "total_fat_g": 3.5,
+          "saturated_fat_g": 0.5,
+          "cholesterol_mg": 3,
+          "sodium_mg": 135,
+          "total_carbs_g": 5,
+          "dietary_fiber_g": 0,
+          "protein_g": 0,
+          "serving_size": "Tablespoon",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Whipped Butter",
+          "name": "Ken's Cannonball BBQ Sauce",
           "station": "International Market",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/db3ec71d-8894-41a0-97ca-4106a971ad6f"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/dd53ce1d-f2b9-4698-8dc2-f6a5d96b87d1",
+          "total_calories": 32,
+          "total_fat_g": 0,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 201,
+          "total_carbs_g": 7.9286,
+          "dietary_fiber_g": 0,
+          "protein_g": 0,
+          "serving_size": "Tablespoon",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Roasted Broccolini",
+          "name": "Buffalo Sauce",
           "station": "International Market",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/026859fa-75f3-4cc0-aae1-cd0613b6401a"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/c14edcc2-cb9f-4e75-825f-df8b7b4ec717",
+          "total_calories": 34,
+          "total_fat_g": 3.7032,
+          "saturated_fat_g": 1.5149,
+          "cholesterol_mg": 0,
+          "sodium_mg": 415,
+          "total_carbs_g": 0,
+          "dietary_fiber_g": 0,
+          "protein_g": 0,
+          "serving_size": "Tablespoon",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Baked Beans",
+          "name": "Garlic Parmesan Sauce",
           "station": "International Market",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/69015f24-d8d9-4514-9592-b09918ec3ecc"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/848827de-af97-4998-8a79-393001048489",
+          "total_calories": 76,
+          "total_fat_g": 7.5599,
+          "saturated_fat_g": 0.945,
+          "cholesterol_mg": 0,
+          "sodium_mg": 416,
+          "total_carbs_g": 1.89,
+          "dietary_fiber_g": 0,
+          "protein_g": 0,
+          "serving_size": "Ounce",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Hot Honey Sauce",
+          "station": "International Market",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/afce9692-680a-4767-9d81-c2ccb0279c0d",
+          "total_calories": 47,
+          "total_fat_g": 0,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 299,
+          "total_carbs_g": 12.5998,
+          "dietary_fiber_g": 0,
+          "protein_g": 0,
+          "serving_size": "Ounce",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Honey BBQ Wing Sauce",
+          "station": "International Market",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/ab29e36b-3087-4375-8f68-ee0b71246798",
+          "total_calories": 155,
+          "total_fat_g": 0,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 603,
+          "total_carbs_g": 40.7854,
+          "dietary_fiber_g": 0,
+          "protein_g": 0,
+          "serving_size": "1/4 Cup Serving",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Kogi Sweet Garlic Teriyaki Sauce",
+          "station": "International Market",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/a25bead0-ff89-497d-a55b-4358fa7f15dd",
+          "total_calories": 47,
+          "total_fat_g": 0,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 576,
+          "total_carbs_g": 10.8944,
+          "dietary_fiber_g": 0,
+          "protein_g": 0.7782,
+          "serving_size": "2 Tbsp",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Frank's Red Hot Buffalo Sauce",
+          "station": "International Market",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/7aeb9ae6-8fc2-4324-8f13-99345c484e8b",
+          "total_calories": 0,
+          "total_fat_g": 0,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 466,
+          "total_carbs_g": 0,
+          "dietary_fiber_g": 0,
+          "protein_g": 0,
+          "serving_size": "Tablespoon",
+          "nutrition_source": "v2_rest"
         }
       ],
       "Parmesan Tomato": [
         {
-          "name": "Sausage Pizza",
+          "name": "Pepperoni Pizza",
           "station": "Parmesan Tomato",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/768ff5e1-f3e3-4845-a89c-75df2d6a67d2"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/6a25c460-2a03-4434-a1cf-46fcaf801974",
+          "total_calories": 164,
+          "total_fat_g": 7.2007,
+          "saturated_fat_g": 3.5692,
+          "cholesterol_mg": 18,
+          "sodium_mg": 345,
+          "total_carbs_g": 17.7336,
+          "dietary_fiber_g": 0.5981,
+          "protein_g": 6.2887,
+          "serving_size": "12 Cut Serving",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "Cheese Pizza",
           "station": "Parmesan Tomato",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/5681c96b-68da-48f5-a88d-d9e534a5a404"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/5681c96b-68da-48f5-a88d-d9e534a5a404",
+          "total_calories": 121,
+          "total_fat_g": 3.252,
+          "saturated_fat_g": 1.7467,
+          "cholesterol_mg": 7,
+          "sodium_mg": 196,
+          "total_carbs_g": 17.7336,
+          "dietary_fiber_g": 0.5981,
+          "protein_g": 4.77,
+          "serving_size": "12 Cut Serving",
+          "nutrition_source": "v2_rest"
         }
       ],
       "Salami and Swiss": [
-        {
-          "name": "Deli Bar",
-          "station": "Salami and Swiss",
-          "court": "Ford",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/34422c2a-dd40-44e5-8394-804b0e3a64bf/d5aa826e-6847-4dba-9a33-40e5b4cc9c41"
-        },
         {
           "name": "Kettle Potato Chips",
           "station": "Salami and Swiss",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/0c65ef86-1674-4e5c-b262-7da962c9f406"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/0c65ef86-1674-4e5c-b262-7da962c9f406",
+          "total_calories": 152,
+          "total_fat_g": 9.1124,
+          "saturated_fat_g": 1.0125,
+          "cholesterol_mg": 0,
+          "sodium_mg": 91,
+          "total_carbs_g": 17.2122,
+          "dietary_fiber_g": 1.0125,
+          "protein_g": 2.025,
+          "serving_size": "Ounce",
+          "nutrition_source": "v2_rest"
         }
       ],
       "Sugar Hill": [
         {
-          "name": "Chocolate Chip Cookie",
+          "name": "Double Chocolate Chip Cookie",
           "station": "Sugar Hill",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/6f6ef6dc-a4ac-47d1-8295-e82c302dba20"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/7c9b1531-501e-43af-ba2c-2ef320bbedf7",
+          "total_calories": 120,
+          "total_fat_g": 5,
+          "saturated_fat_g": 2,
+          "cholesterol_mg": 5,
+          "sodium_mg": 105,
+          "total_carbs_g": 18,
+          "dietary_fiber_g": 0,
+          "protein_g": 1,
+          "serving_size": "Cookie",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Luscious Lemon Bar",
+          "name": "Pound Cake",
           "station": "Sugar Hill",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/36f278d4-2785-436a-88c6-be3b532be2ab"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/a631f9ca-b010-4a20-8005-97ea3f69b085",
+          "total_calories": 91,
+          "total_fat_g": 5.5926,
+          "saturated_fat_g": 2.3548,
+          "cholesterol_mg": 22,
+          "sodium_mg": 59,
+          "total_carbs_g": 9.1247,
+          "dietary_fiber_g": 0.2914,
+          "protein_g": 0.883,
+          "serving_size": "12 Cut Serving",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Sundae Bar",
+          "name": "Strawberry Topping",
           "station": "Sugar Hill",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/01c96af9-4c7f-46cd-9d18-52d0ac180d53/50fc4fbc-e631-4b85-9ed7-c146d623455d"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/2e33c82b-84d9-44a5-94fc-d8fc4f15b02f",
+          "total_calories": 28,
+          "total_fat_g": 0,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 0,
+          "total_carbs_g": 6.7857,
+          "dietary_fiber_g": 0.1719,
+          "protein_g": 0.1719,
+          "serving_size": "Tablespoon",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Chocolate Peanut Butter Rice Krispie Bar",
+          "name": "Cookies & Cream Cake",
           "station": "Sugar Hill",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/49566075-9b6b-4d10-953a-ebbd0cd7d3bc"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/273e1e05-d0f8-4507-823e-85f318cdad23",
+          "total_calories": 360,
+          "total_fat_g": 18.3137,
+          "saturated_fat_g": 5.1339,
+          "cholesterol_mg": 0,
+          "sodium_mg": 243,
+          "total_carbs_g": 48.2344,
+          "dietary_fiber_g": 0.2859,
+          "protein_g": 2.7305,
+          "serving_size": "8x10 Cut Serving",
+          "nutrition_source": "v2_rest"
         }
       ],
       "Simple Servings": [
         {
-          "name": "Baked Beans",
+          "name": "Vegan Quinoa and Peppers",
           "station": "Simple Servings",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/8ef9199d-b35b-48c7-af0c-b4a6c4869b49"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/179c4de1-317c-4b45-af35-eb80211fb9de",
+          "total_calories": 454,
+          "total_fat_g": 24.095,
+          "saturated_fat_g": 4.1824,
+          "cholesterol_mg": 0,
+          "sodium_mg": 812,
+          "total_carbs_g": 50.0114,
+          "dietary_fiber_g": 6.8986,
+          "protein_g": 9.7358,
+          "serving_size": "2 # 6 Dishers",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Roasted Broccolini",
+          "name": "Fresh Spinach",
           "station": "Simple Servings",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/026859fa-75f3-4cc0-aae1-cd0613b6401a"
-        },
-        {
-          "name": "Corn",
-          "station": "Simple Servings",
-          "court": "Ford",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/c7ce16ab-523c-425d-969a-c20a9698144a"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/7550c3b1-812f-4dd0-95fa-af53304cfae2",
+          "total_calories": 7,
+          "total_fat_g": 0.1106,
+          "saturated_fat_g": 0.0179,
+          "cholesterol_mg": 0,
+          "sodium_mg": 22,
+          "total_carbs_g": 1.0291,
+          "dietary_fiber_g": 0.6237,
+          "protein_g": 0.8108,
+          "serving_size": "Ounce",
+          "nutrition_source": "v2_rest"
         }
       ],
       "Salads": [
         {
-          "name": "Salad Bar",
+          "name": "Marion Blackberries",
           "station": "Salads",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/6f395b9f-820c-430d-920f-8bb004905080/7a2dd4a2-1b29-4f0a-b303-d479654756ca"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/96268381-2b4d-49cc-88bb-4f09aecca9d7",
+          "total_calories": 35,
+          "total_fat_g": 0,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 0,
+          "total_carbs_g": 7,
+          "dietary_fiber_g": 2.5,
+          "protein_g": 0.5,
+          "serving_size": "1/2 Cup Serving",
+          "nutrition_source": "v2_rest"
         },
         {
-          "name": "Mandarin Oranges",
+          "name": "Peach Slices",
           "station": "Salads",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/42965e57-f502-400f-875a-5bfed6fe3195"
-        },
-        {
-          "name": "Red Sour Cherries",
-          "station": "Salads",
-          "court": "Ford",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/2b8f5adf-2b64-4216-9251-86dbe5668bfb"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/96229caa-47e5-454d-8664-d784d823eb25",
+          "total_calories": 56,
+          "total_fat_g": 0,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 0,
+          "total_carbs_g": 14.9134,
+          "dietary_fiber_g": 0.9321,
+          "protein_g": 0.9321,
+          "serving_size": "1/2 Cup",
+          "nutrition_source": "v2_rest"
         }
       ],
       "By Request": [
@@ -743,70 +1221,153 @@
           "station": "By Request",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/94f931a2-9812-452f-8843-d179e66190e4"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/94f931a2-9812-452f-8843-d179e66190e4",
+          "total_calories": 160,
+          "total_fat_g": 7.9752,
+          "saturated_fat_g": 0.9969,
+          "cholesterol_mg": 0,
+          "sodium_mg": 439,
+          "total_carbs_g": 20.935,
+          "dietary_fiber_g": 2.9907,
+          "protein_g": 3.9876,
+          "serving_size": "Burger",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "GF White Bread",
           "station": "By Request",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/4ff6bcd3-d44e-445d-bc02-6243c876440b"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/4ff6bcd3-d44e-445d-bc02-6243c876440b",
+          "total_calories": 130,
+          "total_fat_g": 4.3392,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 234,
+          "total_carbs_g": 20.8282,
+          "dietary_fiber_g": 0.8678,
+          "protein_g": 1.7357,
+          "serving_size": "Slice",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "GF Hamburger Bun",
           "station": "By Request",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/72449982-e58b-4d1f-a472-511a0ac6865a"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/72449982-e58b-4d1f-a472-511a0ac6865a",
+          "total_calories": 240,
+          "total_fat_g": 7,
+          "saturated_fat_g": 0.5,
+          "cholesterol_mg": 0,
+          "sodium_mg": 440,
+          "total_carbs_g": 44,
+          "dietary_fiber_g": 6,
+          "protein_g": 5,
+          "serving_size": "Bun",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "Vegan Shredded Mozzarella Cheese",
           "station": "By Request",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/807ce933-8003-419a-b5c3-b7eef59b45a5"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/807ce933-8003-419a-b5c3-b7eef59b45a5",
+          "total_calories": 90,
+          "total_fat_g": 6,
+          "saturated_fat_g": 5,
+          "cholesterol_mg": 0,
+          "sodium_mg": 280,
+          "total_carbs_g": 6,
+          "dietary_fiber_g": 0,
+          "protein_g": 1,
+          "serving_size": "Ounce",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "GF Cauliflower Pizza Crust",
           "station": "By Request",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/11d7de76-bf20-4d3c-9511-1121ad78a5a2"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/11d7de76-bf20-4d3c-9511-1121ad78a5a2",
+          "total_calories": 481,
+          "total_fat_g": 10.5299,
+          "saturated_fat_g": 6.017,
+          "cholesterol_mg": 30,
+          "sodium_mg": 842,
+          "total_carbs_g": 81.2299,
+          "dietary_fiber_g": 3.0085,
+          "protein_g": 12.0341,
+          "serving_size": "Crust",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "GF Double Chocolate Muffin",
           "station": "By Request",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/6b7a1b33-2117-459b-a115-cf49b2882c99"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/6b7a1b33-2117-459b-a115-cf49b2882c99",
+          "total_calories": 280,
+          "total_fat_g": 12,
+          "saturated_fat_g": 4.5,
+          "cholesterol_mg": 55,
+          "sodium_mg": 240,
+          "total_carbs_g": 40,
+          "dietary_fiber_g": 2,
+          "protein_g": 3,
+          "serving_size": "Muffin",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "GF Blueberry Muffin",
           "station": "By Request",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/376f78d1-56ce-44ce-963a-c6710560c654"
-        },
-        {
-          "name": "Italian Ice",
-          "station": "By Request",
-          "court": "Ford",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/0944faba-c4c3-46ca-b2bb-bdbd2406ba60"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/376f78d1-56ce-44ce-963a-c6710560c654",
+          "total_calories": 270,
+          "total_fat_g": 9,
+          "saturated_fat_g": 2.5,
+          "cholesterol_mg": 60,
+          "sodium_mg": 250,
+          "total_carbs_g": 39,
+          "dietary_fiber_g": 0.99,
+          "protein_g": 3,
+          "serving_size": "Each",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "Homefree Chocolate Chip Brownie",
           "station": "By Request",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/8ddc50f6-09f4-4f17-b40d-62a41382ced5"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/8ddc50f6-09f4-4f17-b40d-62a41382ced5",
+          "total_calories": 235,
+          "total_fat_g": 8.7981,
+          "saturated_fat_g": 2.4439,
+          "cholesterol_mg": 0,
+          "sodium_mg": 122,
+          "total_carbs_g": 36.17,
+          "dietary_fiber_g": 2.9327,
+          "protein_g": 2.9327,
+          "serving_size": "Brownie",
+          "nutrition_source": "v2_rest"
         },
         {
           "name": "Homefree Chocolate Chip Cookie",
           "station": "By Request",
           "court": "Ford",
           "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/15ca873d-ce96-40af-ae25-547aec74789b"
+          "nutrition_url": "https://dining.purdue.edu/menus/item/15ca873d-ce96-40af-ae25-547aec74789b",
+          "total_calories": 140,
+          "total_fat_g": 7.0118,
+          "saturated_fat_g": 1.5025,
+          "cholesterol_mg": 0,
+          "sodium_mg": 95,
+          "total_carbs_g": 19.032,
+          "dietary_fiber_g": 1.0017,
+          "protein_g": 1.0017,
+          "serving_size": "Cookie",
+          "nutrition_source": "v2_rest"
         }
       ]
     },
@@ -815,286 +1376,395 @@
   "Hillenbrand": {
     "dining_court": "Hillenbrand",
     "meal_time": "lunch",
-    "date": "2025/09/20",
+    "date": "2025/09/21",
     "stations": {},
     "total_items": 0
   },
   "Wiley": {
     "dining_court": "Wiley",
     "meal_time": "lunch",
-    "date": "2025/09/20",
-    "stations": {
-      "La Fonda": [
-        {
-          "name": "Chorichicken Strips",
-          "station": "La Fonda",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/bc188827-5f12-450a-83d2-8c8890cc6c0c"
-        },
-        {
-          "name": "Cilantro Green Rice",
-          "station": "La Fonda",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/0b089db2-4e17-4a81-93cf-a2c8c01a494f"
-        },
-        {
-          "name": "5\" Flour Tortilla",
-          "station": "La Fonda",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/a8d73326-6b30-414a-8e48-5daea95b5f0b"
-        },
-        {
-          "name": "La Fonda Station",
-          "station": "La Fonda",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/06d8dd22-fe62-45e8-88a8-911b1cb30f81/74bf07a5-8204-4770-b6b0-617ca0d90da5"
-        }
-      ],
-      "Romeo & Parmesan": [
-        {
-          "name": "Rotini",
-          "station": "Romeo & Parmesan",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/4ea98f5f-85aa-40f1-a763-30b2ee91c2ae"
-        },
-        {
-          "name": "GF Alfredo Sauce",
-          "station": "Romeo & Parmesan",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/3549cf95-1698-49df-98a8-8fce25289c17"
-        },
-        {
-          "name": "Marinara Sauce",
-          "station": "Romeo & Parmesan",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/36c564ab-649b-48e7-afd4-db4f506f964a"
-        },
-        {
-          "name": "Shredded 3 Cheese Blend",
-          "station": "Romeo & Parmesan",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/7374a586-2d84-4980-8652-b3c4d4a27a0d"
-        },
-        {
-          "name": "Grated Parmesan Cheese",
-          "station": "Romeo & Parmesan",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/5c7d5c81-f792-4c46-8934-e3e09d731c6c"
-        },
-        {
-          "name": "Crushed Red Pepper",
-          "station": "Romeo & Parmesan",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/13fa2fc2-0af2-4193-b215-826c3434fa5a"
-        }
-      ],
-      "Classic Flavors": [
-        {
-          "name": "Roasted BBQ Chicken Drumsticks",
-          "station": "Classic Flavors",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/67b2cb34-c29c-4918-bc8a-490e4eb895ba"
-        },
-        {
-          "name": "Oven Roasted Red Potatoes",
-          "station": "Classic Flavors",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/3721e58a-4b8b-4f36-88fb-fcef66f7982d"
-        },
-        {
-          "name": "California Vegetables",
-          "station": "Classic Flavors",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/bc581765-edea-4776-8ad2-aa09cd0882d1"
-        }
-      ],
-      "Mozzarella Fresca": [
-        {
-          "name": "Sausage Pizza",
-          "station": "Mozzarella Fresca",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/b0d45b9f-a660-446c-a250-7e6d6f8026e4"
-        }
-      ],
-      "Fresh Tastes": [
-        {
-          "name": "Salad Bar",
-          "station": "Fresh Tastes",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/141e0144-7902-4062-ada4-28e620136966/fccdd38c-505b-4db7-96d3-7169ba329755"
-        },
-        {
-          "name": "Chamoy Sauce",
-          "station": "Fresh Tastes",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/6b41961b-4b32-41d8-a9db-00e15d2af2b4"
-        },
-        {
-          "name": "Orange Wedges",
-          "station": "Fresh Tastes",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/be8a481f-41d4-47ed-8fa6-00d1678a4b3c"
-        }
-      ],
-      "Gluten Friendly": [
-        {
-          "name": "Cajun Pollock",
-          "station": "Gluten Friendly",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/b97306a5-2ad2-484e-bda6-94ea5d41a79c"
-        },
-        {
-          "name": "Long Grain Rice",
-          "station": "Gluten Friendly",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/9e6eb50a-0778-49fd-a84e-d9d476f1a297"
-        },
-        {
-          "name": "California Vegetables",
-          "station": "Gluten Friendly",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/bc581765-edea-4776-8ad2-aa09cd0882d1"
-        }
-      ],
-      "Delectables": [
-        {
-          "name": "Brown Butter Mixed Fruit Cobbler",
-          "station": "Delectables",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/3dd9bb56-4d0e-4084-926d-4cf7e1db4c99"
-        },
-        {
-          "name": "Devil's Food Cake Cream Cheese Frosting",
-          "station": "Delectables",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/86597841-eb91-47e4-b101-2e5495635c32"
-        },
-        {
-          "name": "White Chocolate Macadamia Cookie",
-          "station": "Delectables",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/5d550017-8ad5-41cf-8b01-fa56ace2dc98"
-        }
-      ],
-      "Vegetarian": [
-        {
-          "name": "Fried Cheese Ravioli",
-          "station": "Vegetarian",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/ad81509c-7974-4aac-b273-0a821b2f536a"
-        },
-        {
-          "name": "Marinara Sauce",
-          "station": "Vegetarian",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/36c564ab-649b-48e7-afd4-db4f506f964a"
-        },
-        {
-          "name": "California Vegetables",
-          "station": "Vegetarian",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/bc581765-edea-4776-8ad2-aa09cd0882d1"
-        }
-      ],
-      "By Request": [
-        {
-          "name": "GF Hamburger Bun",
-          "station": "By Request",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/72449982-e58b-4d1f-a472-511a0ac6865a"
-        },
-        {
-          "name": "Malibu Burger",
-          "station": "By Request",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/94f931a2-9812-452f-8843-d179e66190e4"
-        },
-        {
-          "name": "Vegan Mozzarella Cheese",
-          "station": "By Request",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/86a2c992-5c8c-4246-8d85-e6d1ca95b8d9"
-        },
-        {
-          "name": "GF White Bread",
-          "station": "By Request",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/4ff6bcd3-d44e-445d-bc02-6243c876440b"
-        },
-        {
-          "name": "GF Double Chocolate Muffin",
-          "station": "By Request",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/6b7a1b33-2117-459b-a115-cf49b2882c99"
-        },
-        {
-          "name": "GF Blueberry Muffin",
-          "station": "By Request",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/376f78d1-56ce-44ce-963a-c6710560c654"
-        },
-        {
-          "name": "Italian Ice",
-          "station": "By Request",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/0944faba-c4c3-46ca-b2bb-bdbd2406ba60"
-        },
-        {
-          "name": "Homefree Chocolate Chip Brownie",
-          "station": "By Request",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/8ddc50f6-09f4-4f17-b40d-62a41382ced5"
-        },
-        {
-          "name": "Homefree Chocolate Chip Cookie",
-          "station": "By Request",
-          "court": "Wiley",
-          "meal_time": "lunch",
-          "nutrition_url": "https://dining.purdue.edu/menus/item/15ca873d-ce96-40af-ae25-547aec74789b"
-        }
-      ]
-    },
-    "total_items": 35
+    "date": "2025/09/21",
+    "stations": {},
+    "total_items": 0
   },
   "Windsor": {
     "dining_court": "Windsor",
     "meal_time": "lunch",
-    "date": "2025/09/20",
-    "stations": {},
-    "total_items": 0
+    "date": "2025/09/21",
+    "stations": {
+      "Portobello Road - Vegetarian": [
+        {
+          "name": "Tomato Basil Open Face Cheese Sandwich",
+          "station": "Portobello Road - Vegetarian",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/57cb1bb4-56db-498f-bbb7-9094d01edf04",
+          "total_calories": 171,
+          "total_fat_g": 6.7143,
+          "saturated_fat_g": 2.4336,
+          "cholesterol_mg": 13,
+          "sodium_mg": 428,
+          "total_carbs_g": 17.6355,
+          "dietary_fiber_g": 1.114,
+          "protein_g": 9.1205,
+          "serving_size": "Sandwich",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Vegan Lentil Marinara Sauce",
+          "station": "Portobello Road - Vegetarian",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/3b2926d6-5335-4d18-96d9-fa857b2d69f7",
+          "total_calories": 204,
+          "total_fat_g": 2.5076,
+          "saturated_fat_g": 0.1335,
+          "cholesterol_mg": 0,
+          "sodium_mg": 576,
+          "total_carbs_g": 35.1743,
+          "dietary_fiber_g": 8.5498,
+          "protein_g": 10.2154,
+          "serving_size": "Cup",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Shaved Brussels Sprouts",
+          "station": "Portobello Road - Vegetarian",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/606ce408-dbb9-49ed-b5d1-d1d1f4ddb6e7",
+          "total_calories": 102,
+          "total_fat_g": 3.5437,
+          "saturated_fat_g": 0.2531,
+          "cholesterol_mg": 0,
+          "sodium_mg": 731,
+          "total_carbs_g": 15.3126,
+          "dietary_fiber_g": 4.3932,
+          "protein_g": 4.0788,
+          "serving_size": "4oz Serving",
+          "nutrition_source": "v2_rest"
+        }
+      ],
+      "Regent Grill": [
+        {
+          "name": "Taco Seasoned Ground Beef",
+          "station": "Regent Grill",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/98abb8cd-0016-4587-ba1b-e98df19242e0",
+          "total_calories": 315,
+          "total_fat_g": 24.0463,
+          "saturated_fat_g": 9.0739,
+          "cholesterol_mg": 85,
+          "sodium_mg": 657,
+          "total_carbs_g": 2.5739,
+          "dietary_fiber_g": 0.3284,
+          "protein_g": 20.6919,
+          "serving_size": "1/2 Cup",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Diced Chicken for Burrito Bowl",
+          "station": "Regent Grill",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/4fe268da-f40b-40bb-aca4-9738273b5038",
+          "total_calories": 169,
+          "total_fat_g": 5.5107,
+          "saturated_fat_g": 1.3662,
+          "cholesterol_mg": 67,
+          "sodium_mg": 520,
+          "total_carbs_g": 2.7964,
+          "dietary_fiber_g": 0.1749,
+          "protein_g": 25.7558,
+          "serving_size": "4 oz Serving",
+          "nutrition_source": "v2_rest"
+        }
+      ],
+      "Abby Road Deli": [],
+      "SoHo International Market": [
+        {
+          "name": "GF Alfredo Sauce",
+          "station": "SoHo International Market",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/3549cf95-1698-49df-98a8-8fce25289c17",
+          "total_calories": 435,
+          "total_fat_g": 38.8471,
+          "saturated_fat_g": 12.4311,
+          "cholesterol_mg": 62,
+          "sodium_mg": 1103,
+          "total_carbs_g": 12.4311,
+          "dietary_fiber_g": 0,
+          "protein_g": 9.3233,
+          "serving_size": "3/4 Cup",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Garlic Herb Chicken Strip",
+          "station": "SoHo International Market",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/6c7ad283-9467-478c-b0a8-17bb09f82018",
+          "total_calories": 75,
+          "total_fat_g": 2.6265,
+          "saturated_fat_g": 0.7504,
+          "cholesterol_mg": 41,
+          "sodium_mg": 465,
+          "total_carbs_g": 1.5008,
+          "dietary_fiber_g": 0,
+          "protein_g": 12.0068,
+          "serving_size": "1/2 Cup",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Pesto Tortellini",
+          "station": "SoHo International Market",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/8a3d5f1b-3477-40b7-9f02-bdb53876e412",
+          "total_calories": 166,
+          "total_fat_g": 4.2144,
+          "saturated_fat_g": 1.1785,
+          "cholesterol_mg": 21,
+          "sodium_mg": 283,
+          "total_carbs_g": 25.7425,
+          "dietary_fiber_g": 1.5855,
+          "protein_g": 6.4572,
+          "serving_size": "1/2 Cup Serving",
+          "nutrition_source": "v2_rest"
+        }
+      ],
+      "Halal": [
+        {
+          "name": "Halal Shepherds Pie",
+          "station": "Halal",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/6203005a-5b7b-40c6-9557-0c4f20444157",
+          "total_calories": 397,
+          "total_fat_g": 22.9497,
+          "saturated_fat_g": 9.1296,
+          "cholesterol_mg": 68,
+          "sodium_mg": 1132,
+          "total_carbs_g": 25.5481,
+          "dietary_fiber_g": 2.7685,
+          "protein_g": 20.0718,
+          "serving_size": "4 x 8 Cut Serving",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Balsamic Brussels Sprouts",
+          "station": "Halal",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/c147c71e-92a7-473e-aa0c-3fdc00053eb4",
+          "total_calories": 65,
+          "total_fat_g": 1.4032,
+          "saturated_fat_g": 0.1009,
+          "cholesterol_mg": 0,
+          "sodium_mg": 56,
+          "total_carbs_g": 12.8304,
+          "dietary_fiber_g": 1.2149,
+          "protein_g": 1.2061,
+          "serving_size": "Serving",
+          "nutrition_source": "v2_rest"
+        }
+      ],
+      "Chelsea Garden": [
+        {
+          "name": "Fresh Strawberries",
+          "station": "Chelsea Garden",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/29b4382c-6c6b-47d5-9619-6fd55048eb65",
+          "total_calories": 31,
+          "total_fat_g": 0.2926,
+          "saturated_fat_g": 0.0146,
+          "cholesterol_mg": 0,
+          "sodium_mg": 1,
+          "total_carbs_g": 7.4897,
+          "dietary_fiber_g": 1.9504,
+          "protein_g": 0.6534,
+          "serving_size": "1/2 Cup Serving",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Deluxe Fruit Mix",
+          "station": "Chelsea Garden",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/fe41876c-a980-45ef-b1d4-986f404934d0",
+          "total_calories": 43,
+          "total_fat_g": 0,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 0,
+          "total_carbs_g": 9.7199,
+          "dietary_fiber_g": 1.215,
+          "protein_g": 0.6014,
+          "serving_size": "1/2 Cup Serving",
+          "nutrition_source": "v2_rest"
+        }
+      ],
+      "Devonshire Way": [
+        {
+          "name": "Ooey Gooey Cake Bar Cookie",
+          "station": "Devonshire Way",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/828843db-6d79-4e96-8627-675ee81892d0",
+          "total_calories": 287,
+          "total_fat_g": 13.781,
+          "saturated_fat_g": 8.3126,
+          "cholesterol_mg": 62,
+          "sodium_mg": 291,
+          "total_carbs_g": 36.3387,
+          "dietary_fiber_g": 0.5197,
+          "protein_g": 3.6275,
+          "serving_size": "8x10 Cut Serving",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Chocolate Covered Strawberry Cake",
+          "station": "Devonshire Way",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/b46f7338-9418-4c88-8637-448bcf6f62ad",
+          "total_calories": 181,
+          "total_fat_g": 6.2058,
+          "saturated_fat_g": 4.1059,
+          "cholesterol_mg": 10,
+          "sodium_mg": 261,
+          "total_carbs_g": 29.164,
+          "dietary_fiber_g": 1.575,
+          "protein_g": 2.5476,
+          "serving_size": "8x10 Cut Serving",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Horchata Bites",
+          "station": "Devonshire Way",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/38b2eb74-8ddd-41ec-b581-9c13887987fc",
+          "total_calories": 65,
+          "total_fat_g": 3,
+          "saturated_fat_g": 1.125,
+          "cholesterol_mg": 4,
+          "sodium_mg": 60,
+          "total_carbs_g": 9,
+          "dietary_fiber_g": 0.25,
+          "protein_g": 0.75,
+          "serving_size": "Bite",
+          "nutrition_source": "v2_rest"
+        }
+      ],
+      "By Request": [
+        {
+          "name": "Homefree Chocolate Chip Cookie",
+          "station": "By Request",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/15ca873d-ce96-40af-ae25-547aec74789b",
+          "total_calories": 140,
+          "total_fat_g": 7.0118,
+          "saturated_fat_g": 1.5025,
+          "cholesterol_mg": 0,
+          "sodium_mg": 95,
+          "total_carbs_g": 19.032,
+          "dietary_fiber_g": 1.0017,
+          "protein_g": 1.0017,
+          "serving_size": "Cookie",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Homefree Chocolate Chip Brownie",
+          "station": "By Request",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/8ddc50f6-09f4-4f17-b40d-62a41382ced5",
+          "total_calories": 235,
+          "total_fat_g": 8.7981,
+          "saturated_fat_g": 2.4439,
+          "cholesterol_mg": 0,
+          "sodium_mg": 122,
+          "total_carbs_g": 36.17,
+          "dietary_fiber_g": 2.9327,
+          "protein_g": 2.9327,
+          "serving_size": "Brownie",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "GF White Bread",
+          "station": "By Request",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/4ff6bcd3-d44e-445d-bc02-6243c876440b",
+          "total_calories": 130,
+          "total_fat_g": 4.3392,
+          "saturated_fat_g": 0,
+          "cholesterol_mg": 0,
+          "sodium_mg": 234,
+          "total_carbs_g": 20.8282,
+          "dietary_fiber_g": 0.8678,
+          "protein_g": 1.7357,
+          "serving_size": "Slice",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "GF Hamburger Bun",
+          "station": "By Request",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/72449982-e58b-4d1f-a472-511a0ac6865a",
+          "total_calories": 240,
+          "total_fat_g": 7,
+          "saturated_fat_g": 0.5,
+          "cholesterol_mg": 0,
+          "sodium_mg": 440,
+          "total_carbs_g": 44,
+          "dietary_fiber_g": 6,
+          "protein_g": 5,
+          "serving_size": "Bun",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Malibu Burger",
+          "station": "By Request",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/94f931a2-9812-452f-8843-d179e66190e4",
+          "total_calories": 160,
+          "total_fat_g": 7.9752,
+          "saturated_fat_g": 0.9969,
+          "cholesterol_mg": 0,
+          "sodium_mg": 439,
+          "total_carbs_g": 20.935,
+          "dietary_fiber_g": 2.9907,
+          "protein_g": 3.9876,
+          "serving_size": "Burger",
+          "nutrition_source": "v2_rest"
+        },
+        {
+          "name": "Vegan Shredded Mozzarella Cheese",
+          "station": "By Request",
+          "court": "Windsor",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/807ce933-8003-419a-b5c3-b7eef59b45a5",
+          "total_calories": 90,
+          "total_fat_g": 6,
+          "saturated_fat_g": 5,
+          "cholesterol_mg": 0,
+          "sodium_mg": 280,
+          "total_carbs_g": 6,
+          "dietary_fiber_g": 0,
+          "protein_g": 1,
+          "serving_size": "Ounce",
+          "nutrition_source": "v2_rest"
+        }
+      ]
+    },
+    "total_items": 21
   }
 }

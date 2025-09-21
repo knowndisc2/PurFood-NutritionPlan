@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import GoalForm from './components/GoalForm';
 import MealPlanDisplay from './components/MealPlanDisplay';
 import { auth } from './firebase'; // Auth only
@@ -6,64 +6,61 @@ import { useAuthState } from 'react-firebase-hooks/auth'; // Import the hook
 import './App.css';
 
 // This is our mock data. In the future, this will come from the AI.
-const MOCK_MEAL_PLAN = `**MEAL PLAN 1: The Pulled Pork Powerhouse**
+const MOCK_MEAL_PLAN = `**MEAL PLAN 1: The Hearty Vegetarian Breakfast**
 
-* Austin Blues Pulled Pork (4 oz): 408 cal, 26g protein, 25g carbs, 0g fat
-* Hamburger Bun (Bun): 140 cal, 4g protein, 28g carbs, 0g fat
-* Creamy Coleslaw (1/2 Cup): 89 cal, 0.5g protein, 12g carbs, 0g fat (estimating 0g fat for simplicity)
-* Crinkle Cut Fries (4 oz): 162 cal, 3g protein, 24g carbs, 0g fat (estimating 0g fat for simplicity)
-* Lasagna (4x4 Cut): 202 cal, 13g protein, 25g carbs, 0g fat (estimating 0g fat for simplicity)
-* Roasted Brussels Sprouts (4 oz): 110 cal, 4g protein, 11g carbs, 0g fat (estimating 0g fat for simplicity)
-* Long Grain Rice (1/2 Cup): 122 cal, 2g protein, 27g carbs, 0g fat (estimating 0g fat for simplicity)
-*  Grated Parmesan Cheese (1 ounce): 113 cal, 11g protein, 0g carbs, 0g fat (estimating 0g fat for simplicity)
+* 8 Scrambled Eggs (1/2 cup each): 1240 cal, 88.6576g protein, 17.7312g carbs, 0g fat
+* 4 Potato Gems (4 oz servings): 864 cal, 10.8g protein, 102.598g carbs, 0g fat
+* 1 cup Marion Blackberries: 70 cal, 1g protein, 14g carbs, 5g fat (estimated)
+* 2 slices GF White Bread: 260 cal, 3.4714g protein, 41.6564g carbs, 0g fat
+
+**Totals:** 2434 cal, 104g protein, 175g carbs, 5g fat
 
 
-Totals: 1346 cal, 63.5g protein, 152g carbs, 0g fat (Note: Fat significantly under target.  This plan needs adjustment to meet the fat requirement, see below.)
+**MEAL PLAN 2: The Pancake Powerhouse**
+
+* 15 Pancakes: 990 cal, 29.7255g protein, 183.303g carbs, 0g fat (estimated)
+* 4 Udi's Plain GF Bagels: 1000 cal, 24g protein, 152g carbs, 0g fat
+* 1 cup Marion Blackberries: 70 cal, 1g protein, 14g carbs, 5g fat (estimated)
+* 2 servings Oatmeal (1/2 cup each): 160 cal, 5.3156g protein, 28.704g carbs, 0g fat
 
 
-**ADJUSTMENT FOR MEAL PLAN 1:** To reach the fat target, we need to add high-fat items, which are limited in the provided menu. We will substitute some items to increase fat content, even though this impacts other macros slightly.
-
-* Austin Blues Pulled Pork (4 oz): 408 cal, 26g protein, 25g carbs, 10g fat (corrected to reflect that pulled pork has some fat)
-* Hamburger Bun (1 Bun): 140 cal, 4g protein, 28g carbs, 2g fat (added a conservative estimate for fat content)
-* Creamy Coleslaw (1 Cup): 178 cal, 1g protein, 24g carbs, 5g fat (Doubled portion to boost fat)
-* Crinkle Cut Fries (4 oz): 162 cal, 3g protein, 24g carbs, 5g fat (added a conservative estimate for fat content)
-*  Grated Parmesan Cheese (2 ounce): 226 cal, 22g protein, 0g carbs, 5g fat (Doubled portion to boost fat)
-
-Totals (Adjusted): 1124 cal, 58g protein, 101g carbs, 27g fat (Still significantly short on the fat, but we can improve it in the other meal plans).
+**Totals:** 2220 cal, 50g protein, 378g carbs, 5g fat
 
 
-**MEAL PLAN 2: The Italian Fiesta**
+**MEAL PLAN 3: The Balanced Buffet**
 
-* Thin Pizza Crust (1 Each): 190 cal, 5g protein, 36g carbs, 1g fat (estimating fat)
-* Pizza Sauce (1/2 cup): 70 cal, 1g protein, 10g carbs, 2g fat (doubled portion)
-* Diced Pepperoni (2 Tablespoons): 178 cal, 6g protein, 0g carbs, 10g fat (doubled portion)
-* Shredded 3 Cheese Blend (2 ounces): 194 cal, 12g protein, 2g carbs, 10g fat (doubled portion)
-* Lasagna Rollups with Alfredo Sauce (1 Roll Up): 470 cal, 14g protein, 35g carbs, 20g fat (added to increase fat and calories)
-* Garlic Bread (1 piece): 72 cal, 2g protein, 10g carbs, 5g fat (adding a conservative estimate for fat content)
-* Salad Bar (Large serving of lettuce, tomatoes, and cucumbers): 50 cal, 1g protein, 2g carbs, 0.5g fat (variable – an attempt to add greens for nutritional value and only a minor macro contribution)
+* 6 Scrambled Eggs (1/2 cup each): 930 cal, 66.5184g protein, 13.30g carbs, 0g fat
+* 2 Potato Gems (4 oz servings): 432 cal, 5.4g protein, 51.299g carbs, 0g fat
+* 2 Udi's Plain GF Bagels: 500 cal, 12g protein, 76g carbs, 0g fat
+* 1 cup Peach Slices: 112 cal, 1.8642g protein, 29.8268g carbs, 0g fat
+* 1 GF Blueberry Muffin: 270 cal, 3g protein, 39g carbs, 0g fat
 
-Totals: 1224 cal, 41g protein, 105g carbs, 48.5g fat
+**Totals:** 2244 cal, 89g protein, 209g carbs, 0g fat
 
 
-**MEAL PLAN 3: The Asian Fusion**
-
-* Mini Spring Rolls (4 Each): 160 cal, 0g protein, 28g carbs, 5g fat (estimating some fat)
-* Tempura Sweet and Sour Sauce (1 Cup): 376 cal, 1g protein, 94g carbs, 10g fat (doubled portion)
-* Fried Rice (1 Cup): 364 cal, 8g protein, 54g carbs, 10g fat (doubled portion)
-* Long Grain Rice (1 Cup): 244 cal, 4g protein, 54g carbs, 1g fat (doubled portion)
-* Grilled Zucchini (3 oz): 59 cal, 0.5g protein, 2g carbs, 0g fat
-* Austin Blues Pulled Pork (2 oz): 204 cal, 13g protein, 12.5g carbs, 5g fat (half portion of pulled pork for added protein)
-* Dark Chocolate Sea Salt Seed'nola (1 ounce): 132 cal, 4g protein, 13g carbs, 5g fat
-
-Totals: 1539 cal, 30.5g protein, 263.5g carbs, 36g fat
-
-
-**Important Note:** The fat content in these plans remains challenging to accurately meet with the given options and their listed nutritional information.  Many items list only a small amount of fat or 0g fat, and accurate fat content can be variable depending on cooking methods and preparation.  These meal plans provide a reasonable approximation; however, to fully achieve the 2000 calorie, 125g protein, 225g carb, and 67g fat targets, additional high-fat options would be needed in the dining hall.`;
+**Note:**  Fat content in these plans is significantly lower than the target.  This is due to the limited availability of high-fat vegetarian options in the provided food list.  To reach the fat target, additional items would be needed, which weren't listed.  The blackberry and peach fat content is an estimation based on similar fruits. The calorie counts are also approximate and may vary based on actual portion sizes served in the dining hall.  It is important to check nutrition labels if available.`;
 
 function App() {
-  const [user] = useAuthState(auth); // Get the current user
-  const [mealPlan, setMealPlan] = useState(null);
+  const [user, loading] = useAuthState(auth); // include loading to avoid flicker
+  const [mealPlan, setMealPlan] = useState(() => {
+    try {
+      const saved = localStorage.getItem('mealPlan');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
   const [isLoading, setIsLoading] = useState(false);
+
+  // (restore no longer needed due to lazy initializer)
+
+  // Persist meal plan whenever it changes
+  useEffect(() => {
+    try {
+      if (mealPlan) localStorage.setItem('mealPlan', JSON.stringify(mealPlan));
+      else localStorage.removeItem('mealPlan');
+    } catch {}
+  }, [mealPlan]);
 
   const getApiBase = () => {
     if (process.env.NODE_ENV !== 'production') {
@@ -141,6 +138,15 @@ function App() {
   const handleStartOver = () => {
     setMealPlan(null);
   };
+  // While auth state is resolving, avoid rendering login or clearing content
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-neutral-950 text-purdue-gold">
+        <div className="animate-pulse">Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="App">
       {/* If a user is logged in, show the main app content */}

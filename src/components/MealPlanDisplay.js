@@ -1,4 +1,5 @@
 import React from 'react';
+import { authenticatedFetch } from '../api';
 import { auth } from '../firebase/config';
 import './MealPlanDisplay.css';
 
@@ -17,9 +18,7 @@ function MealPlanDisplay({ plan, onBack }) {
       const token = await user.getIdToken();
       // Use relative URL to leverage proxy configuration in development
       const url = '/api/fb/meals?limit=10';
-      const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await authenticatedFetch(url);
       if (!res.ok) {
         const text = await res.text();
         throw new Error(`Fetch meals failed: ${res.status} ${res.statusText} — ${text.slice(0, 200)}`);
@@ -59,12 +58,8 @@ function MealPlanDisplay({ plan, onBack }) {
 
       console.log('[MealPlan] Sending meal data:', mealData);
 
-      const res = await fetch('/api/fb/meals', {
+      const res = await authenticatedFetch('/api/fb/meals', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify(mealData)
       });
 
