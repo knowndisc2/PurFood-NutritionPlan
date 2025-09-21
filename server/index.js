@@ -303,7 +303,13 @@ app.get('/api/fb/meals', fbAuthMiddleware, async (req, res) => {
     return res.json(items);
   } catch (e) {
     console.error('[Meals] Fetch failed:', e);
+    console.error('[Meals] Error code:', e?.code, 'message:', e?.message);
     console.error('[Meals] Error stack:', e.stack);
+    // If Firestore returns NOT_FOUND (code 5), treat as empty result instead of 500
+    if (e?.code === 5 || /NOT_FOUND/i.test(e?.message || '')) {
+      console.warn('[Meals] NOT_FOUND from Firestore; returning empty array');
+      return res.json([]);
+    }
     return res.status(500).json({ error: 'Failed to fetch meals', details: e.message });
   }
 });
