@@ -6,39 +6,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'; // Import the hook
 import './App.css';
 
 // This is our mock data. In the future, this will come from the AI.
-const MOCK_MEAL_PLAN = `**MEAL PLAN 1: The Hearty Vegetarian Breakfast**
-
-* 8 Scrambled Eggs (1/2 cup each): 1240 cal, 88.6576g protein, 17.7312g carbs, 0g fat
-* 4 Potato Gems (4 oz servings): 864 cal, 10.8g protein, 102.598g carbs, 0g fat
-* 1 cup Marion Blackberries: 70 cal, 1g protein, 14g carbs, 5g fat (estimated)
-* 2 slices GF White Bread: 260 cal, 3.4714g protein, 41.6564g carbs, 0g fat
-
-**Totals:** 2434 cal, 104g protein, 175g carbs, 5g fat
-
-
-**MEAL PLAN 2: The Pancake Powerhouse**
-
-* 15 Pancakes: 990 cal, 29.7255g protein, 183.303g carbs, 0g fat (estimated)
-* 4 Udi's Plain GF Bagels: 1000 cal, 24g protein, 152g carbs, 0g fat
-* 1 cup Marion Blackberries: 70 cal, 1g protein, 14g carbs, 5g fat (estimated)
-* 2 servings Oatmeal (1/2 cup each): 160 cal, 5.3156g protein, 28.704g carbs, 0g fat
-
-
-**Totals:** 2220 cal, 50g protein, 378g carbs, 5g fat
-
-
-**MEAL PLAN 3: The Balanced Buffet**
-
-* 6 Scrambled Eggs (1/2 cup each): 930 cal, 66.5184g protein, 13.30g carbs, 0g fat
-* 2 Potato Gems (4 oz servings): 432 cal, 5.4g protein, 51.299g carbs, 0g fat
-* 2 Udi's Plain GF Bagels: 500 cal, 12g protein, 76g carbs, 0g fat
-* 1 cup Peach Slices: 112 cal, 1.8642g protein, 29.8268g carbs, 0g fat
-* 1 GF Blueberry Muffin: 270 cal, 3g protein, 39g carbs, 0g fat
-
-**Totals:** 2244 cal, 89g protein, 209g carbs, 0g fat
-
-
-**Note:**  Fat content in these plans is significantly lower than the target.  This is due to the limited availability of high-fat vegetarian options in the provided food list.  To reach the fat target, additional items would be needed, which weren't listed.  The blackberry and peach fat content is an estimation based on similar fruits. The calorie counts are also approximate and may vary based on actual portion sizes served in the dining hall.  It is important to check nutrition labels if available.`;
+const MOCK_MEAL_PLAN = `Please provide me with the food options available at Hillenbrand Dining Court.  I need a list of the specific dishes, with their nutritional information (calories, protein, carbs, and fat per serving) to create the meal plans.  Once you provide that data, I can fulfill your request.`;
 
 function App() {
   const [user, loading] = useAuthState(auth); // include loading to avoid flicker
