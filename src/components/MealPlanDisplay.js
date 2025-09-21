@@ -93,15 +93,15 @@ function MealPlanDisplay({ plan, onBack }) {
   }, [fetchMeals]);
 
   return (
-    <div className="meal-plan-container">
-      <h2>Your Custom Meal Plan</h2>
-      <div className="plan-content">
+    <div className="meal-plan-container animate-fade-in card-elevate animate-scale-in">
+      <h2 className="animate-fade-in-up">Your Custom Meal Plan</h2>
+      <div className="plan-content animate-fade-in-up">
         <pre>{plan}</pre>
       </div>
       
       <div className="plan-actions">
         <button 
-          className="btn-primary" 
+          className="btn-primary btn-animate" 
           onClick={saveMealPlan} 
           disabled={savingMeal}
         >
@@ -109,20 +109,20 @@ function MealPlanDisplay({ plan, onBack }) {
         </button>
       </div>
 
-      <div className="meal-history-section">
+      <div className="meal-history-section animate-fade-in-up">
         <div className="meal-history-header">
           <h3>Meal History</h3>
-          <button className="btn-secondary" onClick={fetchMeals} disabled={loadingMeals}>
+          <button className="btn-secondary btn-animate" onClick={fetchMeals} disabled={loadingMeals}>
             {loadingMeals ? 'Refreshing…' : 'Refresh'}
           </button>
         </div>
-        <div className="meal-history-content">
+        <div className="meal-history-content animate-fade-in">
           {loadingMeals && <div>Loading meals…</div>}
           {mealsError && <div className="error-message">Error: {mealsError}</div>}
           {!loadingMeals && !mealsError && (
             <ul className="meal-list">
               {mealHistory.map((m) => (
-                <li key={m.id} className="meal-history-item">
+                <li key={m.id} className="meal-history-item hover-lift">
                   <div className="meal-info">
                     <strong>{m.name}</strong> 
                     <span className="meal-type">({m.mealType})</span>
@@ -155,7 +155,7 @@ function MealPlanDisplay({ plan, onBack }) {
         </div>
       </div>
 
-      <button className="btn-secondary" onClick={onBack}>
+      <button className="btn-secondary btn-animate" onClick={onBack}>
         Start Over
       </button>
     </div>
