@@ -9,25 +9,28 @@ import './App.css';
 
 // This is our mock data. In the future, this will come from the AI.
 const MOCK_MEAL_PLAN = `**MEAL PLAN 1**
-Earhart
-* Polish Sausage (1 Each Serving) Calories: 266 Protein: 10.0887g Carbs: 3.6686g Fat: 22.9288g
-* Breaded Chicken Strips (5 Per Serving) Calories: 453 Protein: 27.6887g Carbs: 17.6201g Fat: 27.6887g
-* Long Grain Rice (1/2 Cup) Calories: 122 Protein: 2.2791g Carbs: 27.3489g Fat: 0g
-Totals: 841 cal, 40g protein, 49g carbs, 51g fat
+Windsor
+* Halal Shepherds Pie (1) Calories: 397 Protein: 20.0718g Carbs: 25.5481g Fat: 22.9497g
+* Fajita Seasoned Beef (4 oz Serving) Calories: 173 Protein: 18.6528g Carbs: 1.0201g Fat: 9.6622g
+* Homefree Chocolate Chip Cookie (1 Cookie) Calories: 140 Protein: 1.0017g Carbs: 19.032g Fat: 7.0118g
+* Vegan Lentil Marinara Sauce (1 Cup) Calories: 204 Protein: 10.2154g Carbs: 35.1743g Fat: 2.5076g
+Totals: 914 cal, 50g protein, 81g carbs, 42g fat
 
 **MEAL PLAN 2**
-Ford
-* Lasagna (4x4 Cut Serving) Calories: 202 Protein: 12.7386g Carbs: 24.7277g Fat: 5.9946g
-* Breaded Chicken Strips (5 Per Serving) Calories: 453 Protein: 27.6887g Carbs: 17.6201g Fat: 27.6887g
-* Vegan Quinoa and Peppers (2 # 6 Dishers) Calories: 454 Protein: 9.7358g Carbs: 50.0114g Fat: 24.095g
-Totals: 1109 cal, 50g protein, 92g carbs, 58g fat
+Windsor
+* Halal Shepherds Pie (1) Calories: 397 Protein: 20.0718g Carbs: 25.5481g Fat: 22.9497g
+* Fajita Seasoned Beef (1) Calories: 173 Protein: 18.6528g Carbs: 1.0201g Fat: 9.6622g
+* Ooey Gooey Cake Bar Cookie (1) Calories: 287 Protein: 3.6275g Carbs: 36.3387g Fat: 13.781g
+* Balsamic Brussels Sprouts (1 Serving) Calories: 65 Protein: 1.2061g Carbs: 12.8304g Fat: 1.4032g
+Totals: 922 cal, 44g protein, 76g carbs, 48g fat
 
 **MEAL PLAN 3**
-Wiley
-* Chicken Fajitas (Cup) Calories: 214 Protein: 27.3395g Carbs: 9.1069g Fat: 7.5623g
-* Halal Shepherds Pie (4 x 8 Cut Serving) Calories: 397 Protein: 20.0718g Carbs: 25.5481g Fat: 22.9497g
-* Grated Parmesan Cheese (Ounce) Calories: 113 Protein: 11.3398g Carbs: 0g Fat: 11.3398g
-Totals: 724 cal, 59g protein, 35g carbs, 42g fat`;
+Windsor
+* Halal Shepherds Pie (1) Calories: 397 Protein: 20.0718g Carbs: 25.5481g Fat: 22.9497g
+* Homefree Chocolate Chip Brownie (1 Brownie) Calories: 235 Protein: 2.9327g Carbs: 36.17g Fat: 8.7981g
+* Fajita Seasoned Beef (1) Calories: 173 Protein: 18.6528g Carbs: 1.0201g Fat: 9.6622g
+* Shaved Brussels Sprouts (1 Serving) Calories: 102 Protein: 4.0788g Carbs: 15.3126g Fat: 3.5437g
+Totals: 907 cal, 46g protein, 78g carbs, 45g fat`;
 
 function App() {
   const [user, loading] = useAuthState(auth); // include loading to avoid flicker

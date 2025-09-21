@@ -6,7 +6,7 @@ const path = require('path');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 function pickFirstCourtWithItems(menu = {}, goals = {}) {
-  const aiPrompt = goals?.aiPrompt || '';
+  const aiPrompt = goals?.aiPrompt || goals?.preferences || '';
   const diningCourts = Object.keys(menu);
   let preferredCourt = null;
 
@@ -15,8 +15,16 @@ function pickFirstCourtWithItems(menu = {}, goals = {}) {
 
   if (aiPrompt) {
     const promptLower = aiPrompt.toLowerCase();
+    const keywordCandidates = ['hall', 'court', 'dining', 'food', 'eat', 'meal', 'lunch', 'dinner', 'breakfast'];
     for (const court of diningCourts) {
-      if (promptLower.includes(court.toLowerCase())) {
+      const courtNameLower = court.toLowerCase();
+      // 1) Direct mention of the court name anywhere in the prompt
+      if (promptLower.includes(courtNameLower)) {
+        preferredCourt = court;
+        break;
+      }
+      // 2) Fuzzy patterns like "Wiley dining hall" or "dining Wiley"
+      if (keywordCandidates.some(keyword => promptLower.includes(`${keyword} ${courtNameLower}`) || promptLower.includes(`${courtNameLower} ${keyword}`))) {
         preferredCourt = court;
         break;
       }
@@ -36,6 +44,47 @@ function pickFirstCourtWithItems(menu = {}, goals = {}) {
   console.log('[Gemini] No preferred dining court specified.');
   return [null, null]; // No preference, so return null to signal using all courts
 }
+
+function validatePrimaryGoal(planText, { courtName, isSingleCourt, wantsDessert, enforceDessert, dessertKeywords }) {
+  try {
+    const planRegex = /\*\*MEAL PLAN (\d+)\*\*([\s\S]*?)(?=\*\*MEAL PLAN|$)/g;
+    let match;
+    let hasDessert = false;
+    const lcDessertKeywords = (dessertKeywords || []).map(k => String(k).toLowerCase());
+
+    while ((match = planRegex.exec(planText)) !== null) {
+      const content = String(match[2] || '').trim();
+      const lines = content.split('\n').filter(Boolean);
+      const hallName = lines.length > 0 && !/^\s*\*/.test(lines[0]) ? lines[0].trim() : null;
+
+      if (isSingleCourt && courtName) {
+        const wanted = String(courtName).toLowerCase();
+        if (!hallName || !hallName.toLowerCase().includes(wanted)) {
+          return false;
+        }
+      }
+
+      if (enforceDessert) {
+        for (const ln of lines) {
+          if (/^\s*\*/.test(ln)) {
+            const lc = ln.toLowerCase();
+            if (lcDessertKeywords.some(k => lc.includes(k))) {
+              hasDessert = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    if (enforceDessert && !hasDessert) return false;
+    return true;
+  } catch (e) {
+    console.warn('[Gemini] validatePrimaryGoal failed:', e?.message || e);
+    return false;
+  }
+}
+// (Note) Removed stray duplicate block that caused syntax errors.
 
 function formatFoodDataForAI(courtData = {}) {
   let formatted = `Dining Court: ${courtData?.dining_court || 'Unknown'}\n\n`;
@@ -197,10 +246,48 @@ async function generateWithGemini(goals, menu) {
     const target_carbs = Math.round((target_calories * carb_percentage / 100) / 4);
     const target_fat = Math.round((target_calories * fat_percentage / 100) / 9);
     const restrictions_text = dietary_restrictions.length ? dietary_restrictions.join(', ') : 'None';
-    const preferences_text = goals.aiPrompt || 'None';
+    const preferences_text = goals.aiPrompt || goals.preferences || 'None';
 
     const calorie_lower = Math.max(0, target_calories - 100);
     const calorie_upper = target_calories + 100;
+
+    // Detect dessert preference and whether it's possible given available options
+    const dessertKeywords = ['cookie','cookies','brownie','brownies','dessert','ice cream','cake','cupcake','pie','cheesecake','pudding'];
+    const prefLower = String(preferences_text).toLowerCase();
+    const wantsDessert = dessertKeywords.some(k => prefLower.includes(k));
+    const availableHasDessert = dessertKeywords.some(k => String(court_food_data).toLowerCase().includes(k));
+
+    // Build an explicit dessert examples list to guide the model when dessert is requested
+    let dessertItems = [];
+    try {
+      const pushItem = (courtLabel, stationLabel, it) => {
+        const name = (it?.name || '').trim();
+        const lc = name.toLowerCase();
+        const hasAll = typeof it?.total_calories === 'number' && typeof it?.protein_g === 'number' && typeof it?.total_carbs_g === 'number' && (typeof it?.fat_g === 'number' || typeof it?.total_fat_g === 'number');
+        if (!hasAll) return;
+        if (dessertKeywords.some(k => lc.includes(k))) {
+          dessertItems.push(`${name}${courtLabel ? ` (${courtLabel}${stationLabel ? ` • ${stationLabel}` : ''})` : ''}`);
+        }
+      };
+      if (isSingleCourt && courtData) {
+        const stations = courtData?.stations || {};
+        for (const [stName, items] of Object.entries(stations)) {
+          for (const it of items || []) pushItem(courtName, stName, it);
+        }
+      } else {
+        for (const [cName, cData] of Object.entries(menu || {})) {
+          const stations = cData?.stations || {};
+          for (const [stName, items] of Object.entries(stations)) {
+            for (const it of items || []) pushItem(cName, stName, it);
+          }
+        }
+      }
+      // Deduplicate and cap list length
+      dessertItems = Array.from(new Set(dessertItems)).slice(0, 8);
+    } catch {}
+    const dessertExamplesText = (wantsDessert && availableHasDessert && dessertItems.length)
+      ? `\nDESSERT OPTIONS AVAILABLE:\n- ${dessertItems.join('\n- ')}\n`
+      : '';
 
     const prompt = `You are a nutrition expert creating single-meal plans using dining hall food options.
 
@@ -211,10 +298,13 @@ USER REQUIREMENTS:
 - Carb target: ${target_carbs}g (${carb_percentage}% of calories)
 - Fat target: ${target_fat}g (${fat_percentage}% of calories)
 - Dietary restrictions: ${restrictions_text}
-${isSingleCourt ? '- IMPORTANT: The user has requested food from a specific dining hall. You MUST only use food from the dining hall listed under AVAILABLE FOOD OPTIONS.' : ''}
+${isSingleCourt ? `- IMPORTANT: The user has requested food from a specific dining hall. You MUST only use food from the dining hall listed under AVAILABLE FOOD OPTIONS.
+- Additionally, for ALL THREE meal plans you MUST use ONLY the "${courtName}" dining hall and display the Dining Hall line exactly as "${courtName}".` : ''}
+${(wantsDessert && availableHasDessert) ? '- Dessert requirement: include at least one dessert item (e.g., cookies, brownies, ice cream) chosen only from AVAILABLE FOOD OPTIONS. Do not fabricate items.' : ''}
 
 AVAILABLE FOOD OPTIONS:
 ${court_food_data}
+${dessertExamplesText}
 
 TASK: Create exactly 3 different meal plans. Each meal plan must:
 1. VERY strictly adhere to the user's PRIMARY GOAL, if one is provided. This is the most important rule.
@@ -258,15 +348,40 @@ Do not include any conversational notes or disclaimers.  Do not try to round up 
     let normalizedPlan = firstPass.text;
     let allOk = firstPass.allOk;
 
+    // Primary Goal adherence validation (court restriction and dessert inclusion if available)
+    const primaryOkFirst = validatePrimaryGoal(normalizedPlan, {
+      courtName,
+      isSingleCourt,
+      wantsDessert,
+      enforceDessert: wantsDessert && availableHasDessert,
+      dessertKeywords
+    });
+    allOk = allOk && primaryOkFirst;
+
     if (!allOk) {
-      console.warn('[Gemini] Output failed validation (N/A macros or calories out of range). Retrying once...');
-      const retryPrompt = `${prompt}\n\nIMPORTANT: Your last output contained invalid macros (e.g., N/A) or totals outside the allowed calorie range. Regenerate now strictly following ALL rules. Use only numeric macros. Keep totals within the acceptable range.`;
+      console.warn('[Gemini] Output failed validation (macros/calories/primary-goal). Retrying once...');
+      let primaryFix = '';
+      if (isSingleCourt && courtName) {
+        primaryFix += `\n- All plans must use ONLY the "${courtName}" dining hall and display the Dining Hall line exactly as "${courtName}".`;
+      }
+      if (wantsDessert && availableHasDessert) {
+        primaryFix += `\n- Include at least one item that matches any of: ${dessertKeywords.join(', ')} (choose only from AVAILABLE FOOD OPTIONS).`;
+      }
+      const retryPrompt = `${prompt}\n\nIMPORTANT: Your last output failed STRICT validation. Regenerate now strictly following ALL rules. Use ONLY numeric macros and keep totals within range.${primaryFix}`;
       const retryResult = await model.generateContent({ contents: [{ role: 'user', parts: [{ text: retryPrompt }] }] });
       const retryText = retryResult?.response?.text?.() || retryResult?.response?.candidates?.[0]?.content?.parts?.[0]?.text || '';
       planText = String(retryText || '').trim();
       const secondPass = parseAndNormalizePlan(planText, calorie_lower, calorie_upper);
       normalizedPlan = secondPass.text;
       allOk = secondPass.allOk;
+      const primaryOkSecond = validatePrimaryGoal(normalizedPlan, {
+        courtName,
+        isSingleCourt,
+        wantsDessert,
+        enforceDessert: wantsDessert && availableHasDessert,
+        dessertKeywords
+      });
+      allOk = allOk && primaryOkSecond;
     }
 
     // Update App.js with the normalized plan
@@ -316,7 +431,7 @@ function fallbackPlan(goals = {}, menu = {}) {
   const calories = goals.calories ?? 'unspecified';
   const dietary = Array.isArray(goals.dietaryPrefs) ? goals.dietaryPrefs : [];
   const meals = Array.isArray(goals.mealPrefs) ? goals.mealPrefs : [];
-  const prompt = goals.aiPrompt || '';
+  const prompt = goals.aiPrompt || goals.preferences || '';
 
   const suggestions = [];
   try {
