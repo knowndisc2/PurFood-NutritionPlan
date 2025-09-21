@@ -26,8 +26,13 @@ async function scrapeCourt(page, courtName, mealTime, date) {
   const url = `https://dining.purdue.edu/menus/${courtName}/${date}/${mtUrl}/`;
 
   await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
-  // Some content loads dynamically; give it a moment
-  await page.waitForTimeout(1500);
+  // Some content loads dynamically; wait for stations to appear, with a small fallback delay
+  try {
+    await page.waitForSelector('.station', { timeout: 15000 });
+  } catch (e) {
+    // Fallback to a brief delay if selector didn't show up in time
+    await new Promise((r) => setTimeout(r, 1500));
+  }
 
   const html = await page.content();
   const $ = cheerio.load(html);

@@ -3,40 +3,1098 @@
     "dining_court": "Earhart",
     "meal_time": "lunch",
     "date": "2025/09/20",
-    "stations": {},
-    "total_items": 0,
-    "error": "page.waitForTimeout is not a function"
+    "stations": {
+      "Granite Grill": [
+        {
+          "name": "Austin Blues Pulled Pork",
+          "station": "Granite Grill",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/4cd4e545-78be-4640-9d23-790d82ce943b"
+        },
+        {
+          "name": "Sliced Red Onions",
+          "station": "Granite Grill",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/88f2a2a7-89c7-456d-a089-788362c1c29a"
+        },
+        {
+          "name": "Creamy Coleslaw",
+          "station": "Granite Grill",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/cc614b40-c72a-4679-83e0-296c780f969d"
+        },
+        {
+          "name": "Dill Pickle Slices",
+          "station": "Granite Grill",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/34cf76c2-ff01-4d24-914a-7587859cbfb2"
+        },
+        {
+          "name": "Hamburger Bun",
+          "station": "Granite Grill",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/55e312d4-80f1-4349-84f5-57d521347c56"
+        },
+        {
+          "name": "Crinkle Cut Fries",
+          "station": "Granite Grill",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/1a5dd07f-834b-4465-8d4b-b2f4fcae7e01"
+        }
+      ],
+      "Heartland Classics": [
+        {
+          "name": "Lasagna",
+          "station": "Heartland Classics",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/111bf101-d390-488d-ae78-75d18749d346"
+        },
+        {
+          "name": "Lasagna Rollups with Alfredo Sauce",
+          "station": "Heartland Classics",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/9e25d795-02f8-4bf4-ac15-77f4aa620658"
+        },
+        {
+          "name": "Roasted Brussels Sprouts",
+          "station": "Heartland Classics",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/140ab3cc-84bb-481b-8de1-89c4f0e3aa0b"
+        },
+        {
+          "name": "Garlic Bread",
+          "station": "Heartland Classics",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/c7a374b7-8e93-4272-a244-c7c8cc4840c3"
+        },
+        {
+          "name": "Grilled Zucchini",
+          "station": "Heartland Classics",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/38ce3f45-44a6-4487-bc7f-f88d8f080e7c"
+        }
+      ],
+      "The Gallery": [
+        {
+          "name": "MYO Stir Fry",
+          "station": "The Gallery",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/494b053e-907f-402d-bdc1-208122cc798c/26f5299f-caed-430f-98c3-924a4c2e7674"
+        },
+        {
+          "name": "Mini Spring Rolls",
+          "station": "The Gallery",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/8250ca53-98cb-4ba9-9699-c760e1375c3d"
+        },
+        {
+          "name": "Tempura Sweet and Sour Sauce",
+          "station": "The Gallery",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/ab98a972-ac86-42d6-8a5a-02b00ade4549"
+        },
+        {
+          "name": "Long Grain Rice",
+          "station": "The Gallery",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/9e6eb50a-0778-49fd-a84e-d9d476f1a297"
+        },
+        {
+          "name": "Fried Rice",
+          "station": "The Gallery",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/923de590-b346-44f9-962d-dbec39f26ab5"
+        },
+        {
+          "name": "Hoisin Sauce",
+          "station": "The Gallery",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/8adc27d6-b899-4b14-b234-bc28d88c5fca"
+        }
+      ],
+      "Totally Italian": [
+        {
+          "name": "Pizza Crust",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/ba8d80dc-70e2-47f0-8f2e-3b77cfcca9bf"
+        },
+        {
+          "name": "Thin Pizza Crust",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/ef86c378-ce9e-4b6a-b51a-c20b4e66b8f1"
+        },
+        {
+          "name": "Pizza Sauce",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/fb1364ab-ee6c-47d1-ad3a-fc6768617fbc"
+        },
+        {
+          "name": "Garlic Butter Spread",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/8595f77d-a155-4b1f-98cf-0e356252b615"
+        },
+        {
+          "name": "White Garlic Sauce",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/924e4e33-c35e-4b3c-bf80-711fc3594a73"
+        },
+        {
+          "name": "Kale Pesto",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/de6f0669-b6fa-4167-bed3-7c407ea3b70e"
+        },
+        {
+          "name": "Frank's Red Hot Buffalo Sauce",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/7aeb9ae6-8fc2-4324-8f13-99345c484e8b"
+        },
+        {
+          "name": "Ken's Cannonball BBQ Sauce",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/dd53ce1d-f2b9-4698-8dc2-f6a5d96b87d1"
+        },
+        {
+          "name": "Hidden Valley Ranch Dressing",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/d8447f28-4d9f-4971-8db1-27bcd7a97ca0"
+        },
+        {
+          "name": "Diced Pepperoni",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/b65b3e04-5cf4-4f97-979c-7797c1a45ed6"
+        },
+        {
+          "name": "Ham Slices",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/eb3959f9-2c0d-4a01-be74-98fdc70d2fcc"
+        },
+        {
+          "name": "Thin Cut Chicken Breast Strips",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/521f5e4b-4665-4f77-8ad5-9b6486dc9731"
+        },
+        {
+          "name": "Sausage Crumbles",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/0932decd-5692-4f08-a279-22faea598129"
+        },
+        {
+          "name": "Bacon Bits",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/8c53e1d4-0d10-401c-b7db-9e77c4996142"
+        },
+        {
+          "name": "Sliced Fresh Mushrooms",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/29a4c1ce-b68d-4699-aab5-b77ab5fca768"
+        },
+        {
+          "name": "Sliced Red Onions",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/88f2a2a7-89c7-456d-a089-788362c1c29a"
+        },
+        {
+          "name": "Diced Green Pepper",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/caac5ecf-6ba3-4703-b538-a9cc1153db16"
+        },
+        {
+          "name": "Black Olives",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/8d5d322c-b015-43f3-8147-2374ec4d8290"
+        },
+        {
+          "name": "Jalapeno Pepper Rings",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/31d8977b-0df7-4ed4-b26b-f70da4b9b183"
+        },
+        {
+          "name": "Sliced Banana Peppers",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/afb013fe-caa2-4a1c-896a-11e34e48ad8b"
+        },
+        {
+          "name": "Shredded 3 Cheese Blend",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/7374a586-2d84-4980-8652-b3c4d4a27a0d"
+        },
+        {
+          "name": "Grated Parmesan Cheese",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/5c7d5c81-f792-4c46-8934-e3e09d731c6c"
+        },
+        {
+          "name": "Mike's Hot Honey",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/5ee25f0e-d71b-4bc5-b598-c406100e0c31"
+        },
+        {
+          "name": "Mike's Extra Hot Honey",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/22b18fdb-c127-41e4-86e5-7a552376f20e"
+        },
+        {
+          "name": "Crushed Red Pepper",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/13fa2fc2-0af2-4193-b215-826c3434fa5a"
+        },
+        {
+          "name": "Italian Seasoning",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/85da87f2-9981-40be-93ef-7ed24cda141a"
+        },
+        {
+          "name": "Oregano",
+          "station": "Totally Italian",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/4181fd3c-96c1-4bb2-a999-0f13caf9eb9f"
+        }
+      ],
+      "The Pastry Shop": [
+        {
+          "name": "Chocolate Candy Piece Cookie",
+          "station": "The Pastry Shop",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/08b0e608-89e7-475a-b206-384a66025b92"
+        },
+        {
+          "name": "Oreo Cheesecake Bar",
+          "station": "The Pastry Shop",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/5cdef56c-77ea-4cc7-96e4-1946dd090510"
+        },
+        {
+          "name": "Cherry Pie",
+          "station": "The Pastry Shop",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/0a66644f-c556-4a61-9ea5-f40150c00152"
+        }
+      ],
+      "Salad Stop": [
+        {
+          "name": "Salad Bar",
+          "station": "Salad Stop",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/fe840b88-8888-4e79-ab2e-814dd9e7a45f/df7d1415-ed3a-4cd0-827c-406efc042297"
+        },
+        {
+          "name": "White Grapes",
+          "station": "Salad Stop",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/512f31b3-2637-475e-8d87-3107f442638c"
+        },
+        {
+          "name": "Dark Chocolate Sea Salt Seed'nola",
+          "station": "Salad Stop",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/5e54c87b-9a54-4073-be2d-125e7408cc3f"
+        },
+        {
+          "name": "Mandarin Oranges",
+          "station": "Salad Stop",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/4b2e3ed0-1935-43be-9697-dcb6f6804158"
+        }
+      ],
+      "Souper Deli": [
+        {
+          "name": "Deli Bar",
+          "station": "Souper Deli",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/255941ec-72a3-45cb-bfed-cb2d0e4119d9/311f3aa2-d32a-46ba-8cb0-7e4145bbffb7"
+        }
+      ],
+      "By Request": [
+        {
+          "name": "GF White Bread",
+          "station": "By Request",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/4ff6bcd3-d44e-445d-bc02-6243c876440b"
+        },
+        {
+          "name": "GF Hamburger Bun",
+          "station": "By Request",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/72449982-e58b-4d1f-a472-511a0ac6865a"
+        },
+        {
+          "name": "Vegan Shredded Mozzarella Cheese",
+          "station": "By Request",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/807ce933-8003-419a-b5c3-b7eef59b45a5"
+        },
+        {
+          "name": "GF Blueberry Muffin",
+          "station": "By Request",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/376f78d1-56ce-44ce-963a-c6710560c654"
+        },
+        {
+          "name": "Malibu Burger",
+          "station": "By Request",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/94f931a2-9812-452f-8843-d179e66190e4"
+        },
+        {
+          "name": "Italian Ice",
+          "station": "By Request",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/0944faba-c4c3-46ca-b2bb-bdbd2406ba60"
+        },
+        {
+          "name": "GF Hot Dog Bun",
+          "station": "By Request",
+          "court": "Earhart",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/1359a560-f891-4657-8bde-23d1ce3995d4"
+        }
+      ]
+    },
+    "total_items": 59
   },
   "Ford": {
     "dining_court": "Ford",
     "meal_time": "lunch",
     "date": "2025/09/20",
-    "stations": {},
-    "total_items": 0,
-    "error": "page.waitForTimeout is not a function"
+    "stations": {
+      "BoilerQ": [
+        {
+          "name": "All Beef Hot Dog",
+          "station": "BoilerQ",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/f5ff32c7-338a-4d3d-8b5d-477daae4c1cc"
+        },
+        {
+          "name": "Poppy Seed Hot Dog Bun",
+          "station": "BoilerQ",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/26f918e5-e48d-41af-8969-ab27aefa441b"
+        },
+        {
+          "name": "Chicago Style Relish",
+          "station": "BoilerQ",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/a05300a7-cca3-4bf5-a573-313fe2b3dd64"
+        },
+        {
+          "name": "Diced Onion",
+          "station": "BoilerQ",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/158cdf12-7149-46a9-abee-d303282a67ad"
+        },
+        {
+          "name": "Sport Pepper",
+          "station": "BoilerQ",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/d4e67867-d2a1-405c-bf76-1fc9080632eb"
+        },
+        {
+          "name": "Yellow Mustard",
+          "station": "BoilerQ",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/a298388f-9c3f-44af-8b24-6827932fe211"
+        },
+        {
+          "name": "Dill Pickle Spear",
+          "station": "BoilerQ",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/031bb34c-e39c-49bc-9d53-82ba22a246ac"
+        },
+        {
+          "name": "Celery Salt",
+          "station": "BoilerQ",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/a7d8c47e-fae7-4f00-a56e-84fdabd16b31"
+        },
+        {
+          "name": "Diced Tomatoes",
+          "station": "BoilerQ",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/43f440fb-cb78-450a-b7f0-6e6b8ca318d1"
+        },
+        {
+          "name": "Thin Cut Fries",
+          "station": "BoilerQ",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/5befb4c1-9fe2-4d58-aead-4721a7df022b"
+        }
+      ],
+      "Potāto, Potäto": [
+        {
+          "name": "Country Fried Steak",
+          "station": "Potāto, Potäto",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/3f0c2d47-04f7-40f9-9881-c76d1dd060df"
+        },
+        {
+          "name": "Whipped Potatoes",
+          "station": "Potāto, Potäto",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/0a0d1e53-9365-48bc-b449-6d37ce0f3ed5"
+        },
+        {
+          "name": "Cream Gravy",
+          "station": "Potāto, Potäto",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/d7f8d3f3-c9c5-44da-8e66-903d8ebb6143"
+        },
+        {
+          "name": "Corn",
+          "station": "Potāto, Potäto",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/c7ce16ab-523c-425d-969a-c20a9698144a"
+        },
+        {
+          "name": "Sweet Yeasty Rolls",
+          "station": "Potāto, Potäto",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/553c5d21-4ddf-4805-8c92-7808d11d4f96"
+        },
+        {
+          "name": "Whipped Butter",
+          "station": "Potāto, Potäto",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/db3ec71d-8894-41a0-97ca-4106a971ad6f"
+        },
+        {
+          "name": "Roasted Broccolini",
+          "station": "Potāto, Potäto",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/026859fa-75f3-4cc0-aae1-cd0613b6401a"
+        },
+        {
+          "name": "Baked Beans",
+          "station": "Potāto, Potäto",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/69015f24-d8d9-4514-9592-b09918ec3ecc"
+        }
+      ],
+      "International Market": [
+        {
+          "name": "Country Fried Steak",
+          "station": "International Market",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/3f0c2d47-04f7-40f9-9881-c76d1dd060df"
+        },
+        {
+          "name": "Whipped Potatoes",
+          "station": "International Market",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/0a0d1e53-9365-48bc-b449-6d37ce0f3ed5"
+        },
+        {
+          "name": "Cream Gravy",
+          "station": "International Market",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/d7f8d3f3-c9c5-44da-8e66-903d8ebb6143"
+        },
+        {
+          "name": "Corn",
+          "station": "International Market",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/c7ce16ab-523c-425d-969a-c20a9698144a"
+        },
+        {
+          "name": "Sweet Yeasty Rolls",
+          "station": "International Market",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/553c5d21-4ddf-4805-8c92-7808d11d4f96"
+        },
+        {
+          "name": "Whipped Butter",
+          "station": "International Market",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/db3ec71d-8894-41a0-97ca-4106a971ad6f"
+        },
+        {
+          "name": "Roasted Broccolini",
+          "station": "International Market",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/026859fa-75f3-4cc0-aae1-cd0613b6401a"
+        },
+        {
+          "name": "Baked Beans",
+          "station": "International Market",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/69015f24-d8d9-4514-9592-b09918ec3ecc"
+        }
+      ],
+      "Parmesan Tomato": [
+        {
+          "name": "Sausage Pizza",
+          "station": "Parmesan Tomato",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/768ff5e1-f3e3-4845-a89c-75df2d6a67d2"
+        },
+        {
+          "name": "Cheese Pizza",
+          "station": "Parmesan Tomato",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/5681c96b-68da-48f5-a88d-d9e534a5a404"
+        }
+      ],
+      "Salami and Swiss": [
+        {
+          "name": "Deli Bar",
+          "station": "Salami and Swiss",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/34422c2a-dd40-44e5-8394-804b0e3a64bf/d5aa826e-6847-4dba-9a33-40e5b4cc9c41"
+        },
+        {
+          "name": "Kettle Potato Chips",
+          "station": "Salami and Swiss",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/0c65ef86-1674-4e5c-b262-7da962c9f406"
+        }
+      ],
+      "Sugar Hill": [
+        {
+          "name": "Chocolate Chip Cookie",
+          "station": "Sugar Hill",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/6f6ef6dc-a4ac-47d1-8295-e82c302dba20"
+        },
+        {
+          "name": "Luscious Lemon Bar",
+          "station": "Sugar Hill",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/36f278d4-2785-436a-88c6-be3b532be2ab"
+        },
+        {
+          "name": "Sundae Bar",
+          "station": "Sugar Hill",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/01c96af9-4c7f-46cd-9d18-52d0ac180d53/50fc4fbc-e631-4b85-9ed7-c146d623455d"
+        },
+        {
+          "name": "Chocolate Peanut Butter Rice Krispie Bar",
+          "station": "Sugar Hill",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/49566075-9b6b-4d10-953a-ebbd0cd7d3bc"
+        }
+      ],
+      "Simple Servings": [
+        {
+          "name": "Baked Beans",
+          "station": "Simple Servings",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/8ef9199d-b35b-48c7-af0c-b4a6c4869b49"
+        },
+        {
+          "name": "Roasted Broccolini",
+          "station": "Simple Servings",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/026859fa-75f3-4cc0-aae1-cd0613b6401a"
+        },
+        {
+          "name": "Corn",
+          "station": "Simple Servings",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/c7ce16ab-523c-425d-969a-c20a9698144a"
+        }
+      ],
+      "Salads": [
+        {
+          "name": "Salad Bar",
+          "station": "Salads",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/6f395b9f-820c-430d-920f-8bb004905080/7a2dd4a2-1b29-4f0a-b303-d479654756ca"
+        },
+        {
+          "name": "Mandarin Oranges",
+          "station": "Salads",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/42965e57-f502-400f-875a-5bfed6fe3195"
+        },
+        {
+          "name": "Red Sour Cherries",
+          "station": "Salads",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/2b8f5adf-2b64-4216-9251-86dbe5668bfb"
+        }
+      ],
+      "By Request": [
+        {
+          "name": "Malibu Burger",
+          "station": "By Request",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/94f931a2-9812-452f-8843-d179e66190e4"
+        },
+        {
+          "name": "GF White Bread",
+          "station": "By Request",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/4ff6bcd3-d44e-445d-bc02-6243c876440b"
+        },
+        {
+          "name": "GF Hamburger Bun",
+          "station": "By Request",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/72449982-e58b-4d1f-a472-511a0ac6865a"
+        },
+        {
+          "name": "Vegan Shredded Mozzarella Cheese",
+          "station": "By Request",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/807ce933-8003-419a-b5c3-b7eef59b45a5"
+        },
+        {
+          "name": "GF Cauliflower Pizza Crust",
+          "station": "By Request",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/11d7de76-bf20-4d3c-9511-1121ad78a5a2"
+        },
+        {
+          "name": "GF Double Chocolate Muffin",
+          "station": "By Request",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/6b7a1b33-2117-459b-a115-cf49b2882c99"
+        },
+        {
+          "name": "GF Blueberry Muffin",
+          "station": "By Request",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/376f78d1-56ce-44ce-963a-c6710560c654"
+        },
+        {
+          "name": "Italian Ice",
+          "station": "By Request",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/0944faba-c4c3-46ca-b2bb-bdbd2406ba60"
+        },
+        {
+          "name": "Homefree Chocolate Chip Brownie",
+          "station": "By Request",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/8ddc50f6-09f4-4f17-b40d-62a41382ced5"
+        },
+        {
+          "name": "Homefree Chocolate Chip Cookie",
+          "station": "By Request",
+          "court": "Ford",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/15ca873d-ce96-40af-ae25-547aec74789b"
+        }
+      ]
+    },
+    "total_items": 50
   },
   "Hillenbrand": {
     "dining_court": "Hillenbrand",
     "meal_time": "lunch",
     "date": "2025/09/20",
     "stations": {},
-    "total_items": 0,
-    "error": "page.waitForTimeout is not a function"
+    "total_items": 0
   },
   "Wiley": {
     "dining_court": "Wiley",
     "meal_time": "lunch",
     "date": "2025/09/20",
-    "stations": {},
-    "total_items": 0,
-    "error": "page.waitForTimeout is not a function"
+    "stations": {
+      "La Fonda": [
+        {
+          "name": "Chorichicken Strips",
+          "station": "La Fonda",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/bc188827-5f12-450a-83d2-8c8890cc6c0c"
+        },
+        {
+          "name": "Cilantro Green Rice",
+          "station": "La Fonda",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/0b089db2-4e17-4a81-93cf-a2c8c01a494f"
+        },
+        {
+          "name": "5\" Flour Tortilla",
+          "station": "La Fonda",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/a8d73326-6b30-414a-8e48-5daea95b5f0b"
+        },
+        {
+          "name": "La Fonda Station",
+          "station": "La Fonda",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/06d8dd22-fe62-45e8-88a8-911b1cb30f81/74bf07a5-8204-4770-b6b0-617ca0d90da5"
+        }
+      ],
+      "Romeo & Parmesan": [
+        {
+          "name": "Rotini",
+          "station": "Romeo & Parmesan",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/4ea98f5f-85aa-40f1-a763-30b2ee91c2ae"
+        },
+        {
+          "name": "GF Alfredo Sauce",
+          "station": "Romeo & Parmesan",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/3549cf95-1698-49df-98a8-8fce25289c17"
+        },
+        {
+          "name": "Marinara Sauce",
+          "station": "Romeo & Parmesan",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/36c564ab-649b-48e7-afd4-db4f506f964a"
+        },
+        {
+          "name": "Shredded 3 Cheese Blend",
+          "station": "Romeo & Parmesan",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/7374a586-2d84-4980-8652-b3c4d4a27a0d"
+        },
+        {
+          "name": "Grated Parmesan Cheese",
+          "station": "Romeo & Parmesan",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/5c7d5c81-f792-4c46-8934-e3e09d731c6c"
+        },
+        {
+          "name": "Crushed Red Pepper",
+          "station": "Romeo & Parmesan",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/13fa2fc2-0af2-4193-b215-826c3434fa5a"
+        }
+      ],
+      "Classic Flavors": [
+        {
+          "name": "Roasted BBQ Chicken Drumsticks",
+          "station": "Classic Flavors",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/67b2cb34-c29c-4918-bc8a-490e4eb895ba"
+        },
+        {
+          "name": "Oven Roasted Red Potatoes",
+          "station": "Classic Flavors",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/3721e58a-4b8b-4f36-88fb-fcef66f7982d"
+        },
+        {
+          "name": "California Vegetables",
+          "station": "Classic Flavors",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/bc581765-edea-4776-8ad2-aa09cd0882d1"
+        }
+      ],
+      "Mozzarella Fresca": [
+        {
+          "name": "Sausage Pizza",
+          "station": "Mozzarella Fresca",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/b0d45b9f-a660-446c-a250-7e6d6f8026e4"
+        }
+      ],
+      "Fresh Tastes": [
+        {
+          "name": "Salad Bar",
+          "station": "Fresh Tastes",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/141e0144-7902-4062-ada4-28e620136966/fccdd38c-505b-4db7-96d3-7169ba329755"
+        },
+        {
+          "name": "Chamoy Sauce",
+          "station": "Fresh Tastes",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/6b41961b-4b32-41d8-a9db-00e15d2af2b4"
+        },
+        {
+          "name": "Orange Wedges",
+          "station": "Fresh Tastes",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/be8a481f-41d4-47ed-8fa6-00d1678a4b3c"
+        }
+      ],
+      "Gluten Friendly": [
+        {
+          "name": "Cajun Pollock",
+          "station": "Gluten Friendly",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/b97306a5-2ad2-484e-bda6-94ea5d41a79c"
+        },
+        {
+          "name": "Long Grain Rice",
+          "station": "Gluten Friendly",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/9e6eb50a-0778-49fd-a84e-d9d476f1a297"
+        },
+        {
+          "name": "California Vegetables",
+          "station": "Gluten Friendly",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/bc581765-edea-4776-8ad2-aa09cd0882d1"
+        }
+      ],
+      "Delectables": [
+        {
+          "name": "Brown Butter Mixed Fruit Cobbler",
+          "station": "Delectables",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/3dd9bb56-4d0e-4084-926d-4cf7e1db4c99"
+        },
+        {
+          "name": "Devil's Food Cake Cream Cheese Frosting",
+          "station": "Delectables",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/86597841-eb91-47e4-b101-2e5495635c32"
+        },
+        {
+          "name": "White Chocolate Macadamia Cookie",
+          "station": "Delectables",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/5d550017-8ad5-41cf-8b01-fa56ace2dc98"
+        }
+      ],
+      "Vegetarian": [
+        {
+          "name": "Fried Cheese Ravioli",
+          "station": "Vegetarian",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/ad81509c-7974-4aac-b273-0a821b2f536a"
+        },
+        {
+          "name": "Marinara Sauce",
+          "station": "Vegetarian",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/36c564ab-649b-48e7-afd4-db4f506f964a"
+        },
+        {
+          "name": "California Vegetables",
+          "station": "Vegetarian",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/bc581765-edea-4776-8ad2-aa09cd0882d1"
+        }
+      ],
+      "By Request": [
+        {
+          "name": "GF Hamburger Bun",
+          "station": "By Request",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/72449982-e58b-4d1f-a472-511a0ac6865a"
+        },
+        {
+          "name": "Malibu Burger",
+          "station": "By Request",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/94f931a2-9812-452f-8843-d179e66190e4"
+        },
+        {
+          "name": "Vegan Mozzarella Cheese",
+          "station": "By Request",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/86a2c992-5c8c-4246-8d85-e6d1ca95b8d9"
+        },
+        {
+          "name": "GF White Bread",
+          "station": "By Request",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/4ff6bcd3-d44e-445d-bc02-6243c876440b"
+        },
+        {
+          "name": "GF Double Chocolate Muffin",
+          "station": "By Request",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/6b7a1b33-2117-459b-a115-cf49b2882c99"
+        },
+        {
+          "name": "GF Blueberry Muffin",
+          "station": "By Request",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/376f78d1-56ce-44ce-963a-c6710560c654"
+        },
+        {
+          "name": "Italian Ice",
+          "station": "By Request",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/0944faba-c4c3-46ca-b2bb-bdbd2406ba60"
+        },
+        {
+          "name": "Homefree Chocolate Chip Brownie",
+          "station": "By Request",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/8ddc50f6-09f4-4f17-b40d-62a41382ced5"
+        },
+        {
+          "name": "Homefree Chocolate Chip Cookie",
+          "station": "By Request",
+          "court": "Wiley",
+          "meal_time": "lunch",
+          "nutrition_url": "https://dining.purdue.edu/menus/item/15ca873d-ce96-40af-ae25-547aec74789b"
+        }
+      ]
+    },
+    "total_items": 35
   },
   "Windsor": {
     "dining_court": "Windsor",
     "meal_time": "lunch",
     "date": "2025/09/20",
     "stations": {},
-    "total_items": 0,
-    "error": "page.waitForTimeout is not a function"
+    "total_items": 0
   }
 }

@@ -1,0 +1,42 @@
+{
+  "Earhart": {
+    "dining_court": "Earhart",
+    "meal_time": "lunch",
+    "date": "2025/09/20",
+    "stations": {},
+    "total_items": 0,
+    "error": "page.waitForTimeout is not a function"
+  },
+  "Ford": {
+    "dining_court": "Ford",
+    "meal_time": "lunch",
+    "date": "2025/09/20",
+    "stations": {},
+    "total_items": 0,
+    "error": "page.waitForTimeout is not a function"
+  },
+  "Hillenbrand": {
+    "dining_court": "Hillenbrand",
+    "meal_time": "lunch",
+    "date": "2025/09/20",
+    "stations": {},
+    "total_items": 0,
+    "error": "page.waitForTimeout is not a function"
+  },
+  "Wiley": {
+    "dining_court": "Wiley",
+    "meal_time": "lunch",
+    "date": "2025/09/20",
+    "stations": {},
+    "total_items": 0,
+    "error": "page.waitForTimeout is not a function"
+  },
+  "Windsor": {
+    "dining_court": "Windsor",
+    "meal_time": "lunch",
+    "date": "2025/09/20",
+    "stations": {},
+    "total_items": 0,
+    "error": "page.waitForTimeout is not a function"
+  }
+}
