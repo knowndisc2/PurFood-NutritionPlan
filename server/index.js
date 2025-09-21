@@ -4,6 +4,9 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
+const fs = require('fs');
+const { scrapeMenu } = require('./scripts/menuScrape');
+const { generatePlan } = require('./scripts/geminiIntegration');
 const admin = require('./firebaseAdmin');
 // const { router: sessionRouter } = require('./session');
 
@@ -66,6 +69,76 @@ app.get('/api/test-auth', async (req, res) => {
   } catch (e) {
     console.error('Test auth failed:', e);
     return res.status(401).json({ error: 'Token verification failed', details: e.message });
+  }
+});
+
+// GET variant for quick manual testing in a browser or Postman
+// Usage: /api/scrape/menu?mealTime=lunch&date=2025-09-20
+app.get('/api/scrape/menu', async (req, res) => {
+  try {
+    const mealTime = (req.query?.mealTime || 'lunch').toLowerCase();
+    const dateParam = req.query?.date || '';
+    // Convert YYYY-MM-DD to YYYY/MM/DD for scraper if provided
+    const date = dateParam ? String(dateParam).replaceAll('-', '/') : '';
+
+    const data = await scrapeMenu({ mealTime, date });
+
+    const outDir = path.join(process.cwd(), 'src', 'components', 'tmp');
+    try { fs.mkdirSync(outDir, { recursive: true }); } catch {}
+    const dateForFilename = (date || new Date().toISOString().slice(0,10).replace(/-/g,'/')).replaceAll('/', '-');
+    const filename = `purdue_${mealTime.replace(' ', '_')}_${dateForFilename}.json`;
+    const filePath = path.join(outDir, filename);
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+    return res.json({ file: filePath, data });
+  } catch (e) {
+    console.error('[Scrape][GET] Endpoint error', e);
+    return res.status(500).json({ error: 'Failed to scrape menu (GET)', details: e.message });
+  }
+});
+
+// Generate plan text using Gemini (Node) with posted goals and optional menu, then save to a text file
+app.post('/api/ai/gemini', async (req, res) => {
+  try {
+    const body = req.body || {};
+    const goals = body.goals || body; // support old shape
+    const menu = body.menu || null;
+    const planTextRaw = await generatePlan({ goals, menu });
+    const planText = (planTextRaw || '').trim();
+    if (!planText) return res.status(500).json({ error: 'Failed to generate plan text' });
+
+    const outDir = path.join(__dirname, 'outputs');
+    try { if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true }); } catch {}
+    const filename = `gemini_plan_${Date.now()}.txt`;
+    const filePath = path.join(outDir, filename);
+    try {
+      fs.writeFileSync(filePath, planText, 'utf8');
+    } catch (e) {
+      console.error('[AI] Failed to save output file:', e);
+    }
+    return res.json({ planText, file: filename });
+  } catch (e) {
+    console.error('[AI] Endpoint error:', e);
+    return res.status(500).json({ error: 'Failed to run AI integration', details: e.message });
+  }
+});
+
+// Scrape menu using Node (Puppeteer + Cheerio) and return the parsed JSON and file path
+app.post('/api/scrape/menu', async (req, res) => {
+  try {
+    const mealTime = (req.body?.mealTime || 'lunch').toLowerCase();
+    const date = req.body?.date || '';
+    const data = await scrapeMenu({ mealTime, date });
+
+    const outDir = path.join(process.cwd(), 'src', 'components', 'tmp');
+    try { fs.mkdirSync(outDir, { recursive: true }); } catch {}
+    const dateForFilename = (date || new Date().toISOString().slice(0,10).replace(/-/g,'/')).replaceAll('/', '-');
+    const filename = `purdue_${mealTime.replace(' ', '_')}_${dateForFilename}.json`;
+    const filePath = path.join(outDir, filename);
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+    return res.json({ file: filePath, data });
+  } catch (e) {
+    console.error('[Scrape] Endpoint error', e);
+    return res.status(500).json({ error: 'Failed to scrape menu', details: e.message });
   }
 });
 

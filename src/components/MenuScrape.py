@@ -5,6 +5,7 @@ import time
 import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
+import os
 
 
 def setup_headless_driver():
@@ -242,24 +243,52 @@ def print_detailed_summary(all_data, meal_time):
 
 
 if __name__ == "__main__":
-    print("🍽️ Purdue Dining Scraper with Meal Times")
-    meal_time = input("Enter meal time (breakfast/lunch/dinner/brunch/late lunch): ").lower().strip()
-    valid_meal_times = ['breakfast', 'lunch', 'dinner', 'brunch', 'late lunch']
-    if meal_time not in valid_meal_times:
-        print("Invalid meal time. Using 'lunch' as default.")
-        meal_time = 'lunch'
-    use_today = input("Use today's date? (y/n): ").lower().strip()
-    if use_today == 'y' or use_today == '':
-        date = None
-        print(f"Using today's date: {get_todays_date()}")
+    # Non-interactive mode via env vars
+    env_meal_time = os.environ.get('SCRAPE_MEAL_TIME')
+    env_date = os.environ.get('SCRAPE_DATE')  # YYYY/MM/DD or empty for today
+    out_dir = os.environ.get('SCRAPE_OUTPUT_DIR')  # optional
+
+    if env_meal_time:
+        meal_time = env_meal_time.lower().strip()
+        valid_meal_times = ['breakfast', 'lunch', 'dinner', 'brunch', 'late lunch']
+        if meal_time not in valid_meal_times:
+            meal_time = 'lunch'
+        date = env_date if env_date else None
+        data = scrape_all_courts_meal_time(meal_time, date)
+        date_for_filename = (date if date else get_todays_date()).replace('/', '-')
+        filename = f'purdue_{meal_time.replace(" ", "_")}_{date_for_filename}.json'
+        if out_dir:
+            try:
+                os.makedirs(out_dir, exist_ok=True)
+            except Exception:
+                pass
+            filepath = os.path.join(out_dir, filename)
+        else:
+            filepath = filename
+        with open(filepath, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2)
+        # Print minimal notice to stdout so caller can pick up file path
+        print(json.dumps({"ok": True, "file": filepath, "meal_time": meal_time}))
     else:
-        date = input("Enter date (YYYY/MM/DD): ").strip()
-    print(f"Scraping {meal_time.capitalize()} menus...")
-    data = scrape_all_courts_meal_time(meal_time, date)
-    date_for_filename = date if date else get_todays_date().replace('/', '-')
-    filename = f'purdue_{meal_time.replace(" ", "_")}_{date_for_filename}.json'
-    with open(filename, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=2)
-    print(f"\nData saved to {filename}")
-    print_detailed_summary(data, meal_time)
-    print(f"\n✅ Complete! Your team now has comprehensive {meal_time.capitalize()} dining data with full nutrition info.")
+        # Interactive fallback
+        print("🍽️ Purdue Dining Scraper with Meal Times")
+        meal_time = input("Enter meal time (breakfast/lunch/dinner/brunch/late lunch): ").lower().strip()
+        valid_meal_times = ['breakfast', 'lunch', 'dinner', 'brunch', 'late lunch']
+        if meal_time not in valid_meal_times:
+            print("Invalid meal time. Using 'lunch' as default.")
+            meal_time = 'lunch'
+        use_today = input("Use today's date? (y/n): ").lower().strip()
+        if use_today == 'y' or use_today == '':
+            date = None
+            print(f"Using today's date: {get_todays_date()}")
+        else:
+            date = input("Enter date (YYYY/MM/DD): ").strip()
+        print(f"Scraping {meal_time.capitalize()} menus...")
+        data = scrape_all_courts_meal_time(meal_time, date)
+        date_for_filename = date if date else get_todays_date().replace('/', '-')
+        filename = f'purdue_{meal_time.replace(" ", "_")}_{date_for_filename}.json'
+        with open(filename, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2)
+        print(f"\nData saved to {filename}")
+        print_detailed_summary(data, meal_time)
+        print(f"\n✅ Complete! Your team now has comprehensive {meal_time.capitalize()} dining data with full nutrition info.")
