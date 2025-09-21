@@ -11,22 +11,23 @@ import './App.css';
 const MOCK_MEAL_PLAN = `**MEAL PLAN 1**
 Earhart
 * Polish Sausage (1 Each Serving) Calories: 266 Protein: 10.0887g Carbs: 3.6686g Fat: 22.9288g
+* Breaded Chicken Strips (5 Per Serving) Calories: 453 Protein: 27.6887g Carbs: 17.6201g Fat: 27.6887g
 * Long Grain Rice (1/2 Cup) Calories: 122 Protein: 2.2791g Carbs: 27.3489g Fat: 0g
-* Green Beans (1/2 Cup Serving) Calories: 15 Protein: 0.975g Carbs: 2.925g Fat: 0g
-Totals: 403 cal, 13g protein, 34g carbs, 23g fat
+Totals: 841 cal, 40g protein, 49g carbs, 51g fat
 
 **MEAL PLAN 2**
 Ford
+* Lasagna (4x4 Cut Serving) Calories: 202 Protein: 12.7386g Carbs: 24.7277g Fat: 5.9946g
 * Breaded Chicken Strips (5 Per Serving) Calories: 453 Protein: 27.6887g Carbs: 17.6201g Fat: 27.6887g
-* Peas (1/2 Cup) Calories: 62 Protein: 4.3936g Carbs: 10.5445g Fat: 0g
-Totals: 515 cal, 32g protein, 28g carbs, 28g fat
+* Vegan Quinoa and Peppers (2 # 6 Dishers) Calories: 454 Protein: 9.7358g Carbs: 50.0114g Fat: 24.095g
+Totals: 1109 cal, 50g protein, 92g carbs, 58g fat
 
 **MEAL PLAN 3**
 Wiley
 * Chicken Fajitas (Cup) Calories: 214 Protein: 27.3395g Carbs: 9.1069g Fat: 7.5623g
-* Shredded 3 Cheese Blend (Ounce) Calories: 97 Protein: 6.0749g Carbs: 1.0125g Fat: 8.0998g
-* Cilantro Green Rice (1/2 Cup) Calories: 133 Protein: 1.8789g Carbs: 21.9152g Fat: 3.8755g
-Totals: 444 cal, 35g protein, 32g carbs, 20g fat`;
+* Halal Shepherds Pie (4 x 8 Cut Serving) Calories: 397 Protein: 20.0718g Carbs: 25.5481g Fat: 22.9497g
+* Grated Parmesan Cheese (Ounce) Calories: 113 Protein: 11.3398g Carbs: 0g Fat: 11.3398g
+Totals: 724 cal, 59g protein, 35g carbs, 42g fat`;
 
 function App() {
   const [user, loading] = useAuthState(auth); // include loading to avoid flicker

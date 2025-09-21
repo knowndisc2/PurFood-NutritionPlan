@@ -205,27 +205,27 @@ async function generateWithGemini(goals, menu) {
     const prompt = `You are a nutrition expert creating single-meal plans using dining hall food options.
 
 USER REQUIREMENTS:
+- Primary Goal: ${preferences_text}
 - Meal calorie target: ${target_calories} (acceptable range: ${calorie_lower} to ${calorie_upper} calories)
 - Protein target: ${target_protein}g (${protein_percentage}% of calories)
 - Carb target: ${target_carbs}g (${carb_percentage}% of calories)
 - Fat target: ${target_fat}g (${fat_percentage}% of calories)
 - Dietary restrictions: ${restrictions_text}
-- Other preferences: ${preferences_text}
 ${isSingleCourt ? '- IMPORTANT: The user has requested food from a specific dining hall. You MUST only use food from the dining hall listed under AVAILABLE FOOD OPTIONS.' : ''}
 
 AVAILABLE FOOD OPTIONS:
 ${court_food_data}
 
 TASK: Create exactly 3 different meal plans. Each meal plan must:
-1. Keep total calories WITHIN the acceptable range (±100 of the target). Do not go below ${calorie_lower} or above ${calorie_upper}.
-2. Only use foods from the provided list.
-3. Strictly adhere to all dietary restrictions and preferences.
-4. Provide variety across the 3 plans.
-5. Show total calories and macros for each plan.
-6. Display the Dining Hall the food is from.
-7. Strictly adhere to the user's specific goals or extra information.
+1. VERY strictly adhere to the user's PRIMARY GOAL, if one is provided. This is the most important rule.
+2. Keep total calories WITHIN the acceptable range (±100 of the target). Do not go below ${calorie_lower} or above ${calorie_upper}.
+3. Only use foods from the provided list.
+4. Strictly adhere to all dietary restrictions and preferences.
+5. Provide variety across the 3 plans.
+6. Show total calories and macros for each plan.
+7. Display the Dining Hall the food is from.
 8. Strictly adhere to the calorie and macro values given for each food, especially for fat.
- 9. Never output 'N/A' for any macro. Use only numeric values as provided. If a food item does not list numeric fat/protein/carbs/calories, do not use it.
+9. Never output 'N/A' for any macro. Use only numeric values as provided. If a food item does not list numeric fat/protein/carbs/calories, do not use it.
 
 FORMAT your response as:
 
