@@ -1,16 +1,16 @@
 
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import Auth from "./Auth";
 import "./index.css"; // Tailwind CSS
 
-// Use HashRouter for GitHub Pages compatibility
+// Use BrowserRouter with GitHub Pages SPA support
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <HashRouter>
+    <BrowserRouter basename="/PurFood-NutritionPlan">
       <Auth />
-    </HashRouter>
+    </BrowserRouter>
   </React.StrictMode>
 );

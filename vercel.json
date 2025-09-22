@@ -1,22 +1,8 @@
 {
-  "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "server/index-simple.js",
-      "use": "@vercel/node"
+      "source": "/",
+      "destination": "/api/hello"
     }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "server/index-simple.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "server/index-simple.js"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
