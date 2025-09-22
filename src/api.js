@@ -24,6 +24,14 @@ export const authenticatedFetch = async (url, options = {}) => {
 
   // Convert relative URLs to absolute URLs using the API base
   const fullUrl = url.startsWith('http') ? url : `${getApiBase()}${url}`;
+  
+  // Debug logging for API calls
+  console.log('🚀 API Call:', {
+    originalUrl: url,
+    fullUrl,
+    method: options.method || 'GET',
+    hasAuth: !!token
+  });
 
   const headers = {
     ...options.headers,

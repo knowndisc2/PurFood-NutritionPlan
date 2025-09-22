@@ -14,10 +14,12 @@ const firebaseConfig = {
 
 // Debug logging for production
 if (process.env.NODE_ENV === 'production') {
-  console.log('Firebase Config:', {
-    apiKey: firebaseConfig.apiKey ? 'Set' : 'Missing',
-    authDomain: firebaseConfig.authDomain ? 'Set' : 'Missing',
-    projectId: firebaseConfig.projectId ? 'Set' : 'Missing'
+  console.log('🔥 Firebase Config Status:', {
+    apiKey: firebaseConfig.apiKey ? '✅ Set' : '❌ Missing',
+    authDomain: firebaseConfig.authDomain ? '✅ Set' : '❌ Missing',
+    projectId: firebaseConfig.projectId ? '✅ Set' : '❌ Missing',
+    environment: process.env.NODE_ENV,
+    timestamp: new Date().toISOString()
   });
 }
 

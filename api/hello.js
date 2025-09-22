@@ -1,9 +1,12 @@
 // Simple test endpoint
 export default function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // Set CORS headers for GitHub Pages
+  res.setHeader('Access-Control-Allow-Origin', 'https://knowndisc2.github.io');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
 
+  // Handle preflight requests
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
