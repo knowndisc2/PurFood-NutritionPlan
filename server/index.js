@@ -40,7 +40,11 @@ app.use(cors({
       // Allow all origins in development (covers localhost, 127.0.0.1, LAN IPs)
       return cb(null, true);
     }
-    const allowed = ['https://your-domain.com'];
+    const allowed = [
+      'https://knowndisc2.github.io',
+      'https://your-vercel-app.vercel.app',
+      'https://your-railway-app.railway.app'
+    ];
     if (!origin || allowed.includes(origin)) return cb(null, true);
     return cb(new Error('Not allowed by CORS'));
   },

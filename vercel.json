@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server/index-simple.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server/index-simple.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "server/index-simple.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}

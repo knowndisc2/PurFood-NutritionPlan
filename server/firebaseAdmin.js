@@ -3,27 +3,41 @@ const fs = require('fs');
 const path = require('path');
 
 // Initialize Firebase Admin SDK
-// Supports either GOOGLE_APPLICATION_CREDENTIALS file path or SERVICE_ACCOUNT env JSON
-// In server/firebaseAdmin.js
+// Supports environment variables for serverless deployment
 if (!admin.apps.length) {
   try {
-    const serviceAccountPath = path.join(__dirname, 'firebase-admin-key.json');
-    
-    if (fs.existsSync(serviceAccountPath)) {
-      const serviceAccount = require(serviceAccountPath);
+    // Try environment variable first (for Vercel/serverless)
+    if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+      const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
       admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
         databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`
       });
-      console.log('[Firebase Admin] ✓ Initialized with service account key.');
+      console.log('[Firebase Admin] ✓ Initialized with environment variable.');
     } else {
-      console.warn('[Firebase Admin] Service account key not found, using Application Default Credentials');
-      admin.initializeApp();
+      // Fallback to local file (for development)
+      const serviceAccountPath = path.join(__dirname, 'firebase-admin-key.json');
+      
+      if (fs.existsSync(serviceAccountPath)) {
+        const serviceAccount = require(serviceAccountPath);
+        admin.initializeApp({
+          credential: admin.credential.cert(serviceAccount),
+          databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`
+        });
+        console.log('[Firebase Admin] ✓ Initialized with service account key.');
+      } else {
+        console.warn('[Firebase Admin] No credentials found, using Application Default Credentials');
+        admin.initializeApp();
+      }
     }
   } catch (e) {
     console.error('[Firebase Admin] ✗ Error initializing:', e.message);
     console.warn('[Firebase Admin] Falling back to Application Default Credentials.');
-    admin.initializeApp();
+    try {
+      admin.initializeApp();
+    } catch (fallbackError) {
+      console.error('[Firebase Admin] ✗ Fallback failed:', fallbackError.message);
+    }
   }
 }
 // Log emulator usage for visibility during development

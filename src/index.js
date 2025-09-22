@@ -1,13 +1,16 @@
 
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import Auth from "./Auth";
 import "./index.css"; // Tailwind CSS
 
+// Use HashRouter for GitHub Pages compatibility
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <BrowserRouter>
-    <Auth />
-  </BrowserRouter>
+  <React.StrictMode>
+    <HashRouter>
+      <Auth />
+    </HashRouter>
+  </React.StrictMode>
 );

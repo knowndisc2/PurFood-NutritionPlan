@@ -9,26 +9,29 @@ import './App.css';
 
 // This is our mock data. In the future, this will come from the AI.
 const MOCK_MEAL_PLAN = `**MEAL PLAN 1**
-Earhart
-* Breaded Pork Tenderloin (1 Each Serving) Calories: 176 Protein: 22.6569g Carbs: 11.3398g Fat: 4.4112g
-* Sweet Potato Wedge Fries (6 oz Serving) Calories: 320 Protein: 2.0012g Carbs: 50.0286g Fat: 12.0068g
-* Chicken And Noodles (Cup Serving) Calories: 443 Protein: 18.4105g Carbs: 51.1823g Fat: 17.2983g
-Totals: 939 cal, 43g protein, 113g carbs, 34g fat
+Wiley
+* Chicken Fajitas (Cup) Calories: 214 Protein: 27.3395g Carbs: 9.1069g Fat: 7.5623g
+* Rotini (1 Cup Serving) Calories: 215 Protein: 7.0874g Carbs: 42.5243g Fat: 2.3666g
+* Brownie (8x10 Cut Serving) Calories: 156 Protein: 1.944g Carbs: 26.2435g Fat: 4.3739g
+* Shredded 3 Cheese Blend (Ounce) Calories: 97 Protein: 6.0749g Carbs: 1.0125g Fat: 8.0998g
+Totals: 682 cal, 42g protein, 79g carbs, 22g fat
 
 **MEAL PLAN 2**
-Earhart
-* Breaded Pork Tenderloin (1 Each Serving) Calories: 176 Protein: 22.6569g Carbs: 11.3398g Fat: 4.4112g
-* Chicken And Noodles (Cup Serving) Calories: 443 Protein: 18.4105g Carbs: 51.1823g Fat: 17.2983g
+Wiley
+* Lasagna (4x4 Cut Serving) Calories: 202 Protein: 12.7386g Carbs: 24.7277g Fat: 5.9946g
+* Roasted Cajun Chicken Drumsticks (Leg) Calories: 95 Protein: 12.3736g Carbs: 0.5042g Fat: 4.5609g
 * Long Grain Rice (1/2 Cup) Calories: 122 Protein: 2.2791g Carbs: 27.3489g Fat: 0g
-* Green Beans (1/2 Cup Serving) Calories: 15 Protein: 0.975g Carbs: 2.925g Fat: 0g
-Totals: 756 cal, 44g protein, 93g carbs, 22g fat
+* Snickerdoodle Cookie (Cookie) Calories: 125 Protein: 1.0045g Carbs: 18.3199g Fat: 5.0014g
+* Peas (1/2 Cup) Calories: 62 Protein: 4.3936g Carbs: 10.5445g Fat: 0g
+Totals: 606 cal, 33g protein, 81g carbs, 16g fat
 
 **MEAL PLAN 3**
-Ford
-* Breaded Chicken Strips (5 Per Serving) Calories: 453 Protein: 27.6887g Carbs: 17.6201g Fat: 27.6887g
-* Lasagna (4x4 Cut Serving) Calories: 202 Protein: 12.7386g Carbs: 24.7277g Fat: 5.9946g
-* Fresh Spinach (Ounce) Calories: 7 Protein: 0.8108g Carbs: 1.0291g Fat: 0.1106g
-Totals: 662 cal, 41g protein, 43g carbs, 34g fat`;
+Wiley
+* Chicken Fajitas (Cup) Calories: 214 Protein: 27.3395g Carbs: 9.1069g Fat: 7.5623g
+* Cilantro Green Rice (1/2 Cup) Calories: 133 Protein: 1.8789g Carbs: 21.9152g Fat: 3.8755g
+* Homefree Chocolate Chip Brownie (Brownie) Calories: 235 Protein: 2.9327g Carbs: 36.17g Fat: 8.7981g
+* Grated Parmesan Cheese (Ounce) Calories: 113 Protein: 11.3398g Carbs: 0g Fat: 11.3398g
+Totals: 695 cal, 43g protein, 67g carbs, 32g fat`;
 
 function App() {
   const [user, loading] = useAuthState(auth); // include loading to avoid flicker

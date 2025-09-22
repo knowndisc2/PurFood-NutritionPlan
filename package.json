@@ -7,10 +7,12 @@
   "scripts": {
     "start": "node server/index.js",
     "dev": "nodemon server/index.js",
-    "client": "set PORT=3000 && react-scripts start",
+    "client": "cross-env PORT=3000 react-scripts start",
     "build": "craco build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:full": "concurrently \"npm run dev\" \"npm run client\"",
+    "dev:windows": "start-dev.bat",
+    "dev:powershell": "powershell -ExecutionPolicy Bypass -File start-dev.ps1",
     "start:prod": "npm run build && npm run start",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
