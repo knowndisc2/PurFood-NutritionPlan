@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/PurFood-NutritionPlan/static/css/main.0dbc7def.css",
-    "main.js": "/PurFood-NutritionPlan/static/js/main.36a41247.js",
+    "main.js": "/PurFood-NutritionPlan/static/js/main.b72c7736.js",
     "index.html": "/PurFood-NutritionPlan/index.html",
     "main.0dbc7def.css.map": "/PurFood-NutritionPlan/static/css/main.0dbc7def.css.map",
-    "main.36a41247.js.map": "/PurFood-NutritionPlan/static/js/main.36a41247.js.map"
+    "main.b72c7736.js.map": "/PurFood-NutritionPlan/static/js/main.b72c7736.js.map"
   },
   "entrypoints": [
     "static/css/main.0dbc7def.css",
-    "static/js/main.36a41247.js"
+    "static/js/main.b72c7736.js"
   ]
 }
